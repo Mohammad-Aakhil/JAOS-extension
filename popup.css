@@ -1,0 +1,76 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 360px;
+  height: auto;
+  background: transparent;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  color: #0f172a;
+}
+
+body {
+  padding: 12px;
+}
+
+.popup-shell {
+  width: 100%;
+}
+
+.popup-card {
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+  padding: 18px;
+}
+
+.popup__header {
+  margin-bottom: 10px;
+}
+
+.popup__title {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.popup__status-section {
+  margin-bottom: 18px;
+}
+
+.popup__status {
+  margin: 0;
+  font-size: 14px;
+  color: #475569;
+}
+
+.popup__actions {
+  display: flex;
+  justify-content: center;
+}
+
+.popup__button {
+  min-width: 180px;
+  border: none;
+  border-radius: 12px;
+  padding: 11px 18px;
+  background: #0f9d58;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.12s ease;
+}
+
+.popup__button:hover {
+  background: #0d8b4d;
+}
+
+.popup__button:active {
+  transform: translateY(1px);
+}
