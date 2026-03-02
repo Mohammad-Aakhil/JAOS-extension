@@ -612,8 +612,9 @@
   /**
    * Pure DOM autofill (v1 only). No LLM, no v2 engine.
    * Uses v1 ATS adapter selectors → heuristic keyword fill.
+   * Returns { matched, filled, scanned, ats, warnings? }.
    */
-  const runDomAutofillV1 = (profileData) => {
+  const runDomAutofillV1 = async (profileData) => {
     const profile =
       profileData && typeof profileData === "object" ? profileData : {};
 
@@ -622,28 +623,40 @@
 
     if (ats) {
       console.log(`[JAOS DOM] Detected ATS: ${ats.name} (frame: ${isTopFrame ? "top" : "iframe"})`);
-      const { filled, filledElements } = runAtsSelectorFill(ats, profile);
-      console.log(`[JAOS DOM] ${ats.name} selector fill: ${filled} fields`);
+      const { filled: selectorFilled, filledElements } = runAtsSelectorFill(ats, profile);
+      console.log(`[JAOS DOM] ${ats.name} selector fill: ${selectorFilled} fields`);
+
+      let customFilled = 0;
+      let warnings = [];
 
       // Run adapter-specific custom fill (dropdowns, React inputs, etc.)
       if (typeof ats.fillCustom === "function") {
         const helpers = adapterHelpers();
-        ats.fillCustom(profile, helpers)
-          .then((customFilled) => {
-            if (customFilled > 0) {
-              console.log(`[JAOS DOM] ${ats.name} custom fill: ${customFilled} fields`);
-            }
-          })
-          .catch((err) => {
-            console.warn(`[JAOS DOM] ${ats.name} custom fill error:`, err);
-          });
+        try {
+          const result = await ats.fillCustom(profile, helpers);
+          // Support both old (number) and new ({ filled, warnings }) return format
+          if (typeof result === "number") {
+            customFilled = result;
+          } else if (result && typeof result === "object") {
+            customFilled = result.filled || 0;
+            warnings = Array.isArray(result.warnings) ? result.warnings : [];
+          }
+          if (customFilled > 0) {
+            console.log(`[JAOS DOM] ${ats.name} custom fill: ${customFilled} fields`);
+          }
+        } catch (err) {
+          console.warn(`[JAOS DOM] ${ats.name} custom fill error:`, err);
+        }
       }
 
+      const totalFilled = selectorFilled + customFilled;
+
       return {
-        matched: filled,
-        filled,
+        matched: totalFilled,
+        filled: totalFilled,
         scanned: filledElements.size,
         ats: ats.name,
+        warnings,
       };
     }
 
@@ -653,7 +666,7 @@
       console.log("[JAOS DOM] No v1 ATS adapter matched, using heuristic fallback");
     }
     const heuristic = runHeuristicFill(profile);
-    return { ...heuristic, ats: null };
+    return { ...heuristic, ats: null, warnings: [] };
   };
 
   /**
@@ -663,12 +676,12 @@
    * @param {object} [options]
    * @param {boolean} [options.forceV1] — Skip all v2/LLM paths, use pure DOM fill only
    */
-  const runDomAutofill = (profileData, options = {}) => {
+  const runDomAutofill = async (profileData, options = {}) => {
     const { forceV1 = false } = options;
 
     if (forceV1) {
       if (isTopFrame) console.log("[JAOS] forceV1 — using pure DOM fill (no LLM)");
-      return runDomAutofillV1(profileData);
+      return await runDomAutofillV1(profileData);
     }
 
     const profile =
@@ -692,11 +705,12 @@
         scanned: 0,
         ats: "v2-pending",
         v2: true,
+        warnings: [],
       };
     }
 
     // ── Path B: V1 Known ATS — adapter is the single source of truth ──
-    return runDomAutofillV1(profile);
+    return await runDomAutofillV1(profile);
   };
 
   const findResumeFileInputs = () => {
@@ -982,6 +996,20 @@
         isFilled = field.value !== "" && field.selectedIndex > 0;
       } else {
         isFilled = (field.value || "").trim() !== "";
+        // Multiselect chip detection (Workday searchable lists, etc.):
+        // After selection the input is cleared but a chip with a × button appears.
+        if (!isFilled) {
+          const fieldWrap = field.closest(
+            '[data-automation-id^="formField"], [data-automation-id*="multiselect" i]'
+          );
+          if (fieldWrap) {
+            const hasChip = fieldWrap.querySelector(
+              '[data-automation-id="DELETE"], [data-automation-id="delete"], ' +
+              '[aria-label*="Remove" i], [aria-label*="Deselect" i]'
+            );
+            if (hasChip) isFilled = true;
+          }
+        }
       }
 
       required.push({ label: cleanLabel || "Field", isFilled });
@@ -1892,8 +1920,9 @@
     const progressCard = card();
     progressCard.id = "jaos-field-progress";
 
-    const renderFieldProgress = (state) => {
+    const renderFieldProgress = (state, fillWarnings = []) => {
       // state: "idle" | "filling" | "done"
+      // fillWarnings: Array<{ field, message, type }> from adapter fillCustom
       const { total, filled, fields } = scanRequiredFields();
       progressCard.innerHTML = "";
 
@@ -1903,9 +1932,19 @@
       }
       progressCard.style.display = "flex";
 
-      const missed = fields.filter((f) => !f.isFilled);
+      const filledFields = fields.filter((f) => f.isFilled);
+      // Fields with warnings (adapter couldn't fill them automatically).
+      // Use fuzzy matching: a warning covers a field if either contains the other.
+      const warningFieldNames = fillWarnings.map((w) => w.field.toLowerCase());
+      const isExplainedByWarning = (fieldLabel) => {
+        const fl = fieldLabel.toLowerCase();
+        return warningFieldNames.some((wf) => fl.includes(wf) || wf.includes(fl));
+      };
+      // Truly missed: empty AND not already explained by a warning
+      const missed = fields.filter((f) => !f.isFilled && !isExplainedByWarning(f.label));
+      const issueCount = missed.length + fillWarnings.length;
       const pct = total > 0 ? Math.round((filled / total) * 100) : 0;
-      const allDone = filled === total && total > 0;
+      const allDone = filled === total && total > 0 && fillWarnings.length === 0;
 
       // Header row
       const headerRow = document.createElement("div");
@@ -1925,11 +1964,19 @@
       });
 
       const statusBadge = document.createElement("div");
-      statusBadge.textContent = allDone ? "Complete" : state === "filling" ? "Working..." : `${missed.length} missing`;
+      if (state === "filling") {
+        statusBadge.textContent = "Working...";
+      } else if (allDone) {
+        statusBadge.textContent = "Complete";
+      } else if (fillWarnings.length > 0 && missed.length === 0) {
+        statusBadge.textContent = `${fillWarnings.length} need attention`;
+      } else {
+        statusBadge.textContent = `${issueCount} missing`;
+      }
       Object.assign(statusBadge.style, {
         fontSize: "10px", fontWeight: "600",
-        color: allDone ? "#059669" : state === "filling" ? "#2563eb" : "#dc2626",
-        background: allDone ? "#ecfdf5" : state === "filling" ? "#dbeafe" : "#fef2f2",
+        color: allDone ? "#059669" : state === "filling" ? "#2563eb" : fillWarnings.length > 0 ? "#d97706" : "#dc2626",
+        background: allDone ? "#ecfdf5" : state === "filling" ? "#dbeafe" : fillWarnings.length > 0 ? "#fffbeb" : "#fef2f2",
         borderRadius: "999px", padding: "2px 7px",
       });
 
@@ -1956,10 +2003,63 @@
       track.appendChild(bar);
       progressCard.appendChild(track);
 
-      // Field checklist (show missed fields when done)
-      if (state !== "filling" && missed.length > 0 && missed.length <= 8) {
+      if (state === "filling") return; // Don't show details while filling
+
+      // ── Section 1: Filled fields (green checkmarks) ──
+      if (filledFields.length > 0 && total <= 14) {
+        const doneList = document.createElement("div");
+        Object.assign(doneList.style, { display: "flex", flexDirection: "column", gap: "3px", marginTop: "2px" });
+        filledFields.forEach((f) => {
+          const row = document.createElement("div");
+          Object.assign(row.style, {
+            display: "flex", alignItems: "center", gap: "6px",
+            fontSize: "11px", color: "#059669",
+          });
+          const check = document.createElement("span");
+          check.textContent = "\u2713";
+          Object.assign(check.style, { fontSize: "10px", flexShrink: "0" });
+          const lbl = document.createElement("span");
+          lbl.textContent = f.label;
+          Object.assign(lbl.style, { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" });
+          row.appendChild(check);
+          row.appendChild(lbl);
+          doneList.appendChild(row);
+        });
+        progressCard.appendChild(doneList);
+      }
+
+      // ── Section 2: Warnings — needs manual input (amber) ──
+      if (fillWarnings.length > 0) {
+        const warnSection = document.createElement("div");
+        Object.assign(warnSection.style, { marginTop: "4px" });
+
+        const warnHeader = document.createElement("div");
+        Object.assign(warnHeader.style, {
+          fontSize: "11px", fontWeight: "600", color: "#d97706", marginBottom: "3px",
+        });
+        warnHeader.textContent = "\u26A0 Needs manual input:";
+        warnSection.appendChild(warnHeader);
+
+        fillWarnings.forEach((w) => {
+          const row = document.createElement("div");
+          Object.assign(row.style, {
+            fontSize: "11px", color: "#92400e",
+            marginLeft: "8px", marginBottom: "3px",
+            lineHeight: "1.3",
+          });
+          const fieldName = document.createElement("strong");
+          fieldName.textContent = w.field;
+          row.appendChild(fieldName);
+          row.appendChild(document.createTextNode(" \u2014 " + w.message));
+          warnSection.appendChild(row);
+        });
+        progressCard.appendChild(warnSection);
+      }
+
+      // ── Section 3: Truly missing fields (red, not explained by warnings) ──
+      if (missed.length > 0 && missed.length <= 8) {
         const list = document.createElement("div");
-        Object.assign(list.style, { display: "flex", flexDirection: "column", gap: "3px", marginTop: "2px" });
+        Object.assign(list.style, { display: "flex", flexDirection: "column", gap: "3px", marginTop: "4px" });
         missed.forEach((f) => {
           const row = document.createElement("div");
           Object.assign(row.style, {
@@ -1977,32 +2077,6 @@
           list.appendChild(row);
         });
         progressCard.appendChild(list);
-      }
-
-      // Filled field checkmarks
-      if (state !== "filling" && filled > 0 && total <= 12) {
-        const filledFields = fields.filter((f) => f.isFilled);
-        if (filledFields.length > 0) {
-          const doneList = document.createElement("div");
-          Object.assign(doneList.style, { display: "flex", flexDirection: "column", gap: "3px", marginTop: "2px" });
-          filledFields.forEach((f) => {
-            const row = document.createElement("div");
-            Object.assign(row.style, {
-              display: "flex", alignItems: "center", gap: "6px",
-              fontSize: "11px", color: "#059669",
-            });
-            const check = document.createElement("span");
-            check.textContent = "\u2713";
-            Object.assign(check.style, { fontSize: "10px", flexShrink: "0" });
-            const lbl = document.createElement("span");
-            lbl.textContent = f.label;
-            Object.assign(lbl.style, { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" });
-            row.appendChild(check);
-            row.appendChild(lbl);
-            doneList.appendChild(row);
-          });
-          progressCard.appendChild(doneList);
-        }
       }
     };
 
@@ -2042,15 +2116,19 @@
 
     /**
      * Shared completion handler for both buttons.
+     * @param {HTMLElement} btn - The button element
+     * @param {string} defaultBg - Default background gradient
+     * @param {string} defaultText - Default button label
+     * @returns {function(boolean, Array?): Promise<void>}
      */
     const makeOnFillComplete = (btn, defaultBg, defaultText) => {
-      return async (success) => {
+      return async (success, fillWarnings) => {
         const resumeUploaded = await (hasUploadedResume
           ? Promise.resolve(true)
           : uploadResumeToFileInputs(selectedResumeData));
         if (resumeUploaded) hasUploadedResume = true;
 
-        setTimeout(() => renderFieldProgress("done"), 400);
+        setTimeout(() => renderFieldProgress("done", fillWarnings || []), 400);
 
         if (success) {
           btn.textContent = resumeUploaded ? "Done — Resume Attached" : "Done";
@@ -2089,15 +2167,14 @@
 
       console.log("[JAOS DOM] DOM Fill clicked");
 
-      if (!hasUploadedResume) {
-        uploadResumeToFileInputs(selectedResumeData);
-      }
+      // Resume upload is handled in makeOnFillComplete after fill completes
+      // (avoids duplicate uploads from both here and the completion handler)
 
       safeSendMessage(
         { type: "AUTOFILL_JOB", jobTitle, company: jobCompany, jobId, forceV1: true },
         async (response) => {
           const onComplete = makeOnFillComplete(domFillBtn, "linear-gradient(135deg, #2563eb, #1d4ed8)", "Autofill (DOM)");
-          await onComplete(response && response.ok);
+          await onComplete(response && response.ok, response?.warnings);
         }
       );
     });
@@ -2109,90 +2186,68 @@
       renderFieldProgress("filling");
 
       console.log("[JAOS AI] AI Fill clicked");
+      aiFillBtn.textContent = "Filling (AI)...";
 
-      // Step 1: Check if API key is configured
-      safeSendMessage({ type: "JAOS_GET_LLM_CONFIG" }, async (configResp) => {
-        if (!configResp?.ok || !configResp?.hasApiKey) {
-          console.error("[JAOS AI] OpenRouter API key NOT configured!");
-          console.error("[JAOS AI] Set it via background console: chrome.storage.local.set({ OPENROUTER_API_KEY: 'sk-or-...' })");
-          aiFillBtn.textContent = "API Key Missing";
-          aiFillBtn.style.background = "#dc2626";
-          aiFillBtn.style.opacity = "1";
-          aiFillBtn.disabled = false;
-          domFillBtn.disabled = false;
-          domFillBtn.style.opacity = "1";
-          renderFieldProgress("done");
+      const aiBtnBg = "linear-gradient(135deg, #7c3aed, #5b21b6)";
+
+      // Step 1: Fetch profile (LLM is handled server-side, no API key config needed)
+      safeSendMessage({ type: "JAOS_FETCH_PROFILE" }, async (response) => {
+        if (!response || !response.ok) {
+          console.error("[JAOS AI] Profile fetch failed:", response?.error);
+          const onComplete = makeOnFillComplete(aiFillBtn, aiBtnBg, "Autofill (AI)");
+          await onComplete(false);
           return;
         }
 
-        console.log("[JAOS AI] API key present. Model:", configResp.model);
-        aiFillBtn.textContent = "Filling (AI)...";
+        const profile = response.profile || {};
+        const jobCtx = { title: jobTitle, company: jobCompany, jobId };
 
-        const aiBtnBg = "linear-gradient(135deg, #7c3aed, #5b21b6)";
+        console.log("[JAOS AI] Profile loaded:", profile.first_name, profile.last_name);
 
-        // Step 2: Fetch profile
-        safeSendMessage({ type: "JAOS_FETCH_PROFILE" }, async (response) => {
-          if (!response || !response.ok) {
-            console.error("[JAOS AI] Profile fetch failed:", response?.error);
+        // Step 2: Try v2 engine directly in current frame first
+        if (hasV2Engine() && hasV2AdapterMatch()) {
+          console.log("[JAOS AI] v2 adapter matched in current frame, running directly...");
+          try {
+            const result = await runV2Engine(profile, jobCtx);
+            console.log("[JAOS AI] Fill complete:", result);
+            console.log(`[JAOS AI] Filled: ${result.filled}/${result.scanned}, Errors: ${result.errors.length}`);
+            if (result.errors.length > 0) console.warn("[JAOS AI] Errors:", result.errors);
+            if (profile.cover_letter) uploadCoverLetterFile(profile.cover_letter);
             const onComplete = makeOnFillComplete(aiFillBtn, aiBtnBg, "Autofill (AI)");
-            await onComplete(false);
+            await onComplete(result.filled > 0);
             return;
+          } catch (err) {
+            console.error("[JAOS AI] Direct v2 engine failed:", err);
           }
+        }
 
-          const profile = response.profile || {};
-          const jobCtx = { title: jobTitle, company: jobCompany, jobId };
+        // Step 3: No v2 adapter in current frame (form may be in an iframe).
+        // Broadcast JAOS_V2_FILL through background → all frames will check.
+        console.log("[JAOS AI] No v2 adapter in current frame, broadcasting to all frames...");
 
-          console.log("[JAOS AI] Profile loaded:", profile.first_name, profile.last_name);
-
-          if (!hasUploadedResume) {
-            uploadResumeToFileInputs(selectedResumeData);
-          }
-
-          // Step 3: Try v2 engine directly in current frame first
-          if (hasV2Engine() && hasV2AdapterMatch()) {
-            console.log("[JAOS AI] v2 adapter matched in current frame, running directly...");
-            try {
-              const result = await runV2Engine(profile, jobCtx);
-              console.log("[JAOS AI] Fill complete:", result);
-              console.log(`[JAOS AI] Filled: ${result.filled}/${result.scanned}, Errors: ${result.errors.length}`);
-              if (result.errors.length > 0) console.warn("[JAOS AI] Errors:", result.errors);
-              if (profile.cover_letter) uploadCoverLetterFile(profile.cover_letter);
-              const onComplete = makeOnFillComplete(aiFillBtn, aiBtnBg, "Autofill (AI)");
-              await onComplete(result.filled > 0);
-              return;
-            } catch (err) {
-              console.error("[JAOS AI] Direct v2 engine failed:", err);
-            }
-          }
-
-          // Step 4: No v2 adapter in current frame (form may be in an iframe).
-          // Broadcast JAOS_V2_FILL through background → all frames will check.
-          console.log("[JAOS AI] No v2 adapter in current frame, broadcasting to all frames...");
-
-          // Listen for completion from iframe
-          const onV2Done = (msg) => {
-            if (msg?.type === "JAOS_V2_FILL_DONE") {
-              chrome.runtime.onMessage.removeListener(onV2Done);
-              clearTimeout(v2Timeout);
-              console.log("[JAOS AI] Received fill result from iframe:", msg);
-              const onComplete = makeOnFillComplete(aiFillBtn, aiBtnBg, "Autofill (AI)");
-              onComplete(msg.filled > 0);
-            }
-          };
-          chrome.runtime.onMessage.addListener(onV2Done);
-
-          // Timeout: if no response in 35s, give up
-          const v2Timeout = setTimeout(() => {
+        // Listen for completion from iframe
+        const onV2Done = (msg) => {
+          if (msg?.type === "JAOS_V2_FILL_DONE") {
             chrome.runtime.onMessage.removeListener(onV2Done);
-            console.warn("[JAOS AI] V2 fill timed out (35s), no response from any frame");
+            clearTimeout(v2Timeout);
+            console.log("[JAOS AI] Received fill result from iframe:", msg);
             const onComplete = makeOnFillComplete(aiFillBtn, aiBtnBg, "Autofill (AI)");
-            onComplete(false);
-          }, 35000);
+            onComplete(msg.filled > 0);
+          }
+        };
+        chrome.runtime.onMessage.addListener(onV2Done);
 
-          safeSendMessage({
-            type: "JAOS_V2_FILL",
-            jobTitle, company: jobCompany, jobId,
-          });
+        // Timeout: if no response in 35s, give up
+        const v2Timeout = setTimeout(() => {
+          chrome.runtime.onMessage.removeListener(onV2Done);
+          console.warn("[JAOS AI] V2 fill timed out (35s), no response from any frame");
+          const onComplete = makeOnFillComplete(aiFillBtn, aiBtnBg, "Autofill (AI)");
+          onComplete(false);
+        }, 35000);
+
+        safeSendMessage({
+          type: "JAOS_V2_FILL",
+          jobTitle, company: jobCompany, jobId,
         });
       });
     });
@@ -2544,15 +2599,19 @@
       }
 
       const profile = message.profile || {};
-      const result = runDomAutofill(profile, { forceV1: !!message.forceV1 });
 
-      // Upload cover letter as .txt file if a cover-letter file input exists
-      if (profile.cover_letter) {
-        uploadCoverLetterFile(profile.cover_letter);
-      }
+      // runDomAutofill is async (awaits fillCustom), so call sendResponse when done
+      (async () => {
+        const result = await runDomAutofill(profile, { forceV1: !!message.forceV1 });
 
-      sendResponse?.({ ok: true, ...result });
-      return true;
+        // Upload cover letter as .txt file if a cover-letter file input exists
+        if (profile.cover_letter) {
+          uploadCoverLetterFile(profile.cover_letter);
+        }
+
+        sendResponse?.({ ok: true, ...result });
+      })();
+      return true; // Keep message channel open for async sendResponse
     }
 
     // ── V2 AI fill (broadcast to all frames by background) ──

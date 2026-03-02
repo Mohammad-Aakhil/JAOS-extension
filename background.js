@@ -1,6 +1,3 @@
-// Load the centralized LLM client module
-importScripts("engine/llm-client.js");
-
 const JAOS_API_BASE_URL = "http://localhost:8000";
 
 const TOGGLE_MESSAGE = { type: "JAOS_TOGGLE_PANEL" };
@@ -230,10 +227,10 @@ const sendAutofillToTab = async (tabId, jobData = {}) => {
   };
 
   try {
-    await sendMessageToTab(tabId, payload);
+    return await sendMessageToTab(tabId, payload);
   } catch (_error) {
     await injectContentScript(tabId);
-    await sendMessageToTab(tabId, payload);
+    return await sendMessageToTab(tabId, payload);
   }
 };
 
@@ -242,73 +239,39 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     return;
   }
 
-  // ── LLM field mapping proxy (content script → OpenRouter) ──
-  // Content scripts can't make external API calls on sites with strict CSP,
-  // so all LLM calls are routed through the background service worker.
+  // ── LLM field mapping (content script → JAOS backend) ──
+  // The backend fetches the user profile from DB and calls the LLM server-side,
+  // so no API key configuration is needed in the extension.
   if (message.type === "JAOS_LLM_MAP_FIELDS") {
     (async () => {
       try {
-        const llm = self.__jaosLLMClient;
-        if (!llm) {
-          sendResponse({ ok: false, error: "LLM client not loaded" });
+        const response = await fetch(`${JAOS_API_BASE_URL}/api/v1/ai/map-fields`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fields: Array.isArray(message.fields) ? message.fields : [],
+            widgets: Array.isArray(message.widgets) ? message.widgets : [],
+            job_context: message.jobContext || null,
+          }),
+        });
+
+        if (!response.ok) {
+          const errText = await response.text().catch(() => "");
+          sendResponse({
+            ok: false,
+            error: `Backend returned ${response.status}: ${errText.slice(0, 200)}`,
+          });
           return;
         }
 
-        const result = await llm.callLLM({
-          systemPrompt: typeof message.systemPrompt === "string" ? message.systemPrompt : "",
-          userPrompt: typeof message.userPrompt === "string" ? message.userPrompt : "",
-          maxTokens: typeof message.maxTokens === "number" ? message.maxTokens : 2048,
-          temperature: typeof message.temperature === "number" ? message.temperature : 0.1,
-        });
-
+        const result = await response.json();
         sendResponse(result);
       } catch (error) {
         sendResponse({
           ok: false,
-          error: error instanceof Error ? error.message : "LLM call failed",
+          error: error instanceof Error ? error.message : "Map fields request failed",
         });
-      }
-    })();
-
-    return true;
-  }
-
-  // ── LLM config management ──
-  if (message.type === "JAOS_SET_LLM_CONFIG") {
-    (async () => {
-      try {
-        const updates = {};
-        if (typeof message.apiKey === "string") updates.OPENROUTER_API_KEY = message.apiKey;
-        if (typeof message.model === "string") updates.OPENROUTER_MODEL = message.model;
-
-        if (Object.keys(updates).length > 0) {
-          await chrome.storage.local.set(updates);
-        }
-        sendResponse({ ok: true });
-      } catch (error) {
-        sendResponse({ ok: false, error: error instanceof Error ? error.message : "Config update failed" });
-      }
-    })();
-
-    return true;
-  }
-
-  if (message.type === "JAOS_GET_LLM_CONFIG") {
-    (async () => {
-      try {
-        const llm = self.__jaosLLMClient;
-        if (!llm) {
-          sendResponse({ ok: false, error: "LLM client not loaded" });
-          return;
-        }
-        const config = await llm.getConfig();
-        sendResponse({
-          ok: true,
-          hasApiKey: !!config.apiKey,
-          model: config.model,
-        });
-      } catch (error) {
-        sendResponse({ ok: false, error: error instanceof Error ? error.message : "Config read failed" });
       }
     })();
 
@@ -437,8 +400,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
           return;
         }
 
-        await sendAutofillToTab(tabId, message);
-        sendResponse({ ok: true });
+        const tabResponse = await sendAutofillToTab(tabId, message);
+        // Relay the content script's full response (includes filled count, warnings, etc.)
+        sendResponse({ ok: true, ...(tabResponse || {}) });
       } catch (error) {
         sendResponse({
           ok: false,

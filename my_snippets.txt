@@ -1,0 +1,195 @@
+script to scan the all the fields on workday's work experience page
+--------------------------------------------------------------------
+
+(() => {
+  const sections = document.querySelectorAll('[data-automation-id]');
+  const results = {};
+  
+  // Scan all data-automation-id elements
+  sections.forEach(el => {
+    const id = el.getAttribute('data-automation-id');
+    const tag = el.tagName.toLowerCase();
+    const type = el.type || '';
+    const role = el.getAttribute('role') || '';
+    const ariaLabel = el.getAttribute('aria-label') || '';
+    const placeholder = el.getAttribute('placeholder') || '';
+    const value = el.value || el.textContent?.trim().slice(0, 80) || '';
+    
+    if (!results[id]) results[id] = [];
+    results[id].push({
+      tag, type, role, ariaLabel, placeholder,
+      value: value.slice(0, 100),
+      classes: el.className?.toString().slice(0, 120) || '',
+      parent: el.parentElement?.getAttribute('data-automation-id') || '',
+      visible: el.offsetParent !== null
+    });
+  });
+
+  // Find buttons with aria-labels (custom dropdowns)
+  const buttons = document.querySelectorAll('button[aria-label]');
+  const btnList = [];
+  buttons.forEach(b => {
+    btnList.push({
+      ariaLabel: b.getAttribute('aria-label'),
+      automationId: b.getAttribute('data-automation-id') || '',
+      parentAutomationId: b.parentElement?.getAttribute('data-automation-id') || '',
+      text: b.textContent?.trim().slice(0, 60),
+      visible: b.offsetParent !== null
+    });
+  });
+
+  // Find all inputs (including those without data-automation-id)
+  const inputs = document.querySelectorAll('input, select, textarea');
+  const inputList = [];
+  inputs.forEach(inp => {
+    const closestSection = inp.closest('[data-automation-id]');
+    inputList.push({
+      tag: inp.tagName.toLowerCase(),
+      type: inp.type || '',
+      automationId: inp.getAttribute('data-automation-id') || '',
+      ariaLabel: inp.getAttribute('aria-label') || '',
+      placeholder: inp.getAttribute('placeholder') || '',
+      name: inp.name || '',
+      id: inp.id || '',
+      value: inp.value?.slice(0, 80) || '',
+      parentSection: closestSection?.getAttribute('data-automation-id') || '',
+      visible: inp.offsetParent !== null
+    });
+  });
+
+  // Find labels
+  const labels = document.querySelectorAll('label');
+  const labelList = [];
+  labels.forEach(lbl => {
+    const forAttr = lbl.getAttribute('for') || '';
+    const automationId = lbl.getAttribute('data-automation-id') || '';
+    labelList.push({
+      text: lbl.textContent?.trim().slice(0, 80),
+      for: forAttr,
+      automationId,
+      parentSection: lbl.closest('[data-automation-id]')?.getAttribute('data-automation-id') || ''
+    });
+  });
+
+  // Find listbox/combobox roles
+  const combos = document.querySelectorAll('[role="combobox"], [role="listbox"], [role="option"]');
+  const comboList = [];
+  combos.forEach(c => {
+    comboList.push({
+      tag: c.tagName.toLowerCase(),
+      role: c.getAttribute('role'),
+      automationId: c.getAttribute('data-automation-id') || '',
+      ariaLabel: c.getAttribute('aria-label') || '',
+      text: c.textContent?.trim().slice(0, 80),
+      visible: c.offsetParent !== null
+    });
+  });
+
+  console.log('=== JAOS WORKDAY DOM SCAN ===');
+  console.log('data-automation-id elements:', JSON.stringify(results, null, 2));
+  console.log('buttons with aria-label:', JSON.stringify(btnList, null, 2));
+  console.log('all inputs:', JSON.stringify(inputList, null, 2));
+  console.log('labels:', JSON.stringify(labelList, null, 2));
+  console.log('combobox/listbox elements:', JSON.stringify(comboList, null, 2));
+  console.log('=== SCAN COMPLETE ===');
+  
+  // Also copy a summary to clipboard
+  const summary = { 
+    automationIds: results, 
+    buttons: btnList, 
+    inputs: inputList, 
+    labels: labelList, 
+    combos: comboList 
+  };
+  
+  try {
+    copy(JSON.stringify(summary, null, 2));
+    console.log('Full scan copied to clipboard!');
+  } catch(e) {
+    console.log('Could not copy to clipboard. Use copy() manually or right-click > Copy Object on the logged objects above.');
+  }
+})();
+------------------------------------------------------------------------------------------------------------------------------------------
+script to expose workdays education section field types and selector ids
+
+// Find Education section and dump all field details
+const headings = document.querySelectorAll('h2, h3, h4, legend, b, strong, [data-automation-id*="label"], [data-automation-id*="Label"], [data-automation-id*="sectionHeader"]');
+let eduContainer = null;
+
+for (const el of headings) {
+  if (/\beducation\b/i.test(el.textContent || '')) {
+    let ancestor = el.parentElement;
+    for (let d = 0; d < 8 && ancestor; d++) {
+      if (ancestor.querySelectorAll('input, select, textarea, button[aria-label]').length > 3) {
+        eduContainer = ancestor;
+        break;
+      }
+      ancestor = ancestor.parentElement;
+    }
+    if (eduContainer) break;
+  }
+}
+
+if (!eduContainer) { console.log("❌ Education section not found"); } 
+else {
+  console.log("=== EDUCATION SECTION FIELDS ===");
+  
+  // All inputs
+  console.log("\n📝 INPUTS:");
+  eduContainer.querySelectorAll('input').forEach(inp => {
+    if (!inp.offsetWidth) return;
+    const wrapper = inp.closest('[data-automation-id]');
+    console.log({
+      type: inp.type,
+      value: inp.value || '(empty)',
+      automationId: wrapper?.getAttribute('data-automation-id'),
+      ariaLabel: inp.getAttribute('aria-label'),
+      role: inp.getAttribute('role'),
+      placeholder: inp.placeholder,
+      label: document.querySelector(`label[for="${inp.id}"]`)?.textContent?.trim(),
+      parentClasses: inp.parentElement?.className?.substring(0, 60),
+      nearbyText: inp.closest('div[data-automation-id], div > label')?.textContent?.trim()?.substring(0, 50)
+    });
+  });
+
+  // All selects
+  console.log("\n📋 SELECTS:");
+  eduContainer.querySelectorAll('select').forEach(sel => {
+    if (!sel.offsetWidth) return;
+    const wrapper = sel.closest('[data-automation-id]');
+    console.log({
+      automationId: wrapper?.getAttribute('data-automation-id'),
+      ariaLabel: sel.getAttribute('aria-label'),
+      value: sel.value,
+      options: [...sel.options].map(o => o.textContent.trim()).slice(0, 10),
+      label: document.querySelector(`label[for="${sel.id}"]`)?.textContent?.trim()
+    });
+  });
+
+  // All buttons (dropdowns, list icons)
+  console.log("\n🔘 BUTTONS:");
+  eduContainer.querySelectorAll('button').forEach(btn => {
+    if (!btn.offsetWidth) return;
+    console.log({
+      text: btn.textContent.trim().substring(0, 40),
+      automationId: btn.getAttribute('data-automation-id'),
+      ariaLabel: btn.getAttribute('aria-label')?.substring(0, 80),
+      role: btn.getAttribute('role'),
+      parentAutomationId: btn.closest('[data-automation-id]')?.getAttribute('data-automation-id')
+    });
+  });
+
+  // All textareas
+  console.log("\n📄 TEXTAREAS:");
+  eduContainer.querySelectorAll('textarea').forEach(ta => {
+    if (!ta.offsetWidth) return;
+    console.log({
+      value: ta.value?.substring(0, 40) || '(empty)',
+      automationId: ta.closest('[data-automation-id]')?.getAttribute('data-automation-id'),
+      label: document.querySelector(`label[for="${ta.id}"]`)?.textContent?.trim()
+    });
+  });
+}
+
+
+---------------------------------------------------------------------------------------------
