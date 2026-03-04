@@ -2,8 +2,8 @@
   name: "greenhouse",
 
   detect: () => {
-    // Direct Greenhouse hostnames — always detect
-    if (/boards\.greenhouse\.io|job-boards\.greenhouse\.io|my\.greenhouse\.io/i.test(
+    // Direct Greenhouse hostnames (including regional subdomains like .eu., .uk., etc.)
+    if (/(?:boards|job-boards|my)(?:\.\w+)?\.greenhouse\.io/i.test(
       window.location.hostname
     )) return true;
 
@@ -189,8 +189,8 @@
         matched = fillGenderSelect(sel, profile.gender);
       } else if (/\b(race|ethnic)\b/.test(labelText) && profile.race_ethnicity) {
         matched = fillSelectByText(sel, profile.race_ethnicity);
-      } else if (/\b(hispanic|latino)\b/.test(labelText) && profile.race_ethnicity) {
-        matched = fillSelectByText(sel, profile.race_ethnicity);
+      } else if (/\b(hispanic|latino)\b/.test(labelText) && (profile.hispanic_latino || profile.race_ethnicity)) {
+        matched = fillSelectByText(sel, profile.hispanic_latino || profile.race_ethnicity);
       } else if (/\b(veteran|military)\b/.test(labelText) && profile.veteran_status) {
         matched = fillSelectByText(sel, profile.veteran_status);
       } else if (/\b(disabilit)\b/.test(labelText) && profile.disability_status) {
@@ -201,8 +201,8 @@
         matched = fillSelectByText(sel, profile.work_authorization);
       } else if (/\b(relocat)\b/.test(labelText) && profile.willing_to_relocate) {
         matched = fillSelectByText(sel, profile.willing_to_relocate);
-      } else if (/\b(pronoun)\b/.test(labelText) && profile.gender) {
-        matched = fillSelectByText(sel, genderToPronouns(profile.gender));
+      } else if (/\b(pronoun)\b/.test(labelText) && (profile.pronouns || profile.gender)) {
+        matched = fillSelectByText(sel, profile.pronouns || genderToPronouns(profile.gender));
       } else if (/\b(country)\b/.test(labelText)) {
         matched = fillSelectByText(sel, countryFull);
       } else if (/\b(state|province)\b/.test(labelText) && profile.state) {
@@ -253,6 +253,12 @@
       else if (/\b(summary|about|bio|objective)\b/.test(labelText) && !/\b(company|job)\b/.test(labelText))
         value = profile.summary;
 
+      // Fallback: open-ended textarea questions (describe, explain, tell us) → use profile summary
+      if (!value && field.tagName === "TEXTAREA" && profile.summary &&
+          /\b(describe|explain|tell\s*us|elaborate|share|what\s+(?:problem|project|system))\b/.test(labelText)) {
+        value = profile.summary;
+      }
+
       if (value) {
         if (setControlValue(field, String(value))) filled++;
       }
@@ -289,7 +295,7 @@
       else if (/\b(state|province)\b/.test(labelText)) value = profile.state;
       else if (/\b(gender|sex)\b/.test(labelText)) value = profile.gender;
       else if (/\b(hispanic|latino)\b/.test(labelText))
-        value = profile.race_ethnicity;
+        value = profile.hispanic_latino || profile.race_ethnicity;
       else if (/\b(race|ethnic)\b/.test(labelText))
         value = profile.race_ethnicity;
       else if (/\b(veteran|military)\b/.test(labelText))
@@ -297,7 +303,7 @@
       else if (/\b(disabilit)\b/.test(labelText))
         value = profile.disability_status;
       else if (/\b(pronoun)\b/.test(labelText))
-        value = genderToPronouns(profile.gender);
+        value = profile.pronouns || genderToPronouns(profile.gender);
       else if (/\b(sponsor)\b/.test(labelText))
         value = profile.requires_sponsorship;
       else if (/\b(work.?auth)\b/.test(labelText))
@@ -328,7 +334,54 @@
           : profile.exp_end_year;
       }
 
-      if (!value) continue;
+      // ── C2. Heuristic yes/no for custom questions ──
+      // Only activate when no profile mapping matched and dropdown has yes/no options
+      if (!value) {
+        const ctrl = container.querySelector('[class*="__control"]');
+        if (ctrl) {
+          ctrl.click();
+          await new Promise((r) => setTimeout(r, 400));
+          const probeMenu = container.querySelector('[class*="__menu"]');
+          if (probeMenu) {
+            const opts = Array.from(probeMenu.querySelectorAll('[class*="__option"]'));
+            const hasYes = opts.find((o) => /^yes$/i.test(o.textContent.trim()));
+            const hasNo = opts.find((o) => /^no$/i.test(o.textContent.trim()));
+            const hasAgree = opts.find((o) => /\b(i agree|agree|consent|accept)\b/i.test(o.textContent.trim()));
+
+            if (hasYes || hasNo || hasAgree) {
+              let pick = null;
+              // Consent / agreement / NDPA / GDPR → agree or yes
+              if (/\b(consent|ndpa|gdpr|agree|data.?process|privacy)\b/.test(labelText)) {
+                pick = hasAgree || hasYes;
+              }
+              // Previously employed by X → No
+              else if (/\bpreviously.?(employ|work)|employed.?by\b/.test(labelText)) {
+                pick = hasNo;
+              }
+              // Experience / skills questions → Yes
+              else if (/\b(do you have|have you|are you|can you)\b/.test(labelText) &&
+                       /\b(experience|hands.?on|built|deploy|design|work|proficien|familiar|knowledge)\b/.test(labelText)) {
+                pick = hasYes;
+              }
+              // Willing / able / available → Yes
+              else if (/\b(willing|able|available|comfortable|open)\b/.test(labelText)) {
+                pick = hasYes;
+              }
+
+              if (pick) {
+                pick.click();
+                filled++;
+                await new Promise((r) => setTimeout(r, 150));
+                continue;
+              }
+            }
+            // Close menu if we didn't pick anything
+            document.body.click();
+            await new Promise((r) => setTimeout(r, 100));
+          }
+        }
+        continue;
+      }
 
       const control = container.querySelector('[class*="__control"]');
       if (!control) continue;

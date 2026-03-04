@@ -67,13 +67,23 @@
     const QUESTION_MAP = [
       [/\b(?:gender|sex)\b/i, "gender"],
       [/\b(?:race|ethnic)\b/i, "race_ethnicity"],
-      [/\b(?:hispanic|latino)\b/i, "race_ethnicity"],
+      [/\b(?:hispanic|latino)\b/i, "hispanic_latino"],
+      [/\b(?:pronoun)\b/i, "pronouns"],
       [/\b(?:veteran|military)\b/i, "veteran_status"],
       [/\bdisabilit/i, "disability_status"],
       [/\bsponsor/i, "requires_sponsorship"],
-      [/\bwork.?auth/i, "work_authorization"],
+      [/\bwork.?auth|authorized.?to.?work/i, "work_authorization"],
       [/\brelocat/i, "willing_to_relocate"],
       [/\b(?:over.?18|legal.?age)\b/i, "is_over_18"],
+      [/\bnon.?compete|non.?solicitation/i, "__no"],
+      [/\buse.+workday\b|work.+on.+workday/i, "__no"],
+      [/\bgovernment.?employee|employee.+(?:united\s*states|u\.?s\.?).+government/i, "__no"],
+      [/\bexport.?control|(?:iran|cuba|north\s*korea|sanctions)/i, "__no"],
+      [/\brelated.+(?:workday|current).+employee/i, "__no"],
+      [/\brelated.+(?:customer|government\s*official)/i, "__no"],
+      [/\bconvicted|felony|criminal/i, "__no"],
+      [/\bpreviously.?applied|applied.?before/i, "__no"],
+      [/\bcontracting.+responsibilit|contracting.+government/i, "__no"],
     ];
 
     // ─── Label Extraction ────────────────────────────────────
@@ -96,17 +106,28 @@
       for (const [re, key] of map) {
         if (!re.test(sig)) continue;
         if (key === "__mobile") return "Mobile";
-        return profile[key] || null;
+        if (key === "__no") return "No";
+        if (key === "__yes") return "Yes";
+        return profile?.[key] || null;
       }
       return null;
     };
 
     // ─── Workday Fill Helpers ────────────────────────────────
 
+    /** Simulate a real user click with full event sequence for React. */
+    const realClick = (el) => {
+      el.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+      el.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
+      el.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, cancelable: true }));
+      el.dispatchEvent(new MouseEvent("mouseup", { bubbles: true, cancelable: true }));
+      el.click();
+    };
+
     /** Click a button to open a dropdown, find matching option, click it. */
     const fillButtonDropdown = async (btn, value) => {
       if (!value) return false;
-      btn.click();
+      realClick(btn);
       await wait(500);
 
       const options = Array.from(
@@ -123,7 +144,15 @@
         options.find((o) => toLower(o.textContent?.trim()).includes(t)) ||
         options.find((o) => t.includes(toLower(o.textContent?.trim())));
 
-      if (match) { match.click(); await wait(200); return true; }
+      if (match) {
+        realClick(match);
+        await wait(300);
+        // Blur the button to trigger Workday validation
+        btn.dispatchEvent(new FocusEvent("blur", { bubbles: true }));
+        btn.dispatchEvent(new Event("change", { bubbles: true }));
+        await wait(100);
+        return true;
+      }
       document.body.click();
       await wait(100);
       return false;
@@ -263,7 +292,16 @@
       }
     };
 
-    /** Generic multi-entry handler: clear → add → fill per entry. */
+    /** Check if a section heading matching the pattern is visible on the current page. */
+    const isSectionVisible = (headingPattern) => {
+      for (const el of document.querySelectorAll(HEADING_SEL)) {
+        if (!headingPattern.test(el.textContent || "")) continue;
+        if (el.offsetParent !== null || getComputedStyle(el).display !== "none") return true;
+      }
+      return false;
+    };
+
+    /** Generic multi-entry handler: add → fill per entry. */
     const handleMultiEntry = async (headingPattern, entries, fillEntry) => {
       if (!entries.length) return;
       for (let i = 0; i < entries.length; i++) {
@@ -364,31 +402,11 @@
       languages: profile.language_entries?.length ?? "N/A",
     });
 
-    // ── Step 0: Clear form ───────────────────────────────────
-    document.querySelectorAll(
-      'input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]), textarea'
-    ).forEach((el) => {
-      if (el.closest("#jaos-dev-panel") || el.disabled || el.readOnly || !el.value) return;
-      F.setValue(el, "");
-    });
-    document.querySelectorAll("select").forEach((sel) => {
-      if (sel.closest("#jaos-dev-panel") || sel.disabled || sel.selectedIndex <= 0) return;
-      sel.selectedIndex = 0;
-      sel.dispatchEvent(new Event("change", { bubbles: true }));
-    });
-    await Promise.all([
-      clearSectionEntries(/work\s*experience/i),
-      clearSectionEntries(/\beducation\b/i),
-      clearSectionEntries(/\blanguage/i),
-      clearSectionEntries(/\bwebsite/i),
-    ]);
-    await wait(500);
-
     // ── Step 1: Discover & fill flat fields (personal info) ──
     // Scan all inputs/textareas, resolve via PERSONAL_MAP
     const personalFieldMap = PERSONAL_MAP.map(([re, key]) => [
       re,
-      key === "__mobile" ? "Mobile" : profile[key] || "",
+      key === "__mobile" ? "Mobile" : profile?.[key] || "",
     ]).filter(([, val]) => val);
     filled += fillTextFields(document, personalFieldMap);
 
@@ -402,14 +420,14 @@
 
     // Button-based dropdowns (country, state, phone type, etc.)
     const DROPDOWN_MAP = [
-      ["addressSection_countryRegion", profile.country],
-      ["addressSection_countryRegionSubdivision", profile.state],
-      ["countryRegion", profile.country],
-      ["state", profile.state],
-      ["degree", profile.degree],
-      ["fieldOfStudy", profile.field_of_study],
+      ["addressSection_countryRegion", profile?.country],
+      ["addressSection_countryRegionSubdivision", profile?.state],
+      ["countryRegion", profile?.country],
+      ["state", profile?.state],
+      ["degree", profile?.degree],
+      ["fieldOfStudy", profile?.field_of_study],
       ["phoneDeviceType", "Mobile"],
-      ["countryPhoneCode", profile.country],
+      ["countryPhoneCode", profile?.country],
     ];
     for (const [aid, val] of DROPDOWN_MAP) {
       if (!val) continue;
@@ -422,9 +440,10 @@
     }
 
     // ── Step 2: Work Experience ──────────────────────────────
-    const workEntries = (profile.experience_entries || []).filter(
+    const workEntries = (profile?.experience_entries || []).filter(
       (e) => e && (e.title || e.role || e.company)
     );
+    if (isSectionVisible(/work\s*experience/i))
     await handleMultiEntry(/work\s*experience/i, workEntries, async (scope, entry, idx) => {
       let count = 0;
       const isCurrent = Boolean(entry.is_current) || /present|current/i.test(entry.end_date || "");
@@ -463,10 +482,11 @@
     });
 
     // ── Step 3: Education ────────────────────────────────────
-    const rawEdu = (profile.education_entries || []).filter(
+    const rawEdu = (profile?.education_entries || []).filter(
       (e) => e && (e.institution || e.school || e.degree)
     );
     const eduEntries = dedupeEducation(rawEdu);
+    if (isSectionVisible(/\beducation\b/i))
     await handleMultiEntry(/\beducation\b/i, eduEntries, async (scope, entry) => {
       let count = 0;
 
@@ -511,7 +531,7 @@
     });
 
     // ── Step 4: Languages ────────────────────────────────────
-    const langEntries = (profile.language_entries || []).filter((e) => e && e.language);
+    const langEntries = (profile?.language_entries || []).filter((e) => e && e.language);
     const profToLevel = (p) => {
       const s = toLower(p || "");
       if (/native|fluent|advanced/.test(s)) return "Advanced";
@@ -519,6 +539,7 @@
       if (/basic|beginner|elementary/.test(s)) return "Beginner";
       return p || "";
     };
+    if (isSectionVisible(/\blanguage/i))
     await handleMultiEntry(/\blanguage/i, langEntries, async (scope, entry) => {
       let count = 0;
       if (entry.language && await fillScopedSelect(scope, /\blanguage\b/i, entry.language)) { count++; await wait(300); }
@@ -541,7 +562,8 @@
     });
 
     // ── Step 5: Websites ─────────────────────────────────────
-    const websiteUrls = [profile.linkedin, profile.github, profile.portfolio].filter(Boolean);
+    const websiteUrls = [profile?.linkedin, profile?.github, profile?.portfolio].filter(Boolean);
+    if (isSectionVisible(/\bwebsite/i))
     await handleMultiEntry(
       /\bwebsite/i,
       websiteUrls.map((url) => ({ url })),
@@ -571,11 +593,64 @@
       }
     }
 
+    // ── Step 6b: Question sections (button-dropdown) ─────────
+    // Workday renders many questions as button[aria-haspopup="listbox"]
+    // instead of radio groups. Scan all unclaimed button-dropdowns.
+    for (const wrapper of document.querySelectorAll('[data-automation-id*="formField"]')) {
+      if (wrapper.closest("#jaos-dev-panel")) continue;
+      const btn = wrapper.querySelector('button[aria-haspopup="listbox"]');
+      if (!btn || claimed.has(btn)) continue;
+      // Skip if already has a value selected (not "Select One")
+      const btnText = toLower(btn.textContent?.trim() || "");
+      if (btnText && !/select\s*one|select|choose|--/i.test(btnText)) continue;
+
+      const label = getLabel(wrapper);
+      if (!label) continue;
+      const val = resolveValue(label, QUESTION_MAP);
+      if (!val) continue;
+
+      if (await fillButtonDropdown(btn, val)) { claimed.add(btn); filled++; await wait(300); }
+    }
+
+    // ── Step 6c: Acknowledgment dropdowns ─────────────────────
+    // Some Workday forms have "Please enter 'yes' if you acknowledge" with a
+    // button-dropdown instead of a text input. Match by surrounding paragraph text.
+    for (const wrapper of document.querySelectorAll('[data-automation-id*="formField"]')) {
+      if (wrapper.closest("#jaos-dev-panel")) continue;
+      const btn = wrapper.querySelector('button[aria-haspopup="listbox"]');
+      if (!btn || claimed.has(btn)) continue;
+      const fullText = toLower(wrapper.textContent || "");
+      if (
+        /acknowledge|certif|agree|consent/i.test(fullText) &&
+        /enter.+yes|type.+yes|please.+yes|if you acknowledge/i.test(fullText)
+      ) {
+        if (await fillButtonDropdown(btn, "Yes")) { claimed.add(btn); filled++; await wait(300); }
+      }
+    }
+
     // ── Step 7: Agreement checkboxes ─────────────────────────
     for (const cb of document.querySelectorAll('[data-automation-id] input[type="checkbox"]')) {
       if (cb.disabled || cb.checked || cb.closest("#jaos-dev-panel") || claimed.has(cb)) continue;
       const lbl = getLabel(cb.closest("[data-automation-id]") || cb.parentElement);
       if (/agree|acknowledge|certif|consent/i.test(lbl)) { cb.click(); await wait(100); filled++; }
+    }
+
+    // ── Step 7b: Text-based acknowledgments ──────────────────
+    // Some Workday forms have "Please enter 'yes' if you acknowledge" text inputs.
+    for (const el of document.querySelectorAll(
+      'input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="file"]), textarea'
+    )) {
+      if (claimed.has(el) || el.value || el.disabled || el.readOnly) continue;
+      if (el.closest("#jaos-dev-panel")) continue;
+      const sig = getFieldSig(el);
+      const wrapper = el.closest("[data-automation-id]") || el.parentElement;
+      const fullText = toLower(wrapper?.textContent || "");
+      if (
+        (/acknowledge|certif|agree|consent/i.test(sig) || /acknowledge|certif|agree|consent/i.test(fullText)) &&
+        /enter.+yes|type.+yes|please.+yes/i.test(fullText)
+      ) {
+        if (F.setValue(el, "yes")) { claimed.add(el); filled++; await wait(100); }
+      }
     }
 
     // ── Step 8: Collect unmatched empty fields for V2 ────────

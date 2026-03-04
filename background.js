@@ -43,6 +43,10 @@ const injectContentScript = (tabId) =>
       "engine/orchestrator.js",
       // V2 adapters
       "adapters/greenhouse-v2.js",
+      "adapters/workday-v2.js",
+      "adapters/bamboohr-v2.js",
+      "adapters/smartrecruiters-v2.js",
+      "adapters/ashby-v2.js",
       // Main content script (must be last)
       "content.js",
     ],
@@ -145,6 +149,8 @@ const fetchAutofillProfile = async () => {
     city: up.city || "",
     state: up.state || "",
     country: up.country || "United States",
+    street_address: up.street_address || "",
+    zip_code: up.zip_code || "",
 
     years_experience:
       up.years_experience != null ? String(up.years_experience) : "",
@@ -187,6 +193,8 @@ const fetchAutofillProfile = async () => {
     race_ethnicity: ap.race_ethnicity || "",
     veteran_status: ap.veteran_status || "",
     disability_status: ap.disability_status || "",
+    hispanic_latino: ap.hispanic_latino || "",
+    pronouns: ap.pronouns || "",
     willing_to_relocate: boolToYesNo(ap.willing_to_relocate),
     desired_salary: ap.desired_salary || up.salary_expectation || "",
     salary_currency: ap.salary_currency || "USD",

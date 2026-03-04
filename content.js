@@ -436,7 +436,7 @@
 
     // Hispanic/Latino — must be before generic race/ethnicity
     if (/\b(hispanic|latino|latina|latinx)\b/.test(keywordText))
-      return { type: "select_match", value: profile.race_ethnicity };
+      return { type: "select_match", value: profile.hispanic_latino || profile.race_ethnicity };
 
     if (
       /\b(race|ethnic|race.?ethnicity)\b/.test(keywordText) &&
@@ -466,7 +466,7 @@
 
     // Pronouns — must be before generic gender
     if (/\b(pronoun)\b/.test(keywordText))
-      return { type: "select_match", value: genderToPronouns(profile.gender) };
+      return { type: "select_match", value: profile.pronouns || genderToPronouns(profile.gender) };
 
     if (/\b(gender|sex)\b/.test(keywordText))
       return { type: "gender", value: profile.gender };
@@ -606,6 +606,7 @@
       ats: result.adapter,
       v2: true,
       errors: result.errors,
+      fieldLabels: result.fieldLabels || [],
     };
   };
 
@@ -922,10 +923,11 @@
           if (/\*\s*$/.test(h.textContent || "")) return true;
         }
 
-        // Check the direct text of this wrapper
-        // (only first 200 chars to avoid scanning huge sections)
+        // Check the direct text of this wrapper (only compact containers)
+        // Exclude page-level "* indicates a required field" boilerplate
         const directText = (el.textContent || "").substring(0, 200);
-        if (/\*/.test(directText) && el.children.length < 20) return true;
+        if (/\*/.test(directText) && el.children.length < 10 &&
+            !/indicat|denot|required\s+field/i.test(directText)) return true;
       }
       return false;
     };
@@ -959,6 +961,14 @@
       // Skip invisible fields (hidden by CSS, collapsed sections, off-screen, etc.)
       if (!field.offsetParent && getComputedStyle(field).position !== "fixed") return;
       if (field.offsetWidth === 0 && field.offsetHeight === 0) return;
+
+      // Skip react-select internal inputs (they duplicate the visible dropdown)
+      if (field.id && /^react-select/i.test(field.id)) return;
+      if (field.closest('[class*="__value-container"], [class*="__input"]') &&
+          field.closest('[class*="-container"]:has([class*="__control"])')) return;
+
+      // Skip intl-tel-input hidden country/dial code fields
+      if (field.type === "tel" && field.closest(".iti") && field.name && /country|dial/i.test(field.name)) return;
 
       const attrRequired =
         field.hasAttribute("required") ||
@@ -1920,10 +1930,15 @@
     const progressCard = card();
     progressCard.id = "jaos-field-progress";
 
-    const renderFieldProgress = (state, fillWarnings = []) => {
+    const renderFieldProgress = (state, fillWarnings = [], v2FieldLabels = null) => {
       // state: "idle" | "filling" | "done"
       // fillWarnings: Array<{ field, message, type }> from adapter fillCustom
-      const { total, filled, fields } = scanRequiredFields();
+      // v2FieldLabels: Array<{ label, isFilled, isRequired? }> from V2 engine
+      const domScan = scanRequiredFields();
+      const useV2 = v2FieldLabels && v2FieldLabels.length > 0;
+      const fields = useV2 ? v2FieldLabels : domScan.fields;
+      const total = useV2 ? v2FieldLabels.length : domScan.total;
+      const filled = useV2 ? v2FieldLabels.filter((f) => f.isFilled).length : domScan.filled;
       progressCard.innerHTML = "";
 
       if (total === 0 && state === "idle") {
@@ -1931,22 +1946,21 @@
         return;
       }
       progressCard.style.display = "flex";
+      Object.assign(progressCard.style, { maxHeight: "320px", overflowY: "auto" });
 
-      const filledFields = fields.filter((f) => f.isFilled);
-      // Fields with warnings (adapter couldn't fill them automatically).
-      // Use fuzzy matching: a warning covers a field if either contains the other.
-      const warningFieldNames = fillWarnings.map((w) => w.field.toLowerCase());
-      const isExplainedByWarning = (fieldLabel) => {
-        const fl = fieldLabel.toLowerCase();
-        return warningFieldNames.some((wf) => fl.includes(wf) || wf.includes(fl));
-      };
-      // Truly missed: empty AND not already explained by a warning
-      const missed = fields.filter((f) => !f.isFilled && !isExplainedByWarning(f.label));
-      const issueCount = missed.length + fillWarnings.length;
+      // Split into required vs optional
+      const requiredFields = useV2 ? fields.filter((f) => f.isRequired) : fields;
+      const optionalFields = useV2 ? fields.filter((f) => !f.isRequired) : [];
+      const reqFilled = requiredFields.filter((f) => f.isFilled).length;
+      const reqTotal = requiredFields.length;
+      const optFilled = optionalFields.filter((f) => f.isFilled).length;
+      const optTotal = optionalFields.length;
+
       const pct = total > 0 ? Math.round((filled / total) * 100) : 0;
       const allDone = filled === total && total > 0 && fillWarnings.length === 0;
+      const missedCount = total - filled + fillWarnings.length;
 
-      // Header row
+      // ── Header: total fields count + status badge ──
       const headerRow = document.createElement("div");
       Object.assign(headerRow.style, { display: "flex", justifyContent: "space-between", alignItems: "center" });
 
@@ -1954,7 +1968,7 @@
       if (state === "filling") {
         headerLabel.textContent = "Filling fields...";
       } else if (allDone) {
-        headerLabel.textContent = "All fields filled";
+        headerLabel.textContent = `All ${total} fields filled`;
       } else {
         headerLabel.textContent = `${filled} of ${total} fields filled`;
       }
@@ -1968,15 +1982,15 @@
         statusBadge.textContent = "Working...";
       } else if (allDone) {
         statusBadge.textContent = "Complete";
-      } else if (fillWarnings.length > 0 && missed.length === 0) {
+      } else if (fillWarnings.length > 0 && missedCount === fillWarnings.length) {
         statusBadge.textContent = `${fillWarnings.length} need attention`;
       } else {
-        statusBadge.textContent = `${issueCount} missing`;
+        statusBadge.textContent = missedCount > 0 ? `${missedCount} missing` : "Done";
       }
       Object.assign(statusBadge.style, {
         fontSize: "10px", fontWeight: "600",
-        color: allDone ? "#059669" : state === "filling" ? "#2563eb" : fillWarnings.length > 0 ? "#d97706" : "#dc2626",
-        background: allDone ? "#ecfdf5" : state === "filling" ? "#dbeafe" : fillWarnings.length > 0 ? "#fffbeb" : "#fef2f2",
+        color: allDone ? "#059669" : state === "filling" ? "#2563eb" : missedCount > 0 ? "#dc2626" : "#059669",
+        background: allDone ? "#ecfdf5" : state === "filling" ? "#dbeafe" : missedCount > 0 ? "#fef2f2" : "#ecfdf5",
         borderRadius: "999px", padding: "2px 7px",
       });
 
@@ -1984,7 +1998,7 @@
       headerRow.appendChild(statusBadge);
       progressCard.appendChild(headerRow);
 
-      // Progress bar
+      // ── Overall progress bar ──
       const track = document.createElement("div");
       Object.assign(track.style, {
         width: "100%", height: "6px", borderRadius: "999px",
@@ -2003,35 +2017,96 @@
       track.appendChild(bar);
       progressCard.appendChild(track);
 
-      if (state === "filling") return; // Don't show details while filling
+      if (state === "filling") return;
 
-      // ── Section 1: Filled fields (green checkmarks) ──
-      if (filledFields.length > 0 && total <= 14) {
-        const doneList = document.createElement("div");
-        Object.assign(doneList.style, { display: "flex", flexDirection: "column", gap: "3px", marginTop: "2px" });
-        filledFields.forEach((f) => {
-          const row = document.createElement("div");
-          Object.assign(row.style, {
-            display: "flex", alignItems: "center", gap: "6px",
-            fontSize: "11px", color: "#059669",
-          });
-          const check = document.createElement("span");
-          check.textContent = "\u2713";
-          Object.assign(check.style, { fontSize: "10px", flexShrink: "0" });
-          const lbl = document.createElement("span");
-          lbl.textContent = f.label;
-          Object.assign(lbl.style, { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" });
-          row.appendChild(check);
-          row.appendChild(lbl);
-          doneList.appendChild(row);
+      // ── Helper: field list item (checkmark or dot) ──
+      const makeFieldRow = (f, isMissed) => {
+        const row = document.createElement("div");
+        Object.assign(row.style, {
+          display: "flex", alignItems: "center", gap: "6px",
+          fontSize: "11px", lineHeight: "1.4",
+          color: isMissed ? "#dc2626" : "#059669",
         });
-        progressCard.appendChild(doneList);
+        const icon = document.createElement("span");
+        icon.textContent = isMissed ? "\u25CB" : "\u2713";
+        Object.assign(icon.style, { fontSize: isMissed ? "8px" : "10px", flexShrink: "0", width: "12px", textAlign: "center" });
+        const lbl = document.createElement("span");
+        lbl.textContent = f.label.replace(/\*/g, "").trim();
+        Object.assign(lbl.style, { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" });
+        row.appendChild(icon);
+        row.appendChild(lbl);
+        return row;
+      };
+
+      // ── Helper: section with header + mini bar + field list ──
+      const makeSection = (title, fieldList, filledCount, totalCount, accentColor) => {
+        const section = document.createElement("div");
+        Object.assign(section.style, { marginTop: "8px" });
+
+        // Section header row
+        const sectionHeader = document.createElement("div");
+        Object.assign(sectionHeader.style, { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" });
+
+        const sectionLabel = document.createElement("span");
+        sectionLabel.textContent = title;
+        Object.assign(sectionLabel.style, { fontSize: "11px", fontWeight: "700", color: "#374151", textTransform: "uppercase", letterSpacing: "0.5px" });
+
+        const sectionCount = document.createElement("span");
+        const sectionAllFilled = filledCount === totalCount;
+        sectionCount.textContent = `${filledCount} of ${totalCount}`;
+        Object.assign(sectionCount.style, {
+          fontSize: "11px", fontWeight: "600",
+          color: sectionAllFilled ? "#059669" : accentColor,
+        });
+
+        sectionHeader.appendChild(sectionLabel);
+        sectionHeader.appendChild(sectionCount);
+        section.appendChild(sectionHeader);
+
+        // Mini progress bar
+        const miniTrack = document.createElement("div");
+        Object.assign(miniTrack.style, {
+          width: "100%", height: "3px", borderRadius: "999px",
+          background: "#f3f4f6", overflow: "hidden", marginBottom: "4px",
+        });
+        const miniBar = document.createElement("div");
+        const miniPct = totalCount > 0 ? Math.round((filledCount / totalCount) * 100) : 0;
+        Object.assign(miniBar.style, {
+          width: `${miniPct}%`, height: "100%", borderRadius: "999px",
+          background: sectionAllFilled ? "#059669" : accentColor,
+          transition: "width 0.4s ease",
+        });
+        miniTrack.appendChild(miniBar);
+        section.appendChild(miniTrack);
+
+        // Field list
+        const list = document.createElement("div");
+        Object.assign(list.style, { display: "flex", flexDirection: "column", gap: "2px", paddingLeft: "2px" });
+
+        // Show missed fields first, then filled
+        const missedInSection = fieldList.filter((f) => !f.isFilled);
+        const filledInSection = fieldList.filter((f) => f.isFilled);
+        missedInSection.forEach((f) => list.appendChild(makeFieldRow(f, true)));
+        filledInSection.forEach((f) => list.appendChild(makeFieldRow(f, false)));
+
+        section.appendChild(list);
+        return section;
+      };
+
+      // ── Required section ──
+      if (reqTotal > 0) {
+        progressCard.appendChild(makeSection("Required", requiredFields, reqFilled, reqTotal, "#2563eb"));
       }
 
-      // ── Section 2: Warnings — needs manual input (amber) ──
+      // ── Optional section ──
+      if (optTotal > 0) {
+        progressCard.appendChild(makeSection("Optional", optionalFields, optFilled, optTotal, "#8b5cf6"));
+      }
+
+      // ── Warnings — needs manual input (amber) ──
       if (fillWarnings.length > 0) {
         const warnSection = document.createElement("div");
-        Object.assign(warnSection.style, { marginTop: "4px" });
+        Object.assign(warnSection.style, { marginTop: "8px" });
 
         const warnHeader = document.createElement("div");
         Object.assign(warnHeader.style, {
@@ -2054,29 +2129,6 @@
           warnSection.appendChild(row);
         });
         progressCard.appendChild(warnSection);
-      }
-
-      // ── Section 3: Truly missing fields (red, not explained by warnings) ──
-      if (missed.length > 0 && missed.length <= 8) {
-        const list = document.createElement("div");
-        Object.assign(list.style, { display: "flex", flexDirection: "column", gap: "3px", marginTop: "4px" });
-        missed.forEach((f) => {
-          const row = document.createElement("div");
-          Object.assign(row.style, {
-            display: "flex", alignItems: "center", gap: "6px",
-            fontSize: "11px", color: "#dc2626",
-          });
-          const dot = document.createElement("span");
-          dot.textContent = "\u25CB"; // empty circle
-          Object.assign(dot.style, { fontSize: "8px", flexShrink: "0" });
-          const lbl = document.createElement("span");
-          lbl.textContent = f.label;
-          Object.assign(lbl.style, { overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" });
-          row.appendChild(dot);
-          row.appendChild(lbl);
-          list.appendChild(row);
-        });
-        progressCard.appendChild(list);
       }
     };
 
@@ -2122,13 +2174,13 @@
      * @returns {function(boolean, Array?): Promise<void>}
      */
     const makeOnFillComplete = (btn, defaultBg, defaultText) => {
-      return async (success, fillWarnings) => {
+      return async (success, fillWarnings, v2FieldLabels) => {
         const resumeUploaded = await (hasUploadedResume
           ? Promise.resolve(true)
           : uploadResumeToFileInputs(selectedResumeData));
         if (resumeUploaded) hasUploadedResume = true;
 
-        setTimeout(() => renderFieldProgress("done", fillWarnings || []), 400);
+        setTimeout(() => renderFieldProgress("done", fillWarnings || [], v2FieldLabels || null), 400);
 
         if (success) {
           btn.textContent = resumeUploaded ? "Done — Resume Attached" : "Done";
@@ -2214,7 +2266,7 @@
             if (result.errors.length > 0) console.warn("[JAOS AI] Errors:", result.errors);
             if (profile.cover_letter) uploadCoverLetterFile(profile.cover_letter);
             const onComplete = makeOnFillComplete(aiFillBtn, aiBtnBg, "Autofill (AI)");
-            await onComplete(result.filled > 0);
+            await onComplete(result.filled > 0, [], result.fieldLabels);
             return;
           } catch (err) {
             console.error("[JAOS AI] Direct v2 engine failed:", err);
