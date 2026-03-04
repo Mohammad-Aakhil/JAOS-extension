@@ -41,7 +41,8 @@
    * Check if an element is visible (not hidden, not zero-size).
    */
   const isVisible = (el) => {
-    if (!el || !el.offsetParent && el.tagName !== "BODY" && getComputedStyle(el).position !== "fixed") {
+    if (!el) return false;
+    if (!el.offsetParent && el.tagName !== "BODY" && getComputedStyle(el).position !== "fixed") {
       const style = getComputedStyle(el);
       if (style.display === "none" || style.visibility === "hidden") return false;
       if (el.offsetWidth === 0 && el.offsetHeight === 0) return false;
@@ -256,6 +257,24 @@
     return attrs;
   };
 
+  // ─── Select2 detection ─────────────────────────────────────────────
+
+  /**
+   * Check if a <select> element is controlled by Select2.
+   * Used by scanFields() to skip these (handled by scanSelect2Widgets).
+   */
+  const isSelect2Controlled = (el) => {
+    if (el.tagName !== "SELECT") return false;
+    // Select2 v3: adds .select2-offscreen class
+    if (el.classList.contains("select2-offscreen")) return true;
+    // Select2 v4: adds .select2-hidden-accessible class
+    if (el.classList.contains("select2-hidden-accessible")) return true;
+    // Generic: next sibling is the select2 container
+    const next = el.nextElementSibling;
+    if (next && next.classList?.contains("select2-container")) return true;
+    return false;
+  };
+
   // ─── Widget scanners ────────────────────────────────────────────────
 
   /**
@@ -309,6 +328,8 @@
       if (!isVisible(el)) continue;
       // Skip if this is inside a React-select container (already captured)
       if (el.closest('[class*="-container"]:has([class*="__control"])')) continue;
+      // Skip if this is inside a Select2 widget (handled by scanSelect2Widgets)
+      if (el.closest(".select2-container") || el.closest(".select2-drop")) continue;
 
       const input = el.tagName === "INPUT" ? el : el.querySelector("input");
       const label = getLabel(el) || getSectionContext(el);
@@ -353,6 +374,8 @@
       // Skip if there's a combobox pointing to this (already captured above)
       const ownerCombo = root.querySelector(`[aria-owns="${el.id}"], [aria-controls="${el.id}"]`);
       if (ownerCombo) continue;
+      // Skip Select2 result lists (handled by scanSelect2Widgets)
+      if (el.closest(".select2-container") || el.closest(".select2-drop") || el.classList.contains("select2-results")) continue;
 
       const label = getLabel(el) || getSectionContext(el);
       const selected = el.querySelector('[role="option"][aria-selected="true"]');
@@ -371,6 +394,91 @@
         hasValue: !!selected,
         options: options.length > 0 ? options : null,
         ...getDataAttributes(el),
+      });
+    }
+
+    return widgets;
+  };
+
+  /**
+   * Detect Select2 dropdown widgets.
+   * Select2 hides the real <select> and renders a styled .select2-container.
+   * Handles Select2 v3.x (.select2-choice) and v4.x (.select2-selection).
+   */
+  const scanSelect2Widgets = (rootEl) => {
+    const widgets = [];
+    const root = rootEl || document;
+    const containers = deepQuerySelectorAll(root, ".select2-container");
+
+    for (const container of containers) {
+      if (container.closest(`#${PANEL_ID}`) || container.closest(`#${LAUNCHER_WRAP_ID}`)) continue;
+      if (!isVisible(container)) continue;
+
+      // Find the associated hidden <select> element
+      let selectEl = null;
+
+      // Method 1: Container id = "s2id_<select_id>" (Select2 v3)
+      if (container.id && container.id.startsWith("s2id_")) {
+        const selectId = container.id.slice(5);
+        selectEl = document.getElementById(selectId);
+      }
+
+      // Method 2: Previous sibling is a <select>
+      if (!selectEl && container.previousElementSibling?.tagName === "SELECT") {
+        selectEl = container.previousElementSibling;
+      }
+
+      // Method 3: Parent contains a hidden <select> (not inside another select2)
+      if (!selectEl && container.parentElement) {
+        const candidate = container.parentElement.querySelector("select");
+        if (candidate && !candidate.closest(".select2-container")) {
+          selectEl = candidate;
+        }
+      }
+
+      // Extract label from the hidden <select> (has for/id/name/aria attributes)
+      const label = selectEl ? getLabel(selectEl) : getLabel(container);
+
+      // Extract current selected value text
+      // v3: .select2-chosen, v4: .select2-selection__rendered
+      const chosenEl = container.querySelector(".select2-chosen, .select2-selection__rendered");
+      const currentText = clean(chosenEl?.textContent || "");
+
+      // Select2 shows placeholder text when nothing is selected
+      const isPlaceholder = !currentText ||
+        /^(select\.{0,3}|choose\.{0,3}|please select|-- select --|—)$/i.test(currentText);
+      const hasValue = !isPlaceholder;
+
+      // Extract options from the hidden <select> (AJAX-loaded may be empty)
+      let options = null;
+      if (selectEl) {
+        const opts = Array.from(selectEl.options).filter((o) => o.value && !o.disabled);
+        if (opts.length > 0 && opts.length <= 100) {
+          options = opts.map((o) => ({
+            value: o.value,
+            text: clean(o.textContent),
+          }));
+        }
+      }
+
+      // Detect required from the hidden <select>
+      const isRequired = selectEl
+        ? (selectEl.required || selectEl.getAttribute("aria-required") === "true")
+        : false;
+
+      widgets.push({
+        uid: `select2-${widgets.length}-${Date.now()}`,
+        type: "select2",
+        element: container,
+        selectElement: selectEl,
+        label: label,
+        placeholder: !hasValue ? currentText : "",
+        currentValue: hasValue ? currentText : "",
+        section: getSectionContext(selectEl || container),
+        hasValue: hasValue,
+        required: isRequired,
+        options: options,
+        ...getDataAttributes(selectEl || container),
       });
     }
 
@@ -398,6 +506,9 @@
       if (el.disabled) continue;
       if (el.readOnly && el.tagName !== "SELECT") continue;
 
+      // Skip select2-controlled selects (handled by scanSelect2Widgets)
+      if (el.tagName === "SELECT" && isSelect2Controlled(el)) continue;
+
       // Skip hidden fields
       if (el.type === "hidden") continue;
       if (!isVisible(el)) continue;
@@ -405,6 +516,25 @@
       const label = getLabel(el);
       const section = getSectionContext(el);
       const dataAttrs = getDataAttributes(el);
+
+      // Detect required: attribute, aria, OR asterisk in label / nearby markers
+      let isRequired = el.required || el.getAttribute("aria-required") === "true";
+      if (!isRequired) {
+        // Check for asterisk in label text
+        if (/\*/.test(label)) {
+          isRequired = true;
+        } else {
+          // Walk up parents looking for asterisk markers (abbr/span/sup with *)
+          let parent = el;
+          for (let i = 0; i < 4 && !isRequired; i++) {
+            parent = parent.parentElement;
+            if (!parent || parent.tagName === "FORM" || parent.tagName === "BODY") break;
+            for (const m of parent.querySelectorAll("abbr, span, sup")) {
+              if ((m.textContent || "").trim() === "*") { isRequired = true; break; }
+            }
+          }
+        }
+      }
 
       const descriptor = {
         uid: `field-${fields.length}-${Date.now()}`,
@@ -418,7 +548,7 @@
         ariaLabel: el.getAttribute("aria-label") || "",
         autocomplete: el.getAttribute("autocomplete") || "",
         section: section,
-        required: el.required || el.getAttribute("aria-required") === "true",
+        required: isRequired,
         currentValue: el.type === "checkbox" ? String(el.checked) : (el.value || ""),
         hasValue: el.type === "checkbox" ? false : !!(el.value && el.value.trim()),
         options: getSelectOptions(el),
@@ -443,7 +573,8 @@
     const fields = scanFields(rootEl);
     const reactWidgets = scanReactSelects(rootEl);
     const ariaWidgets = scanAriaWidgets(rootEl);
-    return { fields, widgets: [...reactWidgets, ...ariaWidgets] };
+    const select2Widgets = scanSelect2Widgets(rootEl);
+    return { fields, widgets: [...reactWidgets, ...ariaWidgets, ...select2Widgets] };
   };
 
   // ─── LLM serialization ─────────────────────────────────────────────
@@ -499,10 +630,15 @@
         dataUiAutomationId: w.dataUiAutomationId || undefined,
       };
 
-      // Include options for ARIA widgets that have visible options
+      // Include options for widgets (ARIA, Select2) — normalize to text strings
       if (w.options) {
-        obj.options = w.options.slice(0, 50);
+        obj.options = w.options.slice(0, 50).map((o) =>
+          typeof o === "string" ? o : (o.text || o.value || String(o))
+        );
       }
+
+      // Include required for widgets that carry it (select2)
+      if (w.required) obj.required = true;
 
       return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined));
     };
@@ -517,6 +653,7 @@
     scanFields,
     scanReactSelects,
     scanAriaWidgets,
+    scanSelect2Widgets,
     scanPage,
     serializeForLLM,
     isVisible,

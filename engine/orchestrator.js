@@ -217,6 +217,7 @@
     const totalSteps = flow.length;
     const allResults = [];
     const allErrors = [];
+    const allFieldLabels = [];   // { label, isFilled } for UI progress
     let totalFilled = 0;
 
     // Shared context passed to all flow step functions
@@ -300,6 +301,12 @@
 
         if (fieldsToMap.fields.length === 0 && fieldsToMap.widgets.length === 0) {
           log("  All fields already filled, skipping LLM");
+          for (const f of scanResult.fields) {
+            allFieldLabels.push({ label: f.label || f.placeholder || f.name || "Field", isFilled: true, isRequired: !!f.required });
+          }
+          for (const w of scanResult.widgets) {
+            allFieldLabels.push({ label: w.label || w.placeholder || "Widget", isFilled: true, isRequired: !!w.required });
+          }
           allResults.push({ stepId: step.id, filled: 0, total: totalFields, errors: [] });
         } else {
           // 6. LLM mapping
@@ -320,6 +327,7 @@
             const lookup = mapper.buildElementLookup(scanResult);
             let stepFilled = 0;
             const stepErrors = [];
+            const filledUids = new Set();
 
             onProgress?.({ phase: "filling", stepId: step.id, total: totalFields, mappings: mapResult.mappings.length });
 
@@ -344,6 +352,7 @@
 
                 if (success) {
                   stepFilled++;
+                  filledUids.add(mapping.uid);
                   onProgress?.({ phase: "filling", stepId: step.id, filled: stepFilled, total: totalFields });
                 }
 
@@ -354,6 +363,14 @@
                 stepErrors.push(msg);
                 warn(`  ${msg}`);
               }
+            }
+            for (const f of scanResult.fields) {
+              const label = f.label || f.placeholder || f.name || f.id || "Field";
+              allFieldLabels.push({ label, isFilled: filledUids.has(f.uid) || !!(f.currentValue), isRequired: !!f.required });
+            }
+            for (const w of scanResult.widgets) {
+              const label = w.label || w.placeholder || "Widget";
+              allFieldLabels.push({ label, isFilled: filledUids.has(w.uid) || !!(w.currentValue), isRequired: !!w.required });
             }
 
             totalFilled += stepFilled;
@@ -397,6 +414,7 @@
       totalFilled,
       steps: allResults,
       errors: allErrors,
+      fieldLabels: allFieldLabels,
     };
   };
 

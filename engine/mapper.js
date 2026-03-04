@@ -47,6 +47,12 @@
    * @returns {Promise<{ok: boolean, mappings?: Array, error?: string}>}
    */
   const requestMappings = async (serializedFields, _profile, jobContext) => {
+    const fieldCount = (serializedFields.fields || []).length;
+    const widgetCount = (serializedFields.widgets || []).length;
+    console.log(`[JAOS Mapper] Requesting LLM mappings for ${fieldCount} fields + ${widgetCount} widgets...`);
+
+    const t0 = performance.now();
+
     const response = await sendToBackground({
       type: "JAOS_LLM_MAP_FIELDS",
       fields: serializedFields.fields || [],
@@ -54,17 +60,19 @@
       jobContext: jobContext || null,
     });
 
+    const elapsed = (performance.now() - t0).toFixed(0);
+
     if (!response.ok) {
-      console.error("[JAOS Mapper] Backend mapping failed:", response.error);
+      console.error(`[JAOS Mapper] Backend mapping failed (${elapsed}ms):`, response.error);
       return { ok: false, error: response.error || "Field mapping request failed" };
     }
 
     if (!response.mappings || !Array.isArray(response.mappings)) {
-      console.error("[JAOS Mapper] Invalid response — expected {mappings:[...]}, got:", JSON.stringify(response).slice(0, 300));
+      console.error(`[JAOS Mapper] Invalid response (${elapsed}ms) — expected {mappings:[...]}, got:`, JSON.stringify(response).slice(0, 300));
       return { ok: false, error: "Invalid response: missing mappings array" };
     }
 
-    console.log("[JAOS Mapper] Got", response.mappings.length, "mappings from backend");
+    console.log(`[JAOS Mapper] Got ${response.mappings.length} mappings in ${elapsed}ms (${fieldCount} fields, ${widgetCount} widgets)`);
     return { ok: true, mappings: response.mappings };
   };
 
