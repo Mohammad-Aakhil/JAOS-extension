@@ -20,7 +20,7 @@
 
   // ── Detection ──────────────────────────────────────────────────────
 
-  const GREENHOUSE_HOSTNAMES = /boards\.greenhouse\.io|job-boards\.greenhouse\.io|my\.greenhouse\.io/i;
+  const GREENHOUSE_HOSTNAMES = /(?:boards|job-boards|my)(?:\.\w+)?\.greenhouse\.io/i;
 
   const GREENHOUSE_FORM_SELECTORS = [
     "#grnhse_app",
@@ -133,6 +133,308 @@
     return widgets;
   };
 
+  /**
+   * Greenhouse location fields use typeahead/autocomplete.
+   * After the filler types a location value, a dropdown appears with suggestions.
+   * We need to click the first suggestion so the value "commits" to the form.
+   *
+   * Handles:
+   *  - Google Places Autocomplete (.pac-container / .pac-item)
+   *  - Greenhouse custom typeahead (ul with li, [role="listbox"] with [role="option"])
+   */
+  const handleLocationAutocomplete = async (formRoot) => {
+    // Find text inputs that look like location/city/address fields
+    const textInputs = formRoot.querySelectorAll('input[type="text"], input:not([type])');
+
+    for (const input of textInputs) {
+      if (!input.value) continue;
+
+      // Identify location fields by label, name, id, or autocomplete attribute
+      const label = (
+        input.getAttribute("aria-label") ||
+        input.getAttribute("name") ||
+        input.id ||
+        input.closest(".field, .form-field, [class*='field']")?.querySelector("label")?.textContent ||
+        ""
+      ).toLowerCase();
+
+      const isLocation = /(location|city|address|zip|postal)/i.test(label) ||
+        input.getAttribute("autocomplete")?.includes("address") ||
+        input.getAttribute("autocomplete")?.includes("locality");
+
+      if (!isLocation) continue;
+
+      // Re-focus the input to re-trigger autocomplete dropdown
+      input.focus();
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+
+      // Wait for autocomplete to render
+      await new Promise((r) => setTimeout(r, 600));
+
+      // Try Google Places Autocomplete
+      const pacContainer = document.querySelector(".pac-container");
+      if (pacContainer) {
+        const firstItem = pacContainer.querySelector(".pac-item");
+        if (firstItem) {
+          // Google Places uses mousedown, not click
+          firstItem.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+          await new Promise((r) => setTimeout(r, 200));
+          continue;
+        }
+      }
+
+      // Try Greenhouse custom autocomplete / generic listbox near the input
+      const container = input.closest(".field, .form-field, [class*='field']") || input.parentElement;
+      const dropdown =
+        container?.querySelector('[role="listbox"], ul.autocomplete-results, [class*="autocomplete"], [class*="suggestion"]') ||
+        document.querySelector('[role="listbox"]:not([aria-hidden="true"])');
+
+      if (dropdown && dropdown.children.length > 0) {
+        const firstOption = dropdown.querySelector('[role="option"], li, [class*="item"]') || dropdown.children[0];
+        if (firstOption) {
+          firstOption.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+          await new Promise((r) => setTimeout(r, 100));
+          firstOption.click();
+          await new Promise((r) => setTimeout(r, 200));
+          continue;
+        }
+      }
+
+      // Blur to close any orphaned dropdown
+      input.dispatchEvent(new FocusEvent("blur", { bubbles: true }));
+    }
+  };
+
+  // ── Greenhouse scan cleanup helpers ─────────────────────────────────
+
+  /**
+   * Deep visibility check — walks the parent chain checking computed styles.
+   * The generic scanner's isVisible() only checks the element itself, which can
+   * miss elements inside conditionally hidden parent containers (display:none,
+   * opacity:0, max-height:0 with overflow:hidden).
+   */
+  const isDeepVisible = (el, boundary) => {
+    let node = el;
+    while (node && node !== boundary && node !== document.body) {
+      try {
+        const style = getComputedStyle(node);
+        if (
+          style.display === "none" ||
+          style.visibility === "hidden" ||
+          parseFloat(style.opacity) === 0 ||
+          (style.maxHeight === "0px" && style.overflow === "hidden")
+        ) {
+          return false;
+        }
+      } catch (_e) {
+        return false;
+      }
+      node = node.parentElement;
+    }
+    return true;
+  };
+
+  /**
+   * Extract a label for a react-select widget using Greenhouse-specific DOM patterns.
+   * The generic scanner's getLabel() often fails because Greenhouse uses randomized
+   * CSS module class names that don't match generic patterns like [class*='field'].
+   */
+  const getGreenhouseReactSelectLabel = (container) => {
+    // Strategy 1: Walk up looking for a sibling <label> element
+    let parent = container.parentElement;
+    for (let depth = 0; depth < 5 && parent; depth++) {
+      for (const child of parent.children) {
+        if (child === container || child.contains(container)) continue;
+        const isLabelEl =
+          child.tagName === "LABEL" ||
+          child.tagName === "LEGEND" ||
+          (child.matches &&
+            child.matches(
+              '.label, [class*="label"]:not([class*="container"]):not([class*="control"])'
+            ));
+        if (!isLabelEl) continue;
+        const text = (child.textContent || "")
+          .trim()
+          .replace(/\s*\*\s*$/, "")
+          .replace(/\s+/g, " ");
+        if (
+          text &&
+          text.length > 1 &&
+          text.length < 100 &&
+          !text.toLowerCase().includes("if you selected")
+        ) {
+          return text;
+        }
+      }
+      parent = parent.parentElement;
+    }
+
+    // Strategy 2: ARIA attributes on the hidden input inside react-select
+    const ariaInput = container.querySelector("input[aria-label]");
+    if (ariaInput) {
+      const label = (ariaInput.getAttribute("aria-label") || "").trim();
+      if (label) return label;
+    }
+    const labelledInput = container.querySelector("input[aria-labelledby]");
+    if (labelledInput) {
+      const id = labelledInput.getAttribute("aria-labelledby");
+      if (id) {
+        const el = document.getElementById(id);
+        if (el) {
+          const text = (el.textContent || "").trim().replace(/\s*\*\s*$/, "");
+          if (text) return text;
+        }
+      }
+    }
+
+    // Strategy 3: Parse Greenhouse's name attribute
+    // e.g. "job_application[education_school_name_0]" → "School Name"
+    const namedInput = container.querySelector("input[name]");
+    if (namedInput) {
+      const name = namedInput.getAttribute("name") || "";
+      const match = name.match(/\[(?:education_|experience_)?(\w+?)(?:_\d+)?\]$/);
+      if (match) {
+        return match[1]
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+      }
+    }
+
+    // Strategy 4: Placeholder text (if not generic "Select...")
+    const placeholder = container.querySelector('[class*="__placeholder"]');
+    if (placeholder) {
+      const text = (placeholder.textContent || "").trim();
+      if (text && !/^select\.?\.?\.?$/i.test(text) && text.length > 1) {
+        return text;
+      }
+    }
+
+    return null;
+  };
+
+  /**
+   * Greenhouse-specific scan result cleanup.
+   * Filters noise, improves labels, removes hidden conditional fields.
+   * Called from augmentScan in both single-page and multi-step flows.
+   */
+  const cleanupScanResult = (scanResult, formRoot) => {
+    const beforeFields = scanResult.fields.length;
+    const beforeWidgets = scanResult.widgets.length;
+
+    // ── 1. Filter conditional "Other" text fields ──
+    // Greenhouse shows "If you selected 'Other' as your school/degree/discipline,
+    // please enter..." — only relevant when "Other" is actually selected.
+    scanResult.fields = scanResult.fields.filter((f) => {
+      const label = (f.label || "").toLowerCase();
+      if (label.includes("if you selected") && label.includes("other")) return false;
+      if (label.startsWith("if other,") || label.startsWith("if other ")) return false;
+      return true;
+    });
+
+    // ── 2. Deep visibility filter ──
+    // Catches elements inside containers hidden via CSS that isVisible() missed.
+    scanResult.fields = scanResult.fields.filter((f) =>
+      isDeepVisible(f.element, formRoot)
+    );
+    scanResult.widgets = scanResult.widgets.filter((w) =>
+      isDeepVisible(w.element, formRoot)
+    );
+
+    // ── 3. Improve react-select widget labels ──
+    // The generic scanner's getLabel() often fails on react-select containers
+    // because Greenhouse uses randomized CSS class names.
+    for (const w of scanResult.widgets) {
+      if (w.type !== "react-select") continue;
+      const label = (w.label || "").trim().toLowerCase();
+      if (!label || label === "field" || label === "widget" || label.length < 2) {
+        const improved = getGreenhouseReactSelectLabel(w.element);
+        if (improved) {
+          console.log(
+            `[JAOS Greenhouse] Improved label: "${w.label || "(empty)"}" → "${improved}"`
+          );
+          w.label = improved;
+        }
+      }
+    }
+
+    // ── 4. Clean up concatenated field labels ──
+    // The generic scanner joins multiple label sources with " | ", producing
+    // confusing labels like "Last Name | First Name". Fix by extracting the best part.
+    for (const f of scanResult.fields) {
+      if (!f.label || !f.label.includes(" | ")) continue;
+      const parts = f.label
+        .split(" | ")
+        .map((p) => p.trim())
+        .filter(Boolean);
+      if (parts.length < 2) continue;
+
+      const fieldName = (f.name || "").toLowerCase().replace(/[\[\]_]/g, " ");
+      const fieldId = (f.id || "").toLowerCase().replace(/[\[\]_]/g, " ");
+      const autocomplete = (f.autocomplete || "").toLowerCase();
+
+      // If a part matches the field's name/id/autocomplete, use that part
+      const matchingPart = parts.find((p) => {
+        const pl = p.toLowerCase().replace(/[^a-z ]/g, "");
+        return (
+          (fieldName && fieldName.includes(pl)) ||
+          (fieldId && fieldId.includes(pl)) ||
+          (autocomplete && autocomplete.includes(pl))
+        );
+      });
+
+      if (matchingPart) {
+        f.label = matchingPart;
+      } else {
+        // Take the shortest meaningful part (usually the most specific)
+        const shortest = parts
+          .filter((p) => p.length > 1 && p.length < 60)
+          .sort((a, b) => a.length - b.length)[0];
+        if (shortest) f.label = shortest;
+      }
+    }
+
+    // ── 5. Filter fields with no identifying info ──
+    // The LLM can't meaningfully fill a field with no label, name, or placeholder.
+    scanResult.fields = scanResult.fields.filter((f) => {
+      if (f.isFileInput) return true;
+      if (f.label || f.name || f.placeholder || f.ariaLabel || f.autocomplete) return true;
+      return false;
+    });
+
+    const removedFields = beforeFields - scanResult.fields.length;
+    const removedWidgets = beforeWidgets - scanResult.widgets.length;
+    if (removedFields > 0 || removedWidgets > 0) {
+      console.log(
+        `[JAOS Greenhouse] Cleaned scan: removed ${removedFields} fields + ${removedWidgets} widgets ` +
+        `(${scanResult.fields.length} fields + ${scanResult.widgets.length} widgets remain)`
+      );
+    }
+  };
+
+  /**
+   * Detect and add phone country code widgets to the scan result.
+   * Shared helper for both single-page and multi-step flows.
+   */
+  const addPhoneWidgets = (scanResult, formRoot) => {
+    const phoneWidgets = detectPhoneCountryCodeWidget(formRoot);
+    for (const pw of phoneWidgets) {
+      if (pw.type === "react-select-phone") continue;
+      if (pw.type === "iti-flag") {
+        scanResult.widgets.push({
+          uid: `phone-country-${scanResult.widgets.length}-${Date.now()}`,
+          type: "phone-country-iti",
+          element: pw.element,
+          label: "Phone Country Code",
+          placeholder: "",
+          currentValue: "",
+          section: "Contact Information",
+          hasValue: false,
+          _container: pw.container,
+        });
+      }
+    }
+  };
+
   // ── Flow Definition ────────────────────────────────────────────────
 
   /**
@@ -143,12 +445,17 @@
    * The flow handles both cases.
    */
   const getFlow = () => {
-    // Check if this is a multi-step greenhouse form
-    const isMultiStep = !!document.querySelector(
-      '.application-progress, [class*="step-indicator"], [class*="progress-bar"]'
-    );
+    // Only treat as multi-step if there's an actual "Next"/"Continue" button
+    // visible in the form. CSS class heuristics (progress-bar, step-indicator)
+    // produce false positives on single-page Greenhouse forms.
+    const formRoot = getFormRoot();
+    const buttons = Array.from(formRoot.querySelectorAll('button, input[type="submit"], a.btn'));
+    const hasNextButton = buttons.some((btn) => {
+      const text = (btn.textContent || btn.value || "").trim().toLowerCase();
+      return /^(next|continue|save\s*&?\s*continue|proceed)$/i.test(text);
+    });
 
-    if (isMultiStep) {
+    if (hasNextButton) {
       return [
         buildStepFlowEntry("personal-info", "Personal Information"),
         buildStepFlowEntry("resume-cover", "Resume & Cover Letter"),
@@ -185,48 +492,33 @@
         getFormRoot: () => getFormRoot(),
 
         augmentScan: async (ctx, scanResult) => {
-          // Detect phone country code widgets and add them to the scan
           const formRoot = getFormRoot();
-          const phoneWidgets = detectPhoneCountryCodeWidget(formRoot);
-
-          for (const pw of phoneWidgets) {
-            if (pw.type === "react-select-phone") {
-              // Already picked up by scanner's React-select detection
-              continue;
-            }
-            if (pw.type === "iti-flag") {
-              // Add as a custom widget for LLM to see
-              scanResult.widgets.push({
-                uid: `phone-country-${scanResult.widgets.length}-${Date.now()}`,
-                type: "phone-country-iti",
-                element: pw.element,
-                label: "Phone Country Code",
-                placeholder: "",
-                currentValue: "",
-                section: "Contact Information",
-                hasValue: false,
-                _container: pw.container,
-              });
-            }
-          }
+          cleanupScanResult(scanResult, formRoot);
+          addPhoneWidgets(scanResult, formRoot);
         },
 
         afterFill: async (ctx, fillResult) => {
-          // Greenhouse React forms need blur events on all filled inputs
-          // to trigger validation and state sync
           const formRoot = getFormRoot();
-          const inputs = formRoot.querySelectorAll("input, select, textarea");
 
+          // 1. Handle location autocomplete — click the first suggestion
+          //    Must run BEFORE React sync so the selected value sticks
+          await handleLocationAutocomplete(formRoot);
+
+          // 2. React sync on text inputs/textareas ONLY
+          //    Skip <select> — fillSelect already handles _valueTracker + events.
+          //    Re-syncing selects can cause React to re-render and undo the fill.
+          const inputs = formRoot.querySelectorAll("input, select, textarea");
           for (const input of inputs) {
+            if (input.tagName === "SELECT") continue;
             if (input.value || input.checked) {
               triggerReactSync(input);
             }
           }
 
-          // Handle phone country code widgets that couldn't be filled via standard flow
+          // 3. Handle phone country code widgets
           await fillPhoneCountryCode(ctx, formRoot);
 
-          // Wait for any validation messages to render
+          // 4. Wait for validation messages to render
           await ctx.utils.waitForDomStable(300, 2000);
         },
       },
@@ -246,14 +538,23 @@
 
     getFormRoot: () => getFormRoot(),
 
+    augmentScan: async (ctx, scanResult) => {
+      const formRoot = getFormRoot();
+      cleanupScanResult(scanResult, formRoot);
+      addPhoneWidgets(scanResult, formRoot);
+    },
+
     afterFill: async (ctx) => {
       const formRoot = getFormRoot();
+      await handleLocationAutocomplete(formRoot);
       const inputs = formRoot.querySelectorAll("input, select, textarea");
       for (const input of inputs) {
+        if (input.tagName === "SELECT") continue;
         if (input.value || input.checked) {
           triggerReactSync(input);
         }
       }
+      await fillPhoneCountryCode(ctx, formRoot);
       await ctx.utils.waitForDomStable(300, 2000);
     },
 
@@ -349,6 +650,8 @@
   };
 
   // ── Register adapter ───────────────────────────────────────────────
+
+  if (registry.some((a) => a.name === "greenhouse")) return;
 
   registry.push({
     name: "greenhouse",
