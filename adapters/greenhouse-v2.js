@@ -112,12 +112,11 @@
         continue;
       }
 
-      // Variant B: intl-tel-input flag dropdown
-      const itiFlag = container.querySelector(
-        ".iti__selected-flag, [class*='flag-container'], [class*='country-selector']"
-      );
-      if (itiFlag) {
-        widgets.push({ type: "iti-flag", element: itiFlag, container });
+      // Variant B: intl-tel-input (detect by .iti container + button trigger)
+      const itiContainer = container.querySelector(".iti");
+      if (itiContainer) {
+        const btn = itiContainer.querySelector("button.iti__selected-country");
+        widgets.push({ type: "iti-flag", element: btn || itiContainer, container });
         continue;
       }
 
@@ -321,15 +320,17 @@
     const beforeFields = scanResult.fields.length;
     const beforeWidgets = scanResult.widgets.length;
 
-    // ── 1. Filter conditional "Other" text fields ──
+    // ── 1. Filter conditional "Other" text fields and widgets ──
     // Greenhouse shows "If you selected 'Other' as your school/degree/discipline,
     // please enter..." — only relevant when "Other" is actually selected.
-    scanResult.fields = scanResult.fields.filter((f) => {
-      const label = (f.label || "").toLowerCase();
-      if (label.includes("if you selected") && label.includes("other")) return false;
-      if (label.startsWith("if other,") || label.startsWith("if other ")) return false;
-      return true;
-    });
+    const isConditionalOther = (label) => {
+      const l = (label || "").toLowerCase();
+      if (l.includes("if you selected") && l.includes("other")) return true;
+      if (l.startsWith("if other,") || l.startsWith("if other ")) return true;
+      return false;
+    };
+    scanResult.fields = scanResult.fields.filter((f) => !isConditionalOther(f.label));
+    scanResult.widgets = scanResult.widgets.filter((w) => !isConditionalOther(w.label));
 
     // ── 2. Deep visibility filter ──
     // Catches elements inside containers hidden via CSS that isVisible() missed.
@@ -341,17 +342,16 @@
     );
 
     // ── 3. Improve react-select widget labels ──
-    // The generic scanner's getLabel() often fails on react-select containers
-    // because Greenhouse uses randomized CSS class names.
+    // Always re-extract using Greenhouse-specific sibling-walk strategy because the
+    // generic scanner's getLabel() often grabs a shared parent container heading,
+    // giving all widgets the same wrong label (e.g. all get "Are you located in the USA?").
     for (const w of scanResult.widgets) {
       if (w.type !== "react-select") continue;
-      const label = (w.label || "").trim().toLowerCase();
-      if (!label || label === "field" || label === "widget" || label.length < 2) {
-        const improved = getGreenhouseReactSelectLabel(w.element);
-        if (improved) {
-          console.log(
-            `[JAOS Greenhouse] Improved label: "${w.label || "(empty)"}" → "${improved}"`
-          );
+      const improved = getGreenhouseReactSelectLabel(w.element);
+      if (improved) {
+        const current = (w.label || "").trim();
+        if (!current || current.length < 2 || improved !== current.replace(/\s*\*\s*$/, "")) {
+          console.log(`[JAOS Greenhouse] Improved widget label: "${current || "(empty)"}" → "${improved}"`);
           w.label = improved;
         }
       }
@@ -359,37 +359,40 @@
 
     // ── 4. Clean up concatenated field labels ──
     // The generic scanner joins multiple label sources with " | ", producing
-    // confusing labels like "Last Name | First Name". Fix by extracting the best part.
-    for (const f of scanResult.fields) {
+    // noise like "Street Address | Click here for our General Privacy Not...".
+    // Filter noise parts first, then pick the best match.
+    const LABEL_NOISE = /click here|privacy|notice|cookie|terms of|©|http|www\.|\.com|\.org/i;
+    for (const f of [...scanResult.fields, ...scanResult.widgets]) {
       if (!f.label || !f.label.includes(" | ")) continue;
-      const parts = f.label
-        .split(" | ")
-        .map((p) => p.trim())
-        .filter(Boolean);
+      let parts = f.label.split(" | ").map((p) => p.trim()).filter(Boolean);
       if (parts.length < 2) continue;
+
+      // Strip noise: privacy/legal text, URLs, overly long descriptions
+      const meaningful = parts.filter((p) => !LABEL_NOISE.test(p) && p.length < 80);
+      if (meaningful.length > 0) parts = meaningful;
 
       const fieldName = (f.name || "").toLowerCase().replace(/[\[\]_]/g, " ");
       const fieldId = (f.id || "").toLowerCase().replace(/[\[\]_]/g, " ");
       const autocomplete = (f.autocomplete || "").toLowerCase();
+      const placeholder = (f.placeholder || "").toLowerCase();
 
-      // If a part matches the field's name/id/autocomplete, use that part
       const matchingPart = parts.find((p) => {
         const pl = p.toLowerCase().replace(/[^a-z ]/g, "");
         return (
           (fieldName && fieldName.includes(pl)) ||
           (fieldId && fieldId.includes(pl)) ||
-          (autocomplete && autocomplete.includes(pl))
+          (autocomplete && autocomplete.includes(pl)) ||
+          (placeholder && placeholder.includes(pl))
         );
       });
 
       if (matchingPart) {
         f.label = matchingPart;
       } else {
-        // Take the shortest meaningful part (usually the most specific)
-        const shortest = parts
-          .filter((p) => p.length > 1 && p.length < 60)
-          .sort((a, b) => a.length - b.length)[0];
-        if (shortest) f.label = shortest;
+        // Scanner adds label sources in priority order (label[for] → wrapping label →
+        // aria → container heading). First part is the most specific/correct.
+        const first = parts.find((p) => p.length > 1 && p.length < 200);
+        if (first) f.label = first;
       }
     }
 
@@ -400,6 +403,172 @@
       if (f.label || f.name || f.placeholder || f.ariaLabel || f.autocomplete) return true;
       return false;
     });
+
+    // ── 6. Remove checkbox groups (3+ under same container) ──
+    // "Select all that apply" questions (locations, demographics) inflate
+    // field count and are user-preference choices — leave for user.
+    // Single consent checkboxes (1-2 per container) are kept.
+    const checkboxes = scanResult.fields.filter((f) => f.type === "checkbox");
+    if (checkboxes.length >= 3) {
+      const containerMap = new Map();
+      for (const cb of checkboxes) {
+        const container =
+          cb.element.closest(".field, .form-field, fieldset, [class*='field'], [class*='question'], [data-field]") ||
+          cb.element.parentElement?.parentElement;
+        const key = container || cb.element.parentElement;
+        if (!containerMap.has(key)) containerMap.set(key, []);
+        containerMap.get(key).push(cb);
+      }
+
+      const uidsToRemove = new Set();
+      for (const [, group] of containerMap) {
+        if (group.length >= 3) {
+          for (const cb of group) uidsToRemove.add(cb.uid);
+        }
+      }
+
+      if (uidsToRemove.size > 0) {
+        scanResult.fields = scanResult.fields.filter((f) => !uidsToRemove.has(f.uid));
+        console.log(
+          `[JAOS Greenhouse] Removed ${uidsToRemove.size} checkboxes from "select all that apply" groups`
+        );
+      }
+    }
+
+    // ── 7. Remove text fields owned by react-select widgets ──
+    // scanFields() picks up react-select's hidden <input role="combobox"> as text fields.
+    // These are already represented as widgets by scanReactSelects(). Sending both
+    // to the LLM causes it to map to the text field UID → filler does setValue()
+    // which React-Select ignores. Remove duplicates so LLM maps to widget UIDs.
+    if (scanResult.widgets.length > 0) {
+      const reactSelectInputs = new Set();
+      for (const w of scanResult.widgets) {
+        if (w.type !== "react-select") continue;
+        const inputs = w.element.querySelectorAll(
+          'input[role="combobox"], input[id^="react-select"], [class*="__input"] input'
+        );
+        for (const inp of inputs) reactSelectInputs.add(inp);
+      }
+      if (reactSelectInputs.size > 0) {
+        const before = scanResult.fields.length;
+        scanResult.fields = scanResult.fields.filter((f) => !reactSelectInputs.has(f.element));
+        const removed = before - scanResult.fields.length;
+        if (removed > 0) {
+          console.log(`[JAOS Greenhouse] Removed ${removed} react-select combobox inputs from fields`);
+        }
+      }
+    }
+
+    // ── 8. Remove non-fillable input fields ──
+    // File inputs: resume/cover letter handled separately via DataTransfer API.
+    // iti__search-input: internal search box inside intl-tel-input country picker.
+    {
+      const before = scanResult.fields.length;
+      scanResult.fields = scanResult.fields.filter((f) => {
+        if (f.isFileInput) return false;
+        if (f.element.classList?.contains("iti__search-input")) return false;
+        return true;
+      });
+      const removed = before - scanResult.fields.length;
+      if (removed > 0) {
+        console.log(`[JAOS Greenhouse] Removed ${removed} non-fillable inputs (file/iti-search)`);
+      }
+    }
+
+    // ── 9. Improve empty/generic field labels ──
+    // For fields where the scanner couldn't find a label, derive one from attributes.
+    for (const f of scanResult.fields) {
+      const label = (f.label || "").trim();
+      if (label && label !== "Field" && label.length >= 2) continue;
+
+      // Try: name bracket segment → "job_application[..][city]" → "City"
+      if (f.name) {
+        const match = f.name.match(/\[(\w+)\]$/);
+        if (match) {
+          f.label = match[1].replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+          continue;
+        }
+      }
+      if (f.autocomplete) {
+        f.label = f.autocomplete.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+        continue;
+      }
+      if (f.placeholder) {
+        f.label = f.placeholder;
+        continue;
+      }
+    }
+
+    // ── 10. Deduplicate field labels ──
+    // When multiple fields/widgets share the same label (scanner grabbed a shared parent
+    // heading), re-extract the correct label by walking the DOM from each element.
+    const labelCounts = new Map();
+    const allItems = [...scanResult.fields, ...scanResult.widgets];
+    for (const f of allItems) {
+      const key = (f.label || "").toLowerCase().replace(/\s*\*\s*$/, "").trim();
+      if (!key) continue;
+      if (!labelCounts.has(key)) labelCounts.set(key, []);
+      labelCounts.get(key).push(f);
+    }
+    for (const [dupLabel, group] of labelCounts) {
+      if (group.length < 2) continue;
+      for (const f of group) {
+        const el = f.element;
+        let found = null;
+
+        // Strategy A: For react-select widgets, use Greenhouse-specific extractor
+        if (f.type === "react-select") {
+          const improved = getGreenhouseReactSelectLabel(el);
+          if (improved && improved.toLowerCase() !== dupLabel) {
+            found = improved;
+          }
+        }
+
+        // Strategy B: label[for=id] — most reliable for text inputs on Greenhouse
+        if (!found && el.id) {
+          try {
+            const lbl = formRoot.querySelector(`label[for="${el.id}"]`);
+            if (lbl) {
+              found = (lbl.textContent || "").trim().replace(/\s*\*\s*$/, "").replace(/\s+/g, " ");
+            }
+          } catch (_) {}
+        }
+
+        // Strategy C: Walk up to find the nearest sibling label/question text
+        if (!found) {
+          let parent = el.parentElement;
+          for (let d = 0; d < 4 && parent && !found; d++) {
+            for (const sib of parent.children) {
+              if (sib === el || sib.contains(el)) continue;
+              if (sib.querySelector("input, select, textarea")) continue;
+              const tag = sib.tagName;
+              if (["LABEL", "LEGEND", "P", "H3", "H4", "H5"].includes(tag) ||
+                  sib.matches?.("[class*='label'], [class*='question'], [class*='prompt']")) {
+                const text = (sib.textContent || "").trim().replace(/\s*\*\s*$/, "").replace(/\s+/g, " ");
+                if (text && text.length > 1 && text.length < 300 &&
+                    text.toLowerCase() !== dupLabel) {
+                  found = text;
+                  break;
+                }
+              }
+            }
+            parent = parent.parentElement;
+          }
+        }
+
+        // Strategy D: Field attribute fallback
+        if (!found) {
+          const nameSeg = f.name?.match(/\[(\w+)\]$/)?.[1];
+          found = nameSeg?.replace(/_/g, " ")?.replace(/\b\w/g, (c) => c.toUpperCase())
+            || f.autocomplete?.replace(/-/g, " ")?.replace(/\b\w/g, (c) => c.toUpperCase())
+            || f.placeholder || null;
+        }
+
+        if (found && found.length > 1 && found.toLowerCase() !== dupLabel) {
+          f.label = found;
+        }
+      }
+    }
 
     const removedFields = beforeFields - scanResult.fields.length;
     const removedWidgets = beforeWidgets - scanResult.widgets.length;
@@ -432,6 +601,47 @@
           _container: pw.container,
         });
       }
+    }
+  };
+
+  /**
+   * Read react-select options from the React fiber tree.
+   * Returns array of option label strings, or null if fiber not found.
+   */
+  const extractReactSelectOptions = (container) => {
+    const input = container.querySelector(
+      'input[role="combobox"], input[id^="react-select"], [class*="__input"] input'
+    );
+    if (!input) return null;
+    const fiberKey = Object.keys(input).find((k) => k.startsWith("__reactFiber$"));
+    if (!fiberKey) return null;
+    let fiber = input[fiberKey];
+    for (let i = 0; i < 30 && fiber; i++) {
+      const props = fiber.memoizedProps || {};
+      if (props.options && Array.isArray(props.options)) {
+        return props.options.map((o) => String(o.label || o.value || "")).filter(Boolean);
+      }
+      fiber = fiber.return;
+    }
+    return null;
+  };
+
+  /**
+   * Attach options to react-select widgets so the LLM knows available choices.
+   * Without options, the LLM skips widgets entirely (doesn't know what to pick).
+   */
+  const attachWidgetOptions = (scanResult) => {
+    let attached = 0;
+    for (const w of scanResult.widgets) {
+      if (w.type !== "react-select") continue;
+      const opts = extractReactSelectOptions(w.element);
+      if (opts && opts.length > 0) {
+        w.options = opts;
+        attached++;
+      }
+    }
+    if (attached > 0) {
+      console.log(`[JAOS Greenhouse] Attached options to ${attached} react-select widgets`);
     }
   };
 
@@ -495,6 +705,7 @@
           const formRoot = getFormRoot();
           cleanupScanResult(scanResult, formRoot);
           addPhoneWidgets(scanResult, formRoot);
+          attachWidgetOptions(scanResult);
         },
 
         afterFill: async (ctx, fillResult) => {
@@ -542,6 +753,7 @@
       const formRoot = getFormRoot();
       cleanupScanResult(scanResult, formRoot);
       addPhoneWidgets(scanResult, formRoot);
+      attachWidgetOptions(scanResult);
     },
 
     afterFill: async (ctx) => {
@@ -616,28 +828,23 @@
             filler.fillSelect(sel, match.value);
           }
         } else if (pw.type === "iti-flag") {
-          pw.element.click();
-          // Wait for dropdown to appear
-          try {
-            const dropdown = await ctx.utils.waitForElement(
-              '.iti__country-list, [class*="country-list"]',
-              document.body,
-              2000
-            );
-            if (dropdown) {
-              const usItem = dropdown.querySelector(
-                isUS
-                  ? '.iti__country[data-country-code="us"], [data-dial-code="1"][data-country-code="us"]'
-                  : `[data-country-code]`
-              );
-              if (usItem) {
-                usItem.click();
-              } else {
-                document.body.click(); // close dropdown
-              }
+          // Verified: click button → type dial code in search → Enter
+          const btn = pw.container.querySelector("button.iti__selected-country");
+          if (btn) {
+            btn.click();
+            await new Promise(r => setTimeout(r, 300));
+            const search = document.querySelector("input.iti__search-input");
+            if (search) {
+              search.focus();
+              search.value = isUS ? "+1" : country;
+              search.dispatchEvent(new Event("input", { bubbles: true }));
+              await new Promise(r => setTimeout(r, 300));
+              search.dispatchEvent(new KeyboardEvent("keydown", {
+                bubbles: true, key: "Enter", keyCode: 13,
+              }));
+            } else {
+              document.body.click();
             }
-          } catch (_e) {
-            document.body.click();
           }
         } else if (pw.type === "react-select-phone") {
           const targetText = isUS ? "United States" : country;

@@ -70,12 +70,6 @@
     ['input[name*="compensation"]', "desired_salary"],
   ],
 
-  /**
-   * Custom async fill for Greenhouse controls that aren't simple inputs:
-   *  1. react-select dropdowns (rendered as div trees, not native <select>)
-   *  2. native <select> fields for demographics / preferences
-   *  3. text/textarea custom question fields matched by label keywords
-   */
   fillCustom: async (profile, helpers) => {
     const {
       toLower,
@@ -88,7 +82,20 @@
     } = helpers;
     let filled = 0;
 
-    // Normalize country: "US" / "USA" → "United States" for dropdown matching
+    // ── Disable Greenhouse's own "Autofill with MyGreenhouse" button ──
+    // Prevents it from overwriting JAOS-filled data with Greenhouse profile values
+    const ghAutofillBtn = document.querySelector(
+      '.application--header--autofill-with-greenhouse button, ' +
+      'button.btn--pill[aria-disabled]'
+    );
+    if (ghAutofillBtn && /autofill.*(greenhouse|my\s*greenhouse)/i.test(ghAutofillBtn.textContent)) {
+      ghAutofillBtn.setAttribute("aria-disabled", "true");
+      ghAutofillBtn.disabled = true;
+      ghAutofillBtn.style.pointerEvents = "none";
+      ghAutofillBtn.style.opacity = "0.4";
+      console.log("[JAOS Greenhouse] Disabled 'Autofill with MyGreenhouse' button to prevent profile override");
+    }
+
     const normalizeCountry = (c) => {
       if (!c) return "United States";
       if (/^(us|usa)$/i.test(c.trim())) return "United States";
@@ -96,78 +103,120 @@
     };
     const countryFull = normalizeCountry(profile.country);
 
-    // ── 0. Phone country code dropdown ──
-    // Greenhouse renders phone with a separate country code <select> next to the tel input
+    // ── React-Select helpers (via MAIN world fiber bridge) ──
+    // Content scripts run in ISOLATED world and can't access __reactFiber$.
+    // The fiber-bridge.js (MAIN world) handles fiber reads/fills via custom DOM events.
+
+    let bridgeMarkerCounter = 0;
+    const nextMarker = () => `gh-${Date.now()}-${++bridgeMarkerCounter}`;
+
+    /** Read options from a react-select via the MAIN world fiber bridge */
+    const bridgeReadOptions = (container) => {
+      return new Promise((resolve) => {
+        const marker = nextMarker();
+        container.setAttribute("data-jaos-rs", marker);
+        const timeout = setTimeout(() => { cleanup(); resolve(null); }, 2000);
+        const cleanup = () => {
+          clearTimeout(timeout);
+          document.removeEventListener("jaos:rs-options-result", handler);
+          container.removeAttribute("data-jaos-rs");
+        };
+        const handler = (e) => {
+          if (e.detail?.marker !== marker) return;
+          cleanup();
+          resolve(e.detail.success ? e.detail.options : null);
+        };
+        document.addEventListener("jaos:rs-options-result", handler);
+        document.dispatchEvent(new CustomEvent("jaos:rs-options", { detail: { marker } }));
+      });
+    };
+
+    /** Fill a react-select via the MAIN world fiber bridge */
+    const bridgeFill = (container, value) => {
+      return new Promise((resolve) => {
+        const marker = nextMarker();
+        container.setAttribute("data-jaos-rs", marker);
+        const timeout = setTimeout(() => { cleanup(); resolve(false); }, 2000);
+        const cleanup = () => {
+          clearTimeout(timeout);
+          document.removeEventListener("jaos:rs-fill-result", handler);
+          container.removeAttribute("data-jaos-rs");
+        };
+        const handler = (e) => {
+          if (e.detail?.marker !== marker) return;
+          cleanup();
+          resolve(e.detail.success);
+        };
+        document.addEventListener("jaos:rs-fill-result", handler);
+        document.dispatchEvent(new CustomEvent("jaos:rs-fill", { detail: { marker, value } }));
+      });
+    };
+
+    /** Fill react-select: bridge fiber fill (MAIN world) → instant, reliable */
+    const fillReactSelect = async (container, value) => {
+      if (!value) return false;
+      return bridgeFill(container, value);
+    };
+
+    // ── 0. Phone country code ──
     const phoneInputs = document.querySelectorAll(
       '#phone, input[name="phone"], input[name="job_application[phone]"], input[type="tel"]'
     );
     for (const phoneInput of phoneInputs) {
       if (phoneInput.closest("#jaos-dev-panel")) continue;
+      if (phoneInput.classList.contains("iti__search-input")) continue;
       const phoneContainer =
         phoneInput.closest(".field, .form-field, [class*='phone']") ||
         phoneInput.parentElement?.parentElement;
       if (!phoneContainer) continue;
 
-      // a) Native <select> for country code (common in Greenhouse embedded forms)
+      // (a) Native <select>
       const countryCodeSelect = phoneContainer.querySelector("select");
       if (countryCodeSelect && !countryCodeSelect.disabled) {
         const usOption = Array.from(countryCodeSelect.options).find(
           (o) =>
-            /united states/i.test(o.textContent) ||
-            /^us$/i.test(o.value) ||
-            /\+1\b/.test(o.textContent) ||
-            o.value === "US" ||
-            o.value === "us"
+            /united states/i.test(o.textContent) || /^us$/i.test(o.value) ||
+            /\+1\b/.test(o.textContent) || o.value === "US" || o.value === "us"
         );
         if (usOption && countryCodeSelect.value !== usOption.value) {
           setControlValue(countryCodeSelect, usOption.value);
           filled++;
         }
+        continue;
       }
 
-      // b) intl-tel-input library pattern (flag dropdown, not a <select>)
-      const itiFlag = phoneContainer.querySelector(
-        ".iti__selected-flag, [class*='flag-container'], [class*='country-selector']"
-      );
-      if (itiFlag) {
-        itiFlag.click();
-        await new Promise((r) => setTimeout(r, 300));
-        const usList = document.querySelector(
-          '.iti__country[data-country-code="us"], [data-dial-code="1"][data-country-code="us"]'
-        );
-        if (usList) {
-          usList.click();
-          filled++;
-        } else {
-          document.body.click(); // close dropdown
+      // (b) intl-tel-input: click button → type dial code in search → Enter
+      const itiContainer = phoneContainer.querySelector(".iti");
+      if (itiContainer) {
+        const btn = itiContainer.querySelector("button.iti__selected-country");
+        if (btn) {
+          btn.click();
+          await new Promise(r => setTimeout(r, 300));
+          const search = document.querySelector("input.iti__search-input");
+          if (search) {
+            search.focus();
+            search.value = "+1";
+            search.dispatchEvent(new Event("input", { bubbles: true }));
+            await new Promise(r => setTimeout(r, 300));
+            search.dispatchEvent(new KeyboardEvent("keydown", {
+              bubbles: true, key: "Enter", keyCode: 13,
+            }));
+            filled++;
+          } else {
+            document.body.click();
+          }
+          await new Promise(r => setTimeout(r, 200));
         }
-        await new Promise((r) => setTimeout(r, 200));
+        continue;
       }
 
-      // c) React-select style phone country code
+      // (c) React-Select country code: fiber onChange
       const reactCountryCode = phoneContainer.querySelector(
         '[class*="-container"]:has([class*="__control"])'
       );
       if (reactCountryCode) {
-        const ctrl = reactCountryCode.querySelector('[class*="__control"]');
-        if (ctrl) {
-          ctrl.click();
-          await new Promise((r) => setTimeout(r, 300));
-          const menu = reactCountryCode.querySelector('[class*="__menu"]');
-          if (menu) {
-            const opts = Array.from(menu.querySelectorAll('[class*="__option"]'));
-            const usOpt =
-              opts.find((o) => /united states.*\+1|us.*\+1|\+1.*us/i.test(o.textContent)) ||
-              opts.find((o) => /united states/i.test(o.textContent));
-            if (usOpt) {
-              usOpt.click();
-              filled++;
-            } else {
-              document.body.click();
-            }
-          }
-          await new Promise((r) => setTimeout(r, 150));
-        }
+        if (fillViaFiber(reactCountryCode, "United States")) filled++;
+        await new Promise(r => setTimeout(r, 100));
       }
     }
 
@@ -177,7 +226,6 @@
     );
     for (const sel of selects) {
       if (sel.disabled || sel.closest("#jaos-dev-panel")) continue;
-
       const labelEl =
         sel.closest(".field, .form-field")?.querySelector("label, legend") ||
         document.querySelector(`label[for="${sel.id}"]`);
@@ -185,37 +233,36 @@
       if (!labelText) continue;
 
       let matched = false;
-      if (/\b(gender|sex)\b/.test(labelText) && profile.gender) {
+      if (/\b(gender|sex)\b/.test(labelText) && profile.gender)
         matched = fillGenderSelect(sel, profile.gender);
-      } else if (/\b(race|ethnic)\b/.test(labelText) && profile.race_ethnicity) {
+      else if (/\b(race|ethnic)\b/.test(labelText) && profile.race_ethnicity)
         matched = fillSelectByText(sel, profile.race_ethnicity);
-      } else if (/\b(hispanic|latino)\b/.test(labelText) && (profile.hispanic_latino || profile.race_ethnicity)) {
+      else if (/\b(hispanic|latino)\b/.test(labelText) && (profile.hispanic_latino || profile.race_ethnicity))
         matched = fillSelectByText(sel, profile.hispanic_latino || profile.race_ethnicity);
-      } else if (/\b(veteran|military)\b/.test(labelText) && profile.veteran_status) {
+      else if (/\b(veteran|military)\b/.test(labelText) && profile.veteran_status)
         matched = fillSelectByText(sel, profile.veteran_status);
-      } else if (/\b(disabilit)\b/.test(labelText) && profile.disability_status) {
+      else if (/\b(disabilit)\b/.test(labelText) && profile.disability_status)
         matched = fillSelectByText(sel, profile.disability_status);
-      } else if (/\b(sponsor)\b/.test(labelText) && profile.requires_sponsorship) {
+      else if (/\b(sponsor)\b/.test(labelText) && profile.requires_sponsorship)
         matched = fillSelectByText(sel, profile.requires_sponsorship);
-      } else if (/\b(work.?auth)\b/.test(labelText) && profile.work_authorization) {
+      else if (/\b(work.?auth)\b/.test(labelText) && profile.work_authorization)
         matched = fillSelectByText(sel, profile.work_authorization);
-      } else if (/\b(relocat)\b/.test(labelText) && profile.willing_to_relocate) {
+      else if (/\b(relocat)\b/.test(labelText) && profile.willing_to_relocate)
         matched = fillSelectByText(sel, profile.willing_to_relocate);
-      } else if (/\b(pronoun)\b/.test(labelText) && (profile.pronouns || profile.gender)) {
+      else if (/\b(pronoun)\b/.test(labelText) && (profile.pronouns || profile.gender))
         matched = fillSelectByText(sel, profile.pronouns || genderToPronouns(profile.gender));
-      } else if (/\b(country)\b/.test(labelText)) {
+      else if (/\b(country)\b/.test(labelText))
         matched = fillSelectByText(sel, countryFull);
-      } else if (/\b(state|province)\b/.test(labelText) && profile.state) {
+      else if (/\b(state|province)\b/.test(labelText) && profile.state)
         matched = fillSelectByText(sel, profile.state);
-      } else if (/\b(over.?18|legal.?age)\b/.test(labelText) && profile.is_over_18) {
+      else if (/\b(over.?18|legal.?age)\b/.test(labelText) && profile.is_over_18)
         matched = fillSelectByText(sel, profile.is_over_18);
-      } else if (/\b(fluent.?in.?english|english.?proficien)\b/.test(labelText) && profile.fluent_in_english) {
+      else if (/\b(fluent.?in.?english|english.?proficien)\b/.test(labelText) && profile.fluent_in_english)
         matched = fillSelectByText(sel, profile.fluent_in_english);
-      } else if (/\b(referr|how.?did.?you.?(hear|find))\b/.test(labelText) && profile.referral_source) {
+      else if (/\b(referr|how.?did.?you.?(hear|find))\b/.test(labelText) && profile.referral_source)
         matched = fillSelectByText(sel, profile.referral_source);
-      } else if (/\b(degree)\b/.test(labelText) && profile.degree) {
+      else if (/\b(degree)\b/.test(labelText) && profile.degree)
         matched = fillSelectByText(sel, profile.degree);
-      }
 
       if (matched) filled++;
     }
@@ -226,6 +273,7 @@
     );
     for (const field of customFields) {
       if (field.disabled || field.value || field.closest("#jaos-dev-panel")) continue;
+      if (field.classList.contains("iti__search-input")) continue;
 
       const labelEl =
         field.closest(".field, .form-field")?.querySelector("label, legend") ||
@@ -253,7 +301,6 @@
       else if (/\b(summary|about|bio|objective)\b/.test(labelText) && !/\b(company|job)\b/.test(labelText))
         value = profile.summary;
 
-      // Fallback: open-ended textarea questions (describe, explain, tell us) → use profile summary
       if (!value && field.tagName === "TEXTAREA" && profile.summary &&
           /\b(describe|explain|tell\s*us|elaborate|share|what\s+(?:problem|project|system))\b/.test(labelText)) {
         value = profile.summary;
@@ -264,7 +311,7 @@
       }
     }
 
-    // ── C. React-select dropdowns ──
+    // ── C. React-Select dropdowns (fiber parent onChange) ──
     const containers = document.querySelectorAll(
       '[class*="-container"]:has([class*="__control"])'
     );
@@ -274,171 +321,92 @@
 
       const labelEl =
         container.closest("label") ||
-        container
-          .closest(".field, .form-field, [class*='field']")
-          ?.querySelector("label, legend") ||
+        container.closest(".field, .form-field, [class*='field']")?.querySelector("label, legend") ||
         container.previousElementSibling;
       const labelText = toLower(labelEl?.textContent || "");
       if (!labelText) continue;
 
-      // Skip if already has a selected value
       const singleValue = container.querySelector('[class*="__single-value"]');
       if (singleValue && singleValue.textContent.trim()) continue;
 
+      // C1. Profile field → React-Select mapping
       let value = null;
-      if (/\b(school|university|college|institution)\b/.test(labelText))
-        value = profile.school;
+      if (/\b(school|university|college|institution)\b/.test(labelText)) value = profile.school;
       else if (/\b(degree)\b/.test(labelText)) value = profile.degree;
-      else if (/\b(discipline|field.?of.?study|major)\b/.test(labelText))
-        value = profile.field_of_study;
+      else if (/\b(discipline|field.?of.?study|major)\b/.test(labelText)) value = profile.field_of_study;
       else if (/\b(country)\b/.test(labelText)) value = countryFull;
       else if (/\b(state|province)\b/.test(labelText)) value = profile.state;
       else if (/\b(gender|sex)\b/.test(labelText)) value = profile.gender;
-      else if (/\b(hispanic|latino)\b/.test(labelText))
-        value = profile.hispanic_latino || profile.race_ethnicity;
-      else if (/\b(race|ethnic)\b/.test(labelText))
-        value = profile.race_ethnicity;
-      else if (/\b(veteran|military)\b/.test(labelText))
-        value = profile.veteran_status;
-      else if (/\b(disabilit)\b/.test(labelText))
-        value = profile.disability_status;
-      else if (/\b(pronoun)\b/.test(labelText))
-        value = profile.pronouns || genderToPronouns(profile.gender);
-      else if (/\b(sponsor)\b/.test(labelText))
-        value = profile.requires_sponsorship;
-      else if (/\b(work.?auth)\b/.test(labelText))
-        value = profile.work_authorization;
-      else if (/\b(relocat)\b/.test(labelText))
-        value = profile.willing_to_relocate;
-      else if (/\b(over.?18|legal.?age)\b/.test(labelText))
-        value = profile.is_over_18;
-      else if (/\b(fluent.?in.?english)\b/.test(labelText))
-        value = profile.fluent_in_english;
-      else if (/\b(referr|how.?did.?you.?(hear|find))\b/.test(labelText))
-        value = profile.referral_source;
+      else if (/\b(hispanic|latino)\b/.test(labelText)) value = profile.hispanic_latino || profile.race_ethnicity;
+      else if (/\b(race|ethnic)\b/.test(labelText)) value = profile.race_ethnicity;
+      else if (/\b(veteran|military)\b/.test(labelText)) value = profile.veteran_status;
+      else if (/\b(disabilit)\b/.test(labelText)) value = profile.disability_status;
+      else if (/\b(pronoun)\b/.test(labelText)) value = profile.pronouns || genderToPronouns(profile.gender);
+      else if (/\b(sponsor)\b/.test(labelText)) value = profile.requires_sponsorship;
+      else if (/\b(work.?auth)\b/.test(labelText)) value = profile.work_authorization;
+      else if (/\b(relocat)\b/.test(labelText)) value = profile.willing_to_relocate;
+      else if (/\b(over.?18|legal.?age)\b/.test(labelText)) value = profile.is_over_18;
+      else if (/\b(fluent.?in.?english)\b/.test(labelText)) value = profile.fluent_in_english;
+      else if (/\b(referr|how.?did.?you.?(hear|find))\b/.test(labelText)) value = profile.referral_source;
       else if (/\b(start.?date.?month)\b/.test(labelText)) {
         value = isInSection(container, /education|school/i)
-          ? monthName(profile.edu_start_month)
-          : monthName(profile.exp_start_month);
+          ? monthName(profile.edu_start_month) : monthName(profile.exp_start_month);
       } else if (/\b(end.?date.?month)\b/.test(labelText)) {
         value = isInSection(container, /education|school/i)
-          ? monthName(profile.edu_end_month)
-          : monthName(profile.exp_end_month);
+          ? monthName(profile.edu_end_month) : monthName(profile.exp_end_month);
       } else if (/\b(start.?date.?year|start.?year)\b/.test(labelText)) {
         value = isInSection(container, /education|school/i)
-          ? profile.edu_start_year
-          : profile.exp_start_year;
+          ? profile.edu_start_year : profile.exp_start_year;
       } else if (/\b(end.?date.?year|end.?year)\b/.test(labelText)) {
         value = isInSection(container, /education|school/i)
-          ? profile.edu_end_year
-          : profile.exp_end_year;
+          ? profile.edu_end_year : profile.exp_end_year;
       }
 
-      // ── C2. Heuristic yes/no for custom questions ──
-      // Only activate when no profile mapping matched and dropdown has yes/no options
+      // C2. Heuristic yes/no for unmatched custom question dropdowns
       if (!value) {
-        const ctrl = container.querySelector('[class*="__control"]');
-        if (ctrl) {
-          ctrl.click();
-          await new Promise((r) => setTimeout(r, 400));
-          const probeMenu = container.querySelector('[class*="__menu"]');
-          if (probeMenu) {
-            const opts = Array.from(probeMenu.querySelectorAll('[class*="__option"]'));
-            const hasYes = opts.find((o) => /^yes$/i.test(o.textContent.trim()));
-            const hasNo = opts.find((o) => /^no$/i.test(o.textContent.trim()));
-            const hasAgree = opts.find((o) => /\b(i agree|agree|consent|accept)\b/i.test(o.textContent.trim()));
+        const opts = await bridgeReadOptions(container);
+        if (opts && opts.length > 0) {
+          const hasYes = opts.find(o => /^yes$/i.test(o.label.trim()));
+          const hasNo = opts.find(o => /^no$/i.test(o.label.trim()));
+          const hasAgree = opts.find(o => /\b(i agree|agree|consent|accept)\b/i.test(o.label));
 
-            if (hasYes || hasNo || hasAgree) {
-              let pick = null;
-              // Consent / agreement / NDPA / GDPR → agree or yes
-              if (/\b(consent|ndpa|gdpr|agree|data.?process|privacy)\b/.test(labelText)) {
-                pick = hasAgree || hasYes;
-              }
-              // Previously employed by X → No
-              else if (/\bpreviously.?(employ|work)|employed.?by\b/.test(labelText)) {
-                pick = hasNo;
-              }
-              // Experience / skills questions → Yes
-              else if (/\b(do you have|have you|are you|can you)\b/.test(labelText) &&
-                       /\b(experience|hands.?on|built|deploy|design|work|proficien|familiar|knowledge)\b/.test(labelText)) {
-                pick = hasYes;
-              }
-              // Willing / able / available → Yes
-              else if (/\b(willing|able|available|comfortable|open)\b/.test(labelText)) {
-                pick = hasYes;
-              }
+          if (hasYes || hasNo || hasAgree) {
+            let pick = null;
+            // Consent / NDPA / GDPR / privacy → agree or yes
+            if (/\b(consent|ndpa|gdpr|agree|data.?process|privacy)\b/.test(labelText))
+              pick = hasAgree || hasYes;
+            // Previously employed by X → no
+            else if (/\bpreviously.?(employ|work)|employed.?by\b/.test(labelText))
+              pick = hasNo;
+            // Certification / credential / licensed → yes
+            else if (/\b(certif|credential|licensed)\b/.test(labelText))
+              pick = hasYes;
+            // W2 / 1099 / employment type / comfortable → yes
+            else if (/\b(w.?2|1099|contract.?type|employment.?type)\b/.test(labelText))
+              pick = hasYes;
+            // Experience / skills questions → yes
+            else if (/\b(do you have|have you|are you|can you)\b/.test(labelText) &&
+                     /\b(experience|hands.?on|built|deploy|design|work|proficien|familiar|knowledge)\b/.test(labelText))
+              pick = hasYes;
+            // Willing / able / available / comfortable → yes
+            else if (/\b(willing|able|available|comfortable|open)\b/.test(labelText))
+              pick = hasYes;
+            // Broad fallback: any yes/no dropdown where label is a question → yes
+            else if (hasYes && /\?/.test(labelEl?.textContent || ""))
+              pick = hasYes;
 
-              if (pick) {
-                pick.click();
-                filled++;
-                await new Promise((r) => setTimeout(r, 150));
-                continue;
-              }
+            if (pick) {
+              if (await bridgeFill(container, pick.label)) filled++;
+              await new Promise(r => setTimeout(r, 100));
+              continue;
             }
-            // Close menu if we didn't pick anything
-            document.body.click();
-            await new Promise((r) => setTimeout(r, 100));
           }
         }
         continue;
       }
 
-      const control = container.querySelector('[class*="__control"]');
-      if (!control) continue;
-
-      control.click();
-
-      // Wait for dropdown menu to appear (max ~2s)
-      const menu = await new Promise((resolve) => {
-        let attempts = 0;
-        const check = setInterval(() => {
-          const m = container.querySelector('[class*="__menu"]');
-          if (m || ++attempts > 40) {
-            clearInterval(check);
-            resolve(m || null);
-          }
-        }, 50);
-      });
-      if (!menu) continue;
-
-      const target = toLower(value);
-      const options = Array.from(
-        menu.querySelectorAll('[class*="__option"]')
-      );
-      const match =
-        options.find((o) => toLower(o.textContent) === target) ||
-        options.find((o) => toLower(o.textContent).includes(target));
-
-      if (match) {
-        match.click();
-        filled++;
-      } else {
-        // Searchable select: type into the hidden input
-        const input = container.querySelector(
-          '[class*="__input"] input, input[id^="react-select"]'
-        );
-        if (input) {
-          const nativeSetter = Object.getOwnPropertyDescriptor(
-            HTMLInputElement.prototype,
-            "value"
-          ).set;
-          nativeSetter.call(input, value);
-          input.dispatchEvent(new Event("input", { bubbles: true }));
-          await new Promise((r) => setTimeout(r, 300));
-          const filtered = container.querySelectorAll(
-            '[class*="__option"]'
-          );
-          if (filtered.length > 0) {
-            filtered[0].click();
-            filled++;
-          }
-        } else {
-          document.body.click(); // close dropdown
-        }
-      }
-
-      // Let React re-render between fills
-      await new Promise((r) => setTimeout(r, 150));
+      if (await fillReactSelect(container, String(value))) filled++;
+      await new Promise(r => setTimeout(r, 100));
     }
 
     return filled;

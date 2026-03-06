@@ -21,8 +21,15 @@ const sendMessageToTab = (tabId, message) =>
     });
   });
 
-const injectContentScript = (tabId) =>
-  chrome.scripting.executeScript({
+const injectContentScript = async (tabId) => {
+  // Inject MAIN world bridge first (React Fiber access for react-select fills)
+  await chrome.scripting.executeScript({
+    target: { tabId },
+    files: ["engine/fiber-bridge.js"],
+    world: "MAIN",
+  });
+  // Then inject ISOLATED world content scripts
+  return chrome.scripting.executeScript({
     target: { tabId },
     files: [
       // V1 adapters (legacy — still used for non-v2 portals)
@@ -51,6 +58,7 @@ const injectContentScript = (tabId) =>
       "content.js",
     ],
   });
+};
 
 const getActiveTabId = async () => {
   const tabs = await chrome.tabs.query({ active: true, currentWindow: true });

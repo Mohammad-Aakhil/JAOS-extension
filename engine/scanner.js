@@ -327,7 +327,9 @@
       if (el.closest(`#${PANEL_ID}`) || el.closest(`#${LAUNCHER_WRAP_ID}`)) continue;
       if (!isVisible(el)) continue;
       // Skip if this is inside a React-select container (already captured)
+      // Handles both standard (__control) and emotion CSS (input[id^="react-select-"])
       if (el.closest('[class*="-container"]:has([class*="__control"])')) continue;
+      if (el.id?.startsWith("react-select-") || el.closest(':has(> input[id^="react-select-"])')) continue;
       // Skip if this is inside a Select2 widget (handled by scanSelect2Widgets)
       if (el.closest(".select2-container") || el.closest(".select2-drop")) continue;
 
@@ -577,6 +579,48 @@
     return { fields, widgets: [...reactWidgets, ...ariaWidgets, ...select2Widgets] };
   };
 
+  /**
+   * Enrich react-select widgets with available options via the MAIN world fiber bridge.
+   * Must be called after scanPage(). Async because bridge uses custom DOM events.
+   */
+  const enrichReactSelectOptions = async (widgets) => {
+    const reactSelects = widgets.filter((w) => w.type === "react-select" && !w.options);
+    if (reactSelects.length === 0) return;
+
+    let markerCounter = 0;
+    const readOptions = (container) => {
+      return new Promise((resolve) => {
+        const marker = `scan-${Date.now()}-${++markerCounter}`;
+        container.setAttribute("data-jaos-rs", marker);
+        const timeout = setTimeout(() => { cleanup(); resolve(null); }, 2000);
+        const cleanup = () => {
+          clearTimeout(timeout);
+          document.removeEventListener("jaos:rs-options-result", handler);
+          container.removeAttribute("data-jaos-rs");
+        };
+        const handler = (e) => {
+          if (e.detail?.marker !== marker) return;
+          cleanup();
+          resolve(e.detail.success ? e.detail.options : null);
+        };
+        document.addEventListener("jaos:rs-options-result", handler);
+        document.dispatchEvent(new CustomEvent("jaos:rs-options", { detail: { marker } }));
+      });
+    };
+
+    // Read options in parallel (all at once)
+    const results = await Promise.all(
+      reactSelects.map((w) => readOptions(w.element))
+    );
+
+    for (let i = 0; i < reactSelects.length; i++) {
+      const opts = results[i];
+      if (opts && opts.length > 0) {
+        reactSelects[i].options = opts.map((o) => o.label || o.value || String(o));
+      }
+    }
+  };
+
   // ─── LLM serialization ─────────────────────────────────────────────
 
   /**
@@ -655,6 +699,7 @@
     scanAriaWidgets,
     scanSelect2Widgets,
     scanPage,
+    enrichReactSelectOptions,
     serializeForLLM,
     isVisible,
     getLabel,

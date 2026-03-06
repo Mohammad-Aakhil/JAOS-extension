@@ -714,10 +714,120 @@
     return await runDomAutofillV1(profile);
   };
 
+  /**
+   * Remove any pre-attached resume/CV from the ATS form (e.g. Greenhouse profile resume).
+   * Clicks the "×" / "Remove" button in the resume section so the file input reappears.
+   * Returns true if a removal was performed (caller should wait for DOM update).
+   */
+  const removeExistingResumeAttachment = () => {
+    console.log("[JAOS] removeExistingResumeAttachment: scanning for pre-attached resume...");
+
+    // ── Step 1: Find a "Remove file" button near a resume label ──
+    // Greenhouse uses: <button aria-label="Remove file"> inside a file-upload container
+    // that has a sibling label with id containing "resume"
+    const removeButtons = document.querySelectorAll(
+      '[aria-label*="Remove" i], [aria-label*="remove" i], ' +
+      'button[class*="remove"], button[class*="delete"], [class*="remove-file"]'
+    );
+    for (const btn of removeButtons) {
+      if (btn.closest(`#${PANEL_ID}`) || btn.closest(`#${LAUNCHER_WRAP_ID}`)) continue;
+      // Walk up to find if this remove button is inside a resume-related container
+      const container = btn.closest(
+        '[class*="file-upload"], [class*="upload"], [class*="attachment"], ' +
+        'fieldset, .field, .form-group, [data-field]'
+      ) || btn.parentElement?.parentElement?.parentElement;
+      if (!container) continue;
+      const containerText = (container.textContent || "").toLowerCase();
+      // Check if the container (or a sibling label) is resume-related
+      const labelId = container.getAttribute("aria-labelledby") || "";
+      const isResume = /resume|cv/i.test(containerText) || /resume/i.test(labelId) ||
+        container.querySelector('[id*="resume" i], [class*="resume" i]');
+      if (isResume) {
+        console.log("[JAOS] Found resume remove button:", btn.outerHTML?.substring(0, 100));
+        btn.click();
+        return true;
+      }
+    }
+
+    // ── Step 2: Find resume label, walk to parent, look for any × button ──
+    const labels = document.querySelectorAll("label, legend, p, span, div");
+    for (const el of labels) {
+      if (el.closest(`#${PANEL_ID}`) || el.closest(`#${LAUNCHER_WRAP_ID}`)) continue;
+      if (el.children.length > 5 || (el.textContent || "").trim().length > 50) continue;
+      if (!/resume\s*\/?\s*cv|cv\s*\/?\s*resume/i.test((el.textContent || "").trim())) continue;
+
+      // Found the resume label. Walk UP past the label to the overall upload container.
+      // Key: don't stop at the label's own wrapper — go to the PARENT that contains
+      // both the label AND the file display/remove button.
+      let section = el.parentElement;
+      // Keep walking up until we find the filename or a broad enough container
+      for (let i = 0; i < 4 && section; i++) {
+        if (/\.\s*(pdf|docx?|txt|rtf)\b/i.test(section.textContent || "")) break;
+        section = section.parentElement;
+      }
+      if (!section || !/\.\s*(pdf|docx?|txt|rtf)\b/i.test(section.textContent || "")) {
+        console.log("[JAOS] Resume label found but no attached file nearby");
+        return false;
+      }
+
+      console.log("[JAOS] Found resume section with file:", section.className?.substring?.(0, 60));
+
+      // Look for remove/close buttons inside this section
+      const rmBtn = section.querySelector(
+        '[aria-label*="Remove" i], button[class*="remove"], button[class*="delete"], ' +
+        'button[class*="close"], [class*="remove-file"]'
+      );
+      if (rmBtn) {
+        console.log("[JAOS] Clicking remove button:", rmBtn.outerHTML?.substring(0, 100));
+        rmBtn.click();
+        return true;
+      }
+
+      // Fallback: any element with × text
+      for (const c of section.querySelectorAll("button, a, span, div, i")) {
+        const t = (c.textContent || "").trim();
+        if (/^[×✕✖✗xX🗙]$/.test(t) || /^remove$/i.test(t)) {
+          console.log("[JAOS] Clicking × fallback:", c.tagName);
+          c.click();
+          return true;
+        }
+      }
+
+      // SVG icon fallback
+      for (const svg of section.querySelectorAll("svg")) {
+        const p = svg.parentElement;
+        if (p?.tagName === "BUTTON" || p?.getAttribute("role") === "button") {
+          console.log("[JAOS] Clicking SVG button:", p.outerHTML?.substring(0, 80));
+          p.click();
+          return true;
+        }
+      }
+
+      console.log("[JAOS] Resume section found but no remove button inside it");
+      return false;
+    }
+
+    // ── Step 3: Last resort — clear file inputs with files in resume areas ──
+    const fileInputs = Array.from(document.querySelectorAll('input[type="file"]'));
+    for (const input of fileInputs) {
+      if (input.closest(`#${PANEL_ID}`) || input.closest(`#${LAUNCHER_WRAP_ID}`)) continue;
+      const wrap = input.closest('[class*="upload"], .field, .form-group, fieldset') ||
+        input.parentElement?.parentElement || input.parentElement;
+      if (/resume|cv/i.test((wrap?.textContent || "").toLowerCase()) && input.files?.length > 0) {
+        console.log("[JAOS] Clearing file input directly");
+        input.files = new DataTransfer().files;
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+        return true;
+      }
+    }
+
+    console.log("[JAOS] No pre-attached resume found");
+    return false;
+  };
+
   const findResumeFileInputs = () => {
     const fileInputs = Array.from(document.querySelectorAll('input[type="file"]'));
     const resumeInputs = [];
-    const genericInputs = [];
 
     fileInputs.forEach((input) => {
       if (input.closest(`#${PANEL_ID}`) || input.closest(`#${LAUNCHER_WRAP_ID}`)) return;
@@ -727,11 +837,16 @@
         accept && /^image\b/.test(accept) && !accept.includes("pdf") && !accept.includes("doc");
       if (isImageOnly) return;
 
-      // Check nearest container text to classify this input
+      // Check nearest container text to classify this input.
+      // Greenhouse uses: <div class="file-upload" role="group" aria-labelledby="upload-label-resume">
       const nearbyContainer =
-        input.closest("fieldset, .field, .form-group, .upload-field, [data-field]") ||
+        input.closest(
+          'fieldset, .field, .form-group, .upload-field, [data-field], ' +
+          '[class*="file-upload"], [role="group"]'
+        ) ||
         input.parentElement?.parentElement ||
         input.parentElement;
+      const labelledBy = nearbyContainer?.getAttribute("aria-labelledby") || "";
       const nearbyText = (nearbyContainer?.textContent || "").toLowerCase();
 
       // Skip cover letter fields
@@ -741,18 +856,14 @@
       if (/additional\s*file|supporting\s*doc|other\s*doc|supplemental/i.test(nearbyText) &&
           !/resume|cv|curriculum/i.test(nearbyText)) return;
 
-      // Prioritize inputs explicitly labeled as resume/CV
-      if (/resume|cv|curriculum/i.test(nearbyText)) {
+      // Match by: container text, aria-labelledby, or input id containing "resume"
+      if (/resume|cv|curriculum/i.test(nearbyText) || /resume/i.test(labelledBy) ||
+          /resume/i.test(input.id || "")) {
         resumeInputs.push(input);
-      } else {
-        genericInputs.push(input);
       }
     });
 
-    // Return only resume-specific inputs; fall back to first generic if none found
-    if (resumeInputs.length > 0) return resumeInputs;
-    if (genericInputs.length > 0) return [genericInputs[0]];
-    return [];
+    return resumeInputs;
   };
 
   /**
@@ -833,41 +944,86 @@
         return;
       }
 
-      safeSendMessage(
-        {
-          type: "JAOS_FETCH_RESUME_FILE",
-          filePath: resumeData.file_path,
-          filename: resumeData.label || "resume.pdf",
-          mimeType: resumeData.mime_type || "application/pdf",
-        },
-        (response) => {
-          if (!response || !response.ok || !response.fileData) {
-            resolve(false);
-            return;
-          }
+      // Remove any pre-attached resume (e.g. from Greenhouse/Lever profile)
+      // so we can upload the user's JAOS-selected resume instead
+      const removed = removeExistingResumeAttachment();
+      if (removed) {
+        console.log("[JAOS] Removed profile resume, waiting for DOM update before uploading JAOS resume...");
+      }
 
-          try {
-            const binary = atob(response.fileData);
-            const bytes = new Uint8Array(binary.length);
-            for (let i = 0; i < binary.length; i++) {
-              bytes[i] = binary.charCodeAt(i);
-            }
-            const file = new File([bytes], response.filename, {
-              type: response.mimeType,
-            });
-
-            const targets = findResumeFileInputs();
-            if (targets.length === 0) {
+      const doUpload = () => {
+        safeSendMessage(
+          {
+            type: "JAOS_FETCH_RESUME_FILE",
+            filePath: resumeData.file_path,
+            filename: resumeData.label || "resume.pdf",
+            mimeType: resumeData.mime_type || "application/pdf",
+          },
+          (response) => {
+            if (!response || !response.ok || !response.fileData) {
+              console.log("[JAOS] Resume file fetch failed:", response?.error);
               resolve(false);
               return;
             }
 
-            resolve(injectFileIntoInput(targets[0], file));
-          } catch (_error) {
-            resolve(false);
+            try {
+              const binary = atob(response.fileData);
+              const bytes = new Uint8Array(binary.length);
+              for (let i = 0; i < binary.length; i++) {
+                bytes[i] = binary.charCodeAt(i);
+              }
+              const file = new File([bytes], response.filename, {
+                type: response.mimeType,
+              });
+
+              let targets = findResumeFileInputs();
+              console.log("[JAOS] findResumeFileInputs found:", targets.length, "inputs");
+
+              // Fallback: if no labeled resume input found, look for hidden file inputs
+              // inside the resume upload container (Greenhouse hides input behind "Attach" button)
+              if (targets.length === 0) {
+                console.log("[JAOS] No labeled resume input, searching resume upload containers...");
+                const allFileInputs = document.querySelectorAll('input[type="file"]');
+                for (const inp of allFileInputs) {
+                  if (inp.closest(`#${PANEL_ID}`) || inp.closest(`#${LAUNCHER_WRAP_ID}`)) continue;
+                  // Walk up to find a resume-related container
+                  let parent = inp;
+                  for (let i = 0; i < 6; i++) {
+                    parent = parent.parentElement;
+                    if (!parent || parent === document.body) break;
+                    const txt = (parent.textContent || "").toLowerCase();
+                    if (/resume|cv|curriculum/i.test(txt)) {
+                      console.log("[JAOS] Found hidden file input in resume container:", parent.className?.substring?.(0, 50));
+                      targets = [inp];
+                      break;
+                    }
+                  }
+                  if (targets.length > 0) break;
+                }
+              }
+
+              if (targets.length === 0) {
+                console.log("[JAOS] No resume file input found at all — cannot upload");
+                resolve(false);
+                return;
+              }
+
+              console.log("[JAOS] Injecting resume file into input:", response.filename);
+              resolve(injectFileIntoInput(targets[0], file));
+            } catch (_error) {
+              console.error("[JAOS] Resume upload error:", _error);
+              resolve(false);
+            }
           }
-        }
-      );
+        );
+      };
+
+      // If we removed a profile resume, wait for DOM to settle before uploading
+      if (removed) {
+        setTimeout(doUpload, 800);
+      } else {
+        doUpload();
+      }
     });
 
   /**
@@ -1941,7 +2097,7 @@
       const filled = useV2 ? v2FieldLabels.filter((f) => f.isFilled).length : domScan.filled;
       progressCard.innerHTML = "";
 
-      if (total === 0 && state === "idle") {
+      if (state === "idle" || (total === 0 && state !== "done")) {
         progressCard.style.display = "none";
         return;
       }
@@ -1957,8 +2113,10 @@
       const optTotal = optionalFields.length;
 
       const pct = total > 0 ? Math.round((filled / total) * 100) : 0;
-      const allDone = filled === total && total > 0 && fillWarnings.length === 0;
-      const missedCount = total - filled + fillWarnings.length;
+      // "missing" = unfilled REQUIRED + warnings. Optional unfilled fields are not "missing".
+      const reqMissed = reqTotal - reqFilled;
+      const allDone = reqMissed === 0 && fillWarnings.length === 0;
+      const missedCount = reqMissed + fillWarnings.length;
 
       // ── Header: total fields count + status badge ──
       const headerRow = document.createElement("div");
@@ -1968,9 +2126,9 @@
       if (state === "filling") {
         headerLabel.textContent = "Filling fields...";
       } else if (allDone) {
-        headerLabel.textContent = `All ${total} fields filled`;
+        headerLabel.textContent = `All ${reqTotal} required filled`;
       } else {
-        headerLabel.textContent = `${filled} of ${total} fields filled`;
+        headerLabel.textContent = `${reqFilled} of ${reqTotal} required filled`;
       }
       Object.assign(headerLabel.style, {
         fontSize: "12px", fontWeight: "700",
@@ -2005,8 +2163,9 @@
         background: "#e5e7eb", overflow: "hidden",
       });
       const bar = document.createElement("div");
+      const reqPct = reqTotal > 0 ? Math.round((reqFilled / reqTotal) * 100) : pct;
       Object.assign(bar.style, {
-        width: state === "filling" ? "60%" : `${pct}%`,
+        width: state === "filling" ? "60%" : `${reqPct}%`,
         height: "100%", borderRadius: "999px",
         background: allDone ? "#059669" : "linear-gradient(90deg, #2563eb, #3b82f6)",
         transition: "width 0.4s ease",

@@ -62,6 +62,10 @@
     const { minDelay = 15, maxDelay = 55, clearFirst = true } = opts;
     const nativeSetter = getNativeSetter(el);
 
+    // Reset React _valueTracker so React detects changes on each keystroke
+    const tracker = el._valueTracker;
+    if (tracker) tracker.setValue("");
+
     // Focus the element
     el.focus();
     el.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
@@ -114,6 +118,11 @@
     const nativeSetter = getNativeSetter(el);
     const previous = el.value;
 
+    // Reset React _valueTracker so React detects the change on next input event.
+    // Without this, React may not fire onChange and will overwrite our value on re-render.
+    const tracker = el._valueTracker;
+    if (tracker) tracker.setValue("");
+
     el.focus();
     el.dispatchEvent(new FocusEvent("focus", { bubbles: true }));
     el.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
@@ -124,7 +133,7 @@
       el.value = value;
     }
 
-    el.dispatchEvent(new Event("input", { bubbles: true }));
+    el.dispatchEvent(new InputEvent("input", { bubbles: true, data: value, inputType: "insertText" }));
     el.dispatchEvent(new Event("change", { bubbles: true }));
     el.dispatchEvent(new FocusEvent("blur", { bubbles: true }));
     el.dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
@@ -252,8 +261,105 @@
   };
 
   /**
+   * Fill a React-Select via React Fiber internals (no menu interaction).
+   * Walks the fiber tree from the combobox input to find the parent
+   * component's onChange, then calls it directly with a matched option object.
+   * Works on Greenhouse emotion CSS React-Selects where click→menu fails.
+   *
+   * @param {HTMLElement} container — The react-select container element
+   * @param {string} value — Text to match against option labels/values
+   * @returns {boolean}
+   */
+  const fillReactSelectFiber = (container, value) => {
+    if (!value || !container) return false;
+
+    const input = container.querySelector(
+      'input[role="combobox"], input[id^="react-select"], [class*="__input"] input'
+    );
+    if (!input) return false;
+
+    const fiberKey = Object.keys(input).find(k => k.startsWith("__reactFiber$"));
+    if (!fiberKey) return false;
+
+    let fiber = input[fiberKey];
+    let options = null;
+    let selectInstance = null;
+    let parentFn = null;
+    let optionsLevel = -1;
+
+    for (let i = 0; i < 30 && fiber; i++) {
+      const props = fiber.memoizedProps || {};
+
+      // Capture options array (first occurrence only)
+      if (props.options && Array.isArray(props.options) && optionsLevel === -1) {
+        options = props.options;
+        optionsLevel = i;
+      }
+
+      // Strategy A: Find Select class instance with selectOption method.
+      // react-select's Select class has selectOption(option) which handles
+      // state update, menu close, focus, and calling the user's onChange.
+      if (fiber.stateNode && typeof fiber.stateNode.selectOption === "function" && !selectInstance) {
+        selectInstance = fiber.stateNode;
+      }
+
+      // Strategy B: Find onChange STRICTLY ABOVE the options level.
+      // The onChange at the SAME level as options is handleInputChange
+      // (expects event/string for text input) — calling it with {label, value}
+      // causes TypeError. The correct selection onChange is at a higher level.
+      if (typeof props.onChange === "function" && optionsLevel !== -1 && i > optionsLevel && !parentFn) {
+        parentFn = props.onChange;
+      }
+
+      // Stop early if we have the primary strategy ready
+      if (selectInstance && options) break;
+
+      fiber = fiber.return;
+    }
+
+    if (!options || (!selectInstance && !parentFn)) return false;
+
+    const target = value.toLowerCase().trim();
+    const DECLINE = /decline|prefer not|don.?t wish|do not wish|not to (answer|say|disclose|identify)|choose not/i;
+
+    const match =
+      options.find(o => String(o.label || "").toLowerCase().trim() === target) ||
+      options.find(o => String(o.label || "").toLowerCase().includes(target)) ||
+      options.find(o => {
+        const l = String(o.label || "").toLowerCase();
+        return l.length > 1 && target.includes(l);
+      }) ||
+      options.find(o => String(o.value || "").toLowerCase().includes(target)) ||
+      (DECLINE.test(target) ? options.find(o => DECLINE.test(String(o.label || ""))) : null);
+
+    if (!match) return false;
+
+    // Prefer selectOption — react-select's own internal method
+    if (selectInstance) {
+      try {
+        selectInstance.selectOption(match);
+        return true;
+      } catch (e) {
+        console.warn("[JAOS Filler] selectOption() failed:", e.message);
+      }
+    }
+
+    // Fallback to parent onChange (above options level)
+    if (parentFn) {
+      try {
+        parentFn(match);
+        return true;
+      } catch (e) {
+        console.warn("[JAOS Filler] parent onChange() failed:", e.message);
+      }
+    }
+
+    return false;
+  };
+
+  /**
    * Fill a React-select dropdown widget.
-   * Opens the dropdown, searches for the option, clicks it.
+   * Tries React Fiber first (instant), falls back to click→menu interaction.
    *
    * @param {HTMLElement} container — The react-select container element
    * @param {string} value — Text to match in options
@@ -262,57 +368,138 @@
   const fillReactSelect = async (container, value) => {
     if (!value || !container) return false;
 
-    const control = container.querySelector('[class*="__control"]');
-    if (!control) return false;
+    // Strategy 1: MAIN world fiber bridge (selectOption via custom DOM event)
+    // Content scripts run in ISOLATED world and can't access __reactFiber$.
+    // The fiber-bridge.js (MAIN world) handles this via custom events.
+    {
+      const marker = `filler-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      container.setAttribute("data-jaos-rs", marker);
+      const bridgeResult = await new Promise((resolve) => {
+        const timeout = setTimeout(() => { cleanup(); resolve(false); }, 2000);
+        const cleanup = () => {
+          clearTimeout(timeout);
+          document.removeEventListener("jaos:rs-fill-result", handler);
+          container.removeAttribute("data-jaos-rs");
+        };
+        const handler = (e) => {
+          if (e.detail?.marker !== marker) return;
+          cleanup();
+          resolve(e.detail.success);
+        };
+        document.addEventListener("jaos:rs-fill-result", handler);
+        document.dispatchEvent(new CustomEvent("jaos:rs-fill", { detail: { marker, value } }));
+      });
+      if (bridgeResult) return true;
+    }
 
-    // Click to open
-    control.click();
+    // Strategy 2: Click→menu fallback (if bridge unavailable or fiber failed)
+
+    // Open the menu: try toggle button first (Greenhouse Remix), then input, then control
+    const toggleBtn = container.querySelector('[class*="__indicators"] button, button[aria-label*="Toggle"]');
+    const comboInput = container.querySelector('input[role="combobox"], [class*="__input"] input');
+    const control =
+      container.querySelector('[class*="__control"]') ||
+      container.querySelector('[class*="-control"]');
+
+    if (toggleBtn) {
+      toggleBtn.click();
+    } else if (comboInput) {
+      comboInput.focus();
+      comboInput.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true }));
+    } else if (control) {
+      control.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      control.click();
+    } else {
+      console.warn(`[JAOS Filler] React-select: no interactive element found in container`);
+      return false;
+    }
     await delay(200, 400);
 
-    // Wait for menu
+    // Find the react-select search input (works for both standard and emotion)
+    const searchInput = container.querySelector(
+      'input[id^="react-select"], input[role="combobox"], [class*="__input"] input'
+    );
+
+    // Wait for menu (standard or emotion CSS, may appear inside container or portaled to body)
     let menu = null;
     for (let i = 0; i < 40; i++) {
-      menu = container.querySelector('[class*="__menu"]');
+      menu =
+        container.querySelector('[class*="__menu"]') ||
+        container.querySelector('[class*="-menu"]:has([class*="-option"], [id*="-option-"])');
+      // React-Select can portal menu to body — find by the listbox id linked to our input
+      if (!menu && searchInput) {
+        const menuId = searchInput.getAttribute("aria-controls") || searchInput.getAttribute("aria-owns");
+        if (menuId) {
+          const linkedMenu = document.getElementById(menuId);
+          if (linkedMenu) menu = linkedMenu.closest('[class*="-menu"], [class*="__menu"]') || linkedMenu;
+        }
+      }
       if (menu) break;
       await delay(50, 50);
     }
     if (!menu) {
-      document.body.click(); // close if opened without menu
+      document.body.click();
       return false;
     }
 
     const target = value.toLowerCase().trim();
-    const options = Array.from(menu.querySelectorAll('[class*="__option"]'));
+    // Find options — standard (__option), emotion (css-HASH-option), or by role/id
+    const options = Array.from(
+      menu.querySelectorAll('[class*="__option"], [class*="-option"]:not([class*="-option-"]), [role="option"]')
+    ).filter((o) => !o.getAttribute("aria-disabled"));
 
-    // Try exact match first, then partial
+    // Normalize: decline keywords
+    const DECLINE_KEYWORDS = /decline|prefer not|don.?t wish|do not wish|not to (answer|say|disclose|identify)|choose not/i;
+    const targetIsDecline = DECLINE_KEYWORDS.test(target);
+
+    // Multi-tier matching (same as fillSelect)
     const match =
+      // Tier 1: Exact match
       options.find((o) => o.textContent.trim().toLowerCase() === target) ||
+      // Tier 2: Option contains target
       options.find((o) => o.textContent.trim().toLowerCase().includes(target)) ||
-      options.find((o) => target.includes(o.textContent.trim().toLowerCase()));
+      // Tier 3: Target contains option text
+      options.find((o) => {
+        const t = o.textContent.trim().toLowerCase();
+        return t.length > 1 && target.includes(t);
+      }) ||
+      // Tier 4: Semantic decline match
+      (targetIsDecline ? options.find((o) => DECLINE_KEYWORDS.test(o.textContent)) : null);
 
     if (match) {
+      match.scrollIntoView?.({ block: "nearest" });
+      await delay(50, 100);
       match.click();
       await delay(100, 200);
       return true;
     }
 
-    // Try typing into search input
-    const searchInput = container.querySelector(
-      '[class*="__input"] input, input[id^="react-select"]'
-    );
+    // Try typing into search input to filter options
     if (searchInput) {
       const nativeSetter = getNativeSetter(searchInput);
+      searchInput.focus();
+      // Reset tracker so React picks up the search text
+      const tracker = searchInput._valueTracker;
+      if (tracker) tracker.setValue("");
       if (nativeSetter) {
         nativeSetter.call(searchInput, value);
       } else {
         searchInput.value = value;
       }
-      searchInput.dispatchEvent(new Event("input", { bubbles: true }));
+      searchInput.dispatchEvent(new InputEvent("input", { bubbles: true, data: value, inputType: "insertText" }));
       await delay(300, 500);
 
-      const filtered = container.querySelectorAll('[class*="__option"]');
-      if (filtered.length > 0) {
-        filtered[0].click();
+      const filtered = menu.querySelectorAll(
+        '[class*="__option"], [class*="-option"]:not([class*="-option-"]), [role="option"]'
+      );
+      const filteredArr = Array.from(filtered).filter((o) => !o.getAttribute("aria-disabled"));
+      if (filteredArr.length > 0) {
+        // Pick best match from filtered results
+        const filteredMatch =
+          filteredArr.find((o) => o.textContent.trim().toLowerCase() === target) ||
+          filteredArr.find((o) => o.textContent.trim().toLowerCase().includes(target)) ||
+          filteredArr[0]; // Take first if search narrowed results
+        filteredMatch.click();
         await delay(100, 200);
         return true;
       }
@@ -321,6 +508,7 @@
     // Close without selection
     document.body.click();
     await delay(50, 100);
+    console.warn(`[JAOS Filler] React-select: no match for "${value}" in ${options.length} options`);
     return false;
   };
 
@@ -598,6 +786,12 @@
       return false;
     }
 
+    // Check if element is still in the DOM (React may have re-rendered during LLM wait)
+    if (!el.isConnected) {
+      console.warn(`[JAOS Filler] Element DETACHED from DOM for "${fieldLabel}" (type=${fieldDescriptor.type}) — React likely re-rendered. Skipping.`);
+      return false;
+    }
+
     // Skip if already has the correct value
     if (fieldDescriptor.type !== "checkbox" && fieldDescriptor.type !== "radio") {
       if (el.value === String(value)) return false;
@@ -634,7 +828,14 @@
       return fillSelect(el, String(value));
     }
 
-    // Text inputs and textareas
+    // Text inputs and textareas — guard against non-input elements (e.g. div containers
+    // from widgets that weren't routed to their correct fill method)
+    if (el.tagName !== "INPUT" && el.tagName !== "TEXTAREA" && !el.isContentEditable) {
+      console.warn(`[JAOS Filler] Cannot fill <${el.tagName}> as text for "${fieldLabel}" (type=${fieldDescriptor.type}) — element is not a text input`);
+      return false;
+    }
+
+    console.log(`[JAOS Filler] text "${fieldLabel}" → "${String(value).substring(0, 40)}"`);
     if (humanType) {
       await typeText(el, String(value));
       return true;
@@ -648,6 +849,7 @@
     setValue,
     fillSelect,
     fillCheckbox,
+    fillReactSelectFiber,
     fillReactSelect,
     fillAriaCombobox,
     fillSelect2,

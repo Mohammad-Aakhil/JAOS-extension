@@ -269,6 +269,11 @@
           await step.augmentScan(ctx, scanResult);
         }
 
+        // 4b. Enrich react-select widgets with available options via fiber bridge
+        if (scanner.enrichReactSelectOptions) {
+          await scanner.enrichReactSelectOptions(scanResult.widgets);
+        }
+
         const totalFields = scanResult.fields.length + scanResult.widgets.length;
         log(`  Found ${scanResult.fields.length} fields + ${scanResult.widgets.length} widgets`);
 
@@ -322,6 +327,39 @@
             allResults.push({ stepId: step.id, filled: 0, total: totalFields, errors: [errMsg] });
           } else {
             log(`  Got ${mapResult.mappings.length} mappings from LLM`);
+
+            // 6.5. Check if DOM elements are still connected (React may have
+            //      re-rendered during the LLM call, detaching all elements).
+            //      If >50% of elements are detached, re-scan to get fresh references.
+            const sampleElements = [
+              ...scanResult.fields.slice(0, 5).map((f) => f.element),
+              ...scanResult.widgets.slice(0, 5).map((w) => w.element),
+            ];
+            const detachedCount = sampleElements.filter((el) => el && !el.isConnected).length;
+            if (sampleElements.length > 0 && detachedCount > sampleElements.length * 0.5) {
+              log(`  ⚠ ${detachedCount}/${sampleElements.length} sampled elements detached — re-scanning for fresh DOM refs`);
+              const formRoot2 = step.getFormRoot?.(ctx) || adapter.getFormRoot?.() || document.body;
+              const reScan = scanner.scanPage(formRoot2);
+              if (step.augmentScan) await step.augmentScan(ctx, reScan);
+
+              // Match old uids to new elements by label+type
+              const labelIndex = new Map();
+              for (const f of [...reScan.fields, ...reScan.widgets]) {
+                const key = `${(f.label || "").toLowerCase().trim()}||${f.type}`;
+                if (!labelIndex.has(key)) labelIndex.set(key, f);
+              }
+              for (const f of [...scanResult.fields, ...scanResult.widgets]) {
+                if (f.element && f.element.isConnected) continue;
+                const key = `${(f.label || "").toLowerCase().trim()}||${f.type}`;
+                const fresh = labelIndex.get(key);
+                if (fresh && fresh.element && fresh.element.isConnected) {
+                  f.element = fresh.element;
+                  if (fresh.inputElement) f.inputElement = fresh.inputElement;
+                  if (fresh.selectElement) f.selectElement = fresh.selectElement;
+                }
+              }
+              log(`  Re-scan matched ${reScan.fields.length + reScan.widgets.length} fresh elements`);
+            }
 
             // 7. Build element lookup and fill
             const lookup = mapper.buildElementLookup(scanResult);
