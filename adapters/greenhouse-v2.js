@@ -404,36 +404,9 @@
       return false;
     });
 
-    // ── 6. Remove checkbox groups (3+ under same container) ──
-    // "Select all that apply" questions (locations, demographics) inflate
-    // field count and are user-preference choices — leave for user.
-    // Single consent checkboxes (1-2 per container) are kept.
-    const checkboxes = scanResult.fields.filter((f) => f.type === "checkbox");
-    if (checkboxes.length >= 3) {
-      const containerMap = new Map();
-      for (const cb of checkboxes) {
-        const container =
-          cb.element.closest(".field, .form-field, fieldset, [class*='field'], [class*='question'], [data-field]") ||
-          cb.element.parentElement?.parentElement;
-        const key = container || cb.element.parentElement;
-        if (!containerMap.has(key)) containerMap.set(key, []);
-        containerMap.get(key).push(cb);
-      }
-
-      const uidsToRemove = new Set();
-      for (const [, group] of containerMap) {
-        if (group.length >= 3) {
-          for (const cb of group) uidsToRemove.add(cb.uid);
-        }
-      }
-
-      if (uidsToRemove.size > 0) {
-        scanResult.fields = scanResult.fields.filter((f) => !uidsToRemove.has(f.uid));
-        console.log(
-          `[JAOS Greenhouse] Removed ${uidsToRemove.size} checkboxes from "select all that apply" groups`
-        );
-      }
-    }
+    // ── 6. (Handled by scanner) ──
+    // Radio/checkbox grouping now happens in scanner.js scanFields().
+    // Radio buttons are collapsed into radio-group, checkboxes (2+) into checkbox-group.
 
     // ── 7. Remove text fields owned by react-select widgets ──
     // scanFields() picks up react-select's hidden <input role="combobox"> as text fields.

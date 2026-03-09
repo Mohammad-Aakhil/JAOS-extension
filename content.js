@@ -2257,9 +2257,10 @@
         progressCard.appendChild(makeSection("Required", requiredFields, reqFilled, reqTotal, "#2563eb"));
       }
 
-      // ── Optional section ──
-      if (optTotal > 0) {
-        progressCard.appendChild(makeSection("Optional", optionalFields, optFilled, optTotal, "#8b5cf6"));
+      // ── Optional section — only show filled optional fields ──
+      const filledOptionalFields = optionalFields.filter(f => f.isFilled);
+      if (filledOptionalFields.length > 0) {
+        progressCard.appendChild(makeSection("Optional", filledOptionalFields, filledOptionalFields.length, filledOptionalFields.length, "#8b5cf6"));
       }
 
       // ── Warnings — needs manual input (amber) ──

@@ -562,7 +562,101 @@
       fields.push(descriptor);
     }
 
-    return fields;
+    // ── Group radio buttons by name into single fields ──
+    // Each radio group = one field with options, not N separate fields.
+    const radioFields = fields.filter((f) => f.type === "radio");
+    const nonRadioFields = fields.filter((f) => f.type !== "radio");
+    if (radioFields.length > 0) {
+      const radioGroups = new Map();
+      for (const rf of radioFields) {
+        const key = rf.name || rf.element.closest("fieldset, [class*='field'], [class*='question']")?.outerHTML || rf.uid;
+        if (!radioGroups.has(key)) radioGroups.set(key, []);
+        radioGroups.get(key).push(rf);
+      }
+      for (const [, group] of radioGroups) {
+        const first = group[0];
+        const container = first.element.closest("fieldset, [class*='field'], [class*='question']");
+        const legend = container?.querySelector("legend, label, [class*='label']");
+        const groupLabel = legend ? clean(legend.textContent) : first.label;
+        const checked = group.find((r) => r.element.checked);
+        const isReq = group.some((r) => r.required) ||
+          (container?.querySelector(".required, abbr, span, sup") &&
+           (container.querySelector(".required, abbr, span, sup").textContent || "").includes("*"));
+        nonRadioFields.push({
+          uid: `radio-group-${first.name || nonRadioFields.length}-${Date.now()}`,
+          element: container || first.element,
+          tag: "fieldset",
+          type: "radio-group",
+          name: first.name,
+          id: first.id,
+          label: groupLabel,
+          placeholder: "",
+          ariaLabel: "",
+          autocomplete: "",
+          section: first.section,
+          required: isReq,
+          currentValue: checked ? (checked.element.labels?.[0]?.textContent?.trim() || checked.element.value) : "",
+          hasValue: !!checked,
+          options: group.map((r) => ({
+            value: r.element.value,
+            text: clean(r.element.labels?.[0]?.textContent || r.element.parentElement?.textContent || r.element.value),
+          })),
+        });
+      }
+    }
+
+    // ── Group checkboxes by container into single fields ──
+    // "Select all that apply" checkbox groups = one field, not N fields.
+    const checkboxFields = nonRadioFields.filter((f) => f.type === "checkbox");
+    const otherFields = nonRadioFields.filter((f) => f.type !== "checkbox");
+    if (checkboxFields.length > 0) {
+      const cbGroups = new Map();
+      for (const cb of checkboxFields) {
+        const container = cb.element.closest("fieldset, [class*='field'], [class*='question']") ||
+          cb.element.parentElement?.parentElement;
+        const key = container || cb.element.parentElement;
+        if (!cbGroups.has(key)) cbGroups.set(key, []);
+        cbGroups.get(key).push(cb);
+      }
+      for (const [container, group] of cbGroups) {
+        if (group.length >= 2) {
+          // Collapse into a single checkbox-group field
+          const legend = container?.querySelector?.("legend, label, [class*='label']");
+          const groupLabel = legend ? clean(legend.textContent) : group[0].label;
+          const anyChecked = group.some((c) => c.element.checked);
+          const isReq = group.some((c) => c.required) ||
+            (container?.querySelector?.(".required, abbr, span, sup") &&
+             (container.querySelector(".required, abbr, span, sup").textContent || "").includes("*"));
+          otherFields.push({
+            uid: `checkbox-group-${group[0].name || otherFields.length}-${Date.now()}`,
+            element: container?.nodeType === 1 ? container : group[0].element,
+            tag: "fieldset",
+            type: "checkbox-group",
+            name: group[0].name,
+            id: "",
+            label: groupLabel,
+            placeholder: "",
+            ariaLabel: "",
+            autocomplete: "",
+            section: group[0].section,
+            required: isReq,
+            currentValue: group.filter((c) => c.element.checked).map((c) =>
+              clean(c.element.labels?.[0]?.textContent || c.element.parentElement?.textContent || c.element.value)
+            ).join(", "),
+            hasValue: anyChecked,
+            options: group.map((c) => ({
+              value: c.element.value,
+              text: clean(c.element.labels?.[0]?.textContent || c.element.parentElement?.textContent || c.element.value),
+            })),
+          });
+        } else {
+          // Single checkbox — keep as-is
+          otherFields.push(...group);
+        }
+      }
+    }
+
+    return checkboxFields.length > 0 ? otherFields : nonRadioFields;
   };
 
   // ─── Full page scan ─────────────────────────────────────────────────

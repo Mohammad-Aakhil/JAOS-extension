@@ -48,6 +48,44 @@
   };
 
   /**
+   * Get the visible label text for a checkbox/radio input.
+   * Walks up the DOM to find the associated <label> — handles Greenhouse's
+   * wrapper pattern where the label is a sibling of the input's parent div.
+   *
+   * DOM: <div class="checkbox__wrapper">
+   *        <div class="checkbox__input"><input type="checkbox"></div>
+   *        <label>Option Text</label>
+   *      </div>
+   */
+  const _getInputLabelText = (input) => {
+    // 1. Native labels association (label[for=id])
+    if (input.labels && input.labels.length > 0) {
+      const t = input.labels[0].textContent?.trim();
+      if (t) return t;
+    }
+    // 2. Walk up to find sibling <label> in wrapper container (Greenhouse pattern)
+    let parent = input.parentElement;
+    for (let i = 0; i < 3 && parent; i++) {
+      const label = parent.querySelector("label");
+      if (label && !label.contains(input)) {
+        const t = label.textContent?.trim();
+        if (t) return t;
+      }
+      // Also check for text-bearing sibling spans
+      for (const sib of parent.children) {
+        if (sib === input || sib.contains(input)) continue;
+        if (sib.tagName === "LABEL" || sib.tagName === "SPAN") {
+          const t = sib.textContent?.trim();
+          if (t && t.length > 0 && t.length < 200) return t;
+        }
+      }
+      parent = parent.parentElement;
+    }
+    // 3. Fallback: input value attribute
+    return input.value || "";
+  };
+
+  /**
    * Type a value into a text input character-by-character.
    * Simulates realistic human typing with variable delays.
    *
@@ -793,7 +831,8 @@
     }
 
     // Skip if already has the correct value
-    if (fieldDescriptor.type !== "checkbox" && fieldDescriptor.type !== "radio") {
+    if (fieldDescriptor.type !== "checkbox" && fieldDescriptor.type !== "radio" &&
+        fieldDescriptor.type !== "radio-group" && fieldDescriptor.type !== "checkbox-group") {
       if (el.value === String(value)) return false;
     }
 
@@ -815,6 +854,47 @@
 
     if (fieldDescriptor.isFileInput) {
       return false;
+    }
+
+    if (fieldDescriptor.type === "radio-group") {
+      // Find the matching radio input inside the container and .click() it
+      // Must use real .click() — React-controlled radios ignore programmatic checked + events
+      const radios = el.querySelectorAll('input[type="radio"]');
+      const target = String(value).toLowerCase().trim();
+      let matched = false;
+      for (const radio of radios) {
+        const radioText = _getInputLabelText(radio).toLowerCase().trim();
+        if (radioText === target || radioText.includes(target) || target.includes(radioText) ||
+            radio.value.toLowerCase() === target) {
+          radio.click();
+          matched = true;
+          console.log(`[JAOS Filler] radio-group "${fieldLabel}" → "${radioText.substring(0, 40)}"`);
+          break;
+        }
+      }
+      if (!matched) console.warn(`[JAOS Filler] radio-group "${fieldLabel}": no match for "${value}" in ${radios.length} options`);
+      return matched;
+    }
+
+    if (fieldDescriptor.type === "checkbox-group") {
+      // value can be comma-separated list or array — click matching checkboxes
+      // Must use real .click() — Greenhouse renders React-controlled custom checkboxes
+      // with SVG icons; setting .checked + dispatching events doesn't update React state
+      const checkboxes = el.querySelectorAll('input[type="checkbox"]');
+      const targets = (Array.isArray(value) ? value : String(value).split(","))
+        .map((v) => v.toLowerCase().trim())
+        .filter(Boolean);
+      let filled = 0;
+      for (const cb of checkboxes) {
+        const cbText = _getInputLabelText(cb).toLowerCase().trim();
+        const shouldCheck = targets.some((t) => cbText === t || cbText.includes(t) || t.includes(cbText) || cb.value.toLowerCase() === t);
+        if (shouldCheck && !cb.checked) {
+          cb.click();
+          filled++;
+        }
+      }
+      console.log(`[JAOS Filler] checkbox-group "${fieldLabel}" → checked ${filled}/${targets.length} matches`);
+      return filled > 0;
     }
 
     if (fieldDescriptor.type === "checkbox" || fieldDescriptor.type === "radio") {
