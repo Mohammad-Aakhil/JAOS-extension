@@ -837,6 +837,13 @@
         accept && /^image\b/.test(accept) && !accept.includes("pdf") && !accept.includes("doc");
       if (isImageOnly) return;
 
+      // [OracleCloud] Skip file inputs inside the "Import your profile" section
+      // These trigger LinkedIn/Indeed profile import — NOT resume upload
+      const ariaLabel = (input.getAttribute("aria-label") || "").toLowerCase();
+      if (ariaLabel.includes("import your profile")) return;
+      if (input.classList.contains("apply-flow-profile-import-awli__file-upload")) return;
+      if (input.closest('[class*="profile-import"]') || input.closest('[class*="import-awli"]')) return;
+
       // Check nearest container text to classify this input.
       // Greenhouse uses: <div class="file-upload" role="group" aria-labelledby="upload-label-resume">
       const nearbyContainer =

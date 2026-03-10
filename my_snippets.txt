@@ -193,3 +193,837 @@ else {
 
 
 ---------------------------------------------------------------------------------------------
+workday specific questions
+
+Ethnicity (Single Selection):
+Select One
+American Indian or Alaskan Native, not Hispanic or Latino (United States of America)
+Asian, not Hispanic or Latino (United States of America)
+Black, not Hispanic or Latino (United States of America)
+Decline to Answer (United States of America)
+Hispanic or Latino (United States of America)
+Native Hawaiian or Other Pacific Islander, not Hispanic or Latino (United States of America)
+Two or More Races, not Hispanic or Latino (United States of America)
+White, not Hispanic or Latino (United States of America)
+
+Veterans Status
+Select One
+I IDENTIFY AS ONE OR MORE OF THE CLASSIFICATIONS OF PROTECTED VETERANS LISTED ABOVE
+I IDENTIFY AS A VETERAN, JUST NOT A PROTECTED VETERAN
+I AM NOT A VETERAN
+I DO NOT WISH TO SELF-IDENTIFY
+
+------------------------------------------------------------------------------------------------
+
+// ORACLE CLOUD — Contact Info Seed Fill Test
+(async () => {
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+  const log = (field, status, detail) => console.log(`[${status}] ${field}: ${detail}`);
+
+  // ── 1. Last Name (text) ──
+  const lastName = document.querySelector('input[name="lastName"]');
+  if (lastName) {
+    lastName.focus();
+    lastName.value = 'Aqeel';
+    lastName.dispatchEvent(new Event('input', { bubbles: true }));
+    lastName.dispatchEvent(new Event('change', { bubbles: true }));
+    lastName.blur();
+    log('Last Name', '✅', lastName.value);
+  } else log('Last Name', '❌', 'not found');
+
+  // ── 2. First Name (text) ──
+  const firstName = document.querySelector('input[name="firstName"]');
+  if (firstName) {
+    firstName.focus();
+    firstName.value = 'Mohammad';
+    firstName.dispatchEvent(new Event('input', { bubbles: true }));
+    firstName.dispatchEvent(new Event('change', { bubbles: true }));
+    firstName.blur();
+    log('First Name', '✅', firstName.value);
+  } else log('First Name', '❌', 'not found');
+
+  // ── 3. Title (pill buttons) ──
+  const pills = document.querySelectorAll('ul.cx-select-pills-container button.cx-select-pill-section');
+  let titleFilled = false;
+  for (const btn of pills) {
+    if (btn.querySelector('.cx-select-pill-name')?.textContent.trim() === 'Mr.') {
+      btn.click();
+      titleFilled = true;
+      log('Title', '✅', 'Mr. (aria-pressed=' + btn.getAttribute('aria-pressed') + ')');
+      break;
+    }
+  }
+  if (!titleFilled) log('Title', '⏭️', pills.length > 0 ? 'Mr. not found in ' + pills.length + ' options' : 'no pill buttons found');
+
+  // ── 4. Middle Name (text) ──
+  const middleName = document.querySelector('input[name="middleNames"]');
+  if (middleName) {
+    middleName.focus();
+    middleName.value = '';
+    middleName.dispatchEvent(new Event('input', { bubbles: true }));
+    middleName.blur();
+    log('Middle Name', '⏭️', 'empty — skipped');
+  } else log('Middle Name', '⏭️', 'not on this portal');
+
+  // ── 5. Preferred Name (text, optional, not on all portals) ──
+  const preferred = document.querySelector('input[name="knownAs"]');
+  if (preferred) {
+    log('Preferred Name', '⏭️', 'present but skipped (optional)');
+  } else log('Preferred Name', '⏭️', 'not on this portal');
+
+  // ── 6. Email (skip if prefilled) ──
+  const email = document.querySelector('input[name="email"]');
+  if (email) {
+    if (email.value.trim()) {
+      log('Email', '⏭️', 'already prefilled: ' + email.value);
+    } else {
+      email.focus();
+      email.value = 'aakhilmohammad65@gmail.com';
+      email.dispatchEvent(new Event('input', { bubbles: true }));
+      email.dispatchEvent(new Event('change', { bubbles: true }));
+      email.blur();
+      log('Email', '✅', email.value);
+    }
+  } else log('Email', '❌', 'not found');
+
+  // ── 7. Phone Country Code (cx-select dropdown — skip if +1) ──
+  const phoneCode = document.querySelector('input.cx-select-input[name="phoneNumber"]');
+  if (phoneCode) {
+    if (phoneCode.value.includes('+1')) {
+      log('Phone Country Code', '⏭️', 'already +1 (US)');
+    } else {
+      log('Phone Country Code', '⚠️', 'value="' + phoneCode.value + '" — needs cx-select fill (not tested here)');
+    }
+  } else log('Phone Country Code', '❌', 'not found');
+
+  // ── 8. Phone Number (tel input) ──
+  const phone = document.querySelector('input.phone-row__input[type="tel"]');
+  if (phone) {
+    phone.focus();
+    phone.value = '7169364737';
+    phone.dispatchEvent(new Event('input', { bubbles: true }));
+    phone.dispatchEvent(new Event('change', { bubbles: true }));
+    phone.blur();
+    log('Phone Number', '✅', phone.value);
+  } else log('Phone Number', '❌', 'not found');
+
+  console.log('\n=== CONTACT INFO SEED FILL COMPLETE ===');
+  console.log('Text inputs filled via .value + input/change events');
+  console.log('Title filled via .click() on pill button');
+  console.log('Check the form visually — are values showing and validation cleared?');
+})();
+
+-----------------------------------------------------------------------------------------------
+
+// ORACLE CLOUD — Address Section Seed Script v4
+// Key fix: dispatch KeyboardEvent for each character (Oracle Maps needs keydown/keyup)
+(async () => {
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+
+  // Simulate real typing with full keyboard event sequence
+  async function simulateTyping(input, text, charDelay = 40) {
+    input.focus();
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await delay(100);
+
+    for (const char of text) {
+      const keyOpts = { key: char, code: `Key${char.toUpperCase()}`, bubbles: true, cancelable: true };
+      input.dispatchEvent(new KeyboardEvent('keydown', keyOpts));
+      input.dispatchEvent(new KeyboardEvent('keypress', keyOpts));
+      input.value += char;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new KeyboardEvent('keyup', keyOpts));
+      await delay(charDelay);
+    }
+  }
+
+  // Wait for listbox options to appear (polling with timeout)
+  async function waitForOptions(inputId, timeoutMs = 5000) {
+    const listboxId = inputId + '-listbox';
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+      const listbox = document.getElementById(listboxId);
+      if (listbox) {
+        const items = listbox.querySelectorAll('div[role="gridcell"].cx-select__list-item');
+        if (items.length > 0) return items;
+      }
+      await delay(250);
+    }
+    return null;
+  }
+
+  // Fill a cx-select dropdown with keyboard typing
+  async function fillCxSelect(name, searchText, matchText) {
+    const input = document.querySelector(`input.cx-select-input[name="${name}"]`);
+    if (!input) { console.warn(`⚠️ ${name}: not found`); return false; }
+    if (input.value.trim()) {
+      console.log(`⏭️ ${name}: already "${input.value}"`);
+      return true;
+    }
+
+    await simulateTyping(input, searchText);
+    const items = await waitForOptions(input.id, 3000);
+
+    if (!items || items.length === 0) {
+      console.warn(`⚠️ ${name}: 0 options for "${searchText}"`);
+      return false;
+    }
+
+    console.log(`✅ ${name}: ${items.length} options`);
+    const target = (matchText || searchText).toLowerCase();
+    for (const item of items) {
+      const text = item.querySelector('span.cx-select-list-item--content')?.textContent?.trim()
+                || item.textContent.trim();
+      if (text.toLowerCase().includes(target)) {
+        console.log(`   Clicking: "${text}"`);
+        item.click();
+        return true;
+      }
+    }
+    console.log(`   No match for "${target}", clicking first: "${items[0].textContent.trim()}"`);
+    items[0].click();
+    return true;
+  }
+
+  console.log('=== ADDRESS SEED FILL v4 ===\n');
+
+  // --- COUNTRY ---
+  const countryInput = document.querySelector('input.cx-select-input[name="country"]');
+  if (countryInput?.value.includes('United States')) {
+    console.log('⏭️ Country: already "United States"');
+  } else {
+    await fillCxSelect('country', 'United States', 'united states');
+    await delay(500);
+  }
+
+  // --- ADDRESS LINE 1 (Oracle Maps — THE key field) ---
+  console.log('\n--- Address Line 1 (Oracle Maps) ---');
+  const addr1 = document.querySelector('input.cx-select-input[name="addressLine1"]');
+  if (addr1) {
+    await simulateTyping(addr1, '123 Main St Dallas TX', 40);
+
+    // Wait up to 5s for Oracle Maps suggestions
+    console.log('   ⏳ Waiting for Oracle Maps suggestions...');
+    const suggestions = await waitForOptions(addr1.id, 5000);
+
+    if (suggestions && suggestions.length > 0) {
+      console.log(`✅ Address Line 1: ${suggestions.length} suggestions!`);
+      // Click first suggestion — cascade fills City/State/ZIP/County
+      const firstText = suggestions[0].textContent.trim();
+      console.log(`   Clicking: "${firstText}"`);
+      suggestions[0].click();
+      // Wait for cascade
+      console.log('   ⏳ Waiting 2s for cascade fill...');
+      await delay(2000);
+
+      // Verify cascade
+      const city = document.querySelector('input.cx-select-input[name="city"]')?.value;
+      const state = document.querySelector('input.cx-select-input[name="region2"]')?.value;
+      const zip = document.querySelector('input.cx-select-input[name="postalCode"]')?.value;
+      const county = document.querySelector('input.cx-select-input[name="region1"]')?.value;
+      console.log(`\n✅ CASCADE RESULT:`);
+      console.log(`   City: "${city}"`);
+      console.log(`   State: "${state}"`);
+      console.log(`   ZIP: "${zip}"`);
+      console.log(`   County: "${county}"`);
+
+      if (city && state && zip && county) {
+        console.log('\n🎉 ALL ADDRESS FIELDS FILLED VIA CASCADE!');
+      } else {
+        console.warn('\n⚠️ Some fields missing after cascade — check manually');
+      }
+    } else {
+      console.warn('⚠️ No Oracle Maps suggestions after 5s');
+      console.log('   Falling back to individual field fill...');
+
+      // Commit address line 1 as plain text
+      addr1.dispatchEvent(new Event('change', { bubbles: true }));
+      addr1.blur();
+      await delay(300);
+
+      // Fill City (will cascade State + County)
+      await fillCxSelect('city', 'Dallas', 'dallas');
+      await delay(1500); // wait for state/county cascade
+
+      // Fill ZIP separately
+      if (!document.querySelector('input.cx-select-input[name="postalCode"]')?.value) {
+        await fillCxSelect('postalCode', '75201', '75201');
+      }
+    }
+  }
+
+  // --- SUMMARY ---
+  await delay(500);
+  console.log('\n=== ADDRESS FILL SUMMARY ===');
+  const fields = [
+    ['Country', 'country'], ['Address Line 1', 'addressLine1'],
+    ['City', 'city'], ['State', 'region2'],
+    ['ZIP Code', 'postalCode'], ['County', 'region1'],
+  ];
+  for (const [label, name] of fields) {
+    const inp = document.querySelector(`input[name="${name}"]`);
+    const val = inp?.value || '(empty)';
+    const req = inp?.getAttribute('aria-required') === 'true' ? '*' : ' ';
+    console.log(`  ${req} ${label.padEnd(16)}: ${val}`);
+  }
+})();
+
+https://fa-exki-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/26990/apply/section/1wil
+
+
+// ═══════════════════════════════════════════════════════════
+// [OracleCloud] Work Experience + Education — Flexible Script
+// Handles both portal variants:
+//   - Fanatics: Degree=text, dates present, no School/Status
+//   - HealthPartners: Degree=dropdown, no dates, has School/Status
+// ═══════════════════════════════════════════════════════════
+(async () => {
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+
+  // ───── HELPERS ─────
+  function fillText(name, value) {
+    const el = document.querySelector(`input[name="${name}"]`)
+            || document.querySelector(`textarea[name="${name}"]`);
+    if (!el) return false;
+    el.focus(); el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    el.blur();
+    console.log('FILLED:', name);
+    return true;
+  }
+
+  async function fillCxSelect(nameOrId, searchText, byId = false) {
+    const input = byId
+      ? document.querySelector(`input.cx-select-input[id^="${nameOrId}"]`)
+      : document.querySelector(`input.cx-select-input[name="${nameOrId}"]`)
+        || document.querySelector(`input.cx-select-input[name*="${nameOrId}"]`);
+    if (!input) { console.log('SKIP cx-select:', nameOrId); return false; }
+    input.focus(); input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await delay(300);
+    for (const char of searchText) {
+      input.value += char;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await delay(50);
+    }
+    await delay(1000);
+    const listbox = document.getElementById(input.id + '-listbox');
+    if (!listbox) return false;
+    const items = listbox.querySelectorAll('div[role="gridcell"]');
+    if (items.length > 0) {
+      console.log(`${nameOrId}: clicking "${items[0].textContent.trim()}"`);
+      items[0].click();
+      return true;
+    }
+    console.log(`${nameOrId}: 0 results for "${searchText}"`);
+    return false;
+  }
+
+  // ═══════════════════════════════════════
+  // WORK EXPERIENCE
+  // ═══════════════════════════════════════
+  console.log('\n📋 WORK EXPERIENCE');
+  const addExpBtn = document.getElementById('timeline-add-experience-button');
+  if (addExpBtn) {
+    addExpBtn.click();
+    await delay(1000);
+
+    fillText('employerName', 'IgniteLegends Technologies');
+    fillText('jobTitle', 'Full Stack Developer');
+
+    // Dates (present on some portals, absent on others)
+    const hasExpDates = !!document.querySelector('input.cx-select-input[id^="month-startDate"]');
+    if (hasExpDates) {
+      console.log('Experience dates: FOUND');
+      await fillCxSelect('month-startDate', 'June', true);
+      await delay(300);
+      await fillCxSelect('year-startDate', '2024', true);
+      await delay(300);
+      await fillCxSelect('month-endDate', 'March', true);
+      await delay(300);
+      await fillCxSelect('year-endDate', '2026', true);
+      await delay(300);
+    } else {
+      console.log('Experience dates: NOT present on this portal');
+    }
+
+    // Country + State cascade
+    await fillCxSelect('countryCode', 'United States');
+    await delay(1000);
+    for (let i = 0; i < 10; i++) {
+      if (document.querySelector('input.cx-select-input[name="stateProvinceCode"]')) break;
+      await delay(300);
+    }
+    await fillCxSelect('stateProvinceCode', 'TX');
+    await delay(300);
+
+    fillText('employerCity', 'Dallas');
+
+    // Responsibilities textarea (some portals have it)
+    const textarea = document.querySelector('textarea[name="responsibilities"]');
+    if (textarea) {
+      textarea.focus();
+      textarea.value = 'Built full-stack web apps using Next.js, FastAPI, and PostgreSQL. Led AI-powered job automation platform.';
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      textarea.dispatchEvent(new Event('change', { bubbles: true }));
+      textarea.blur();
+      console.log('FILLED: responsibilities');
+    }
+
+    // Save
+    const saveBtn = document.querySelector('button.save-btn');
+    if (saveBtn) { saveBtn.click(); await delay(1500); }
+    console.log('✅ Work Experience done');
+  } else {
+    console.warn('Add Experience button not found');
+  }
+
+  // ═══════════════════════════════════════
+  // EDUCATION
+  // ═══════════════════════════════════════
+  console.log('\n📋 EDUCATION');
+  const addEduBtn = document.getElementById('timeline-add-education-button');
+  if (addEduBtn) {
+    addEduBtn.click();
+    await delay(1000);
+
+    // ── Degree: auto-detect text vs cx-select dropdown ──
+    const degreeCx = document.querySelector('input.cx-select-input[name="contentItemId"]')
+      || document.querySelector('input.cx-select-input[aria-label*="Degree" i]');
+    const degreeTxt = document.querySelector('input.input-row__control[name="degreeName"]');
+
+    if (degreeCx) {
+      console.log('Degree: DROPDOWN detected');
+      await fillCxSelect('contentItemId', 'Bachelor');
+    } else if (degreeTxt) {
+      console.log('Degree: TEXT INPUT detected');
+      fillText('degreeName', 'Bachelor of Technology');
+    } else {
+      console.warn('Degree: NOT FOUND');
+    }
+    await delay(300);
+
+    // Major (text — works on both)
+    fillText('major', 'Computer Science');
+
+    // School (cx-select — only on some portals, try US school)
+    const schoolInput = document.querySelector('input.cx-select-input[name="educationalEstablishment"]');
+    if (schoolInput) {
+      console.log('School: FOUND, trying search...');
+      const picked = await fillCxSelect('educationalEstablishment', 'University of Texas');
+      if (!picked) console.log('School: no match — user fills manually');
+    }
+    await delay(300);
+
+    // Dates (only if present)
+    const hasEduDates = !!document.querySelector('input.cx-select-input[id^="month-startDate"]');
+    if (hasEduDates) {
+      console.log('Education dates: FOUND');
+      await fillCxSelect('month-startDate', 'August', true);
+      await delay(300);
+      await fillCxSelect('year-startDate', '2021', true);
+      await delay(300);
+      await fillCxSelect('month-endDate', 'May', true);
+      await delay(300);
+      await fillCxSelect('year-endDate', '2025', true);
+      await delay(300);
+    } else {
+      console.log('Education dates: NOT present on this portal');
+    }
+
+    // Country + State cascade
+    await fillCxSelect('countryCode', 'United States');
+    await delay(1000);
+    for (let i = 0; i < 10; i++) {
+      if (document.querySelector('input.cx-select-input[name="stateProvinceCode"]')) break;
+      await delay(300);
+    }
+    await fillCxSelect('stateProvinceCode', 'TX');
+    await delay(300);
+
+    // City (text)
+    fillText('city', 'Dallas');
+
+    // Minor (text, optional — only on some portals)
+    // fillText('minor', '');
+
+    // Status pills (only on some portals)
+    const statusPills = document.querySelectorAll('timeline-form-inline button.cx-select-pill-section');
+    if (statusPills.length > 0) {
+      for (const btn of statusPills) {
+        if (btn.querySelector('.cx-select-pill-name')?.textContent.trim() === 'Completed') {
+          btn.click();
+          console.log('Status: Completed');
+          break;
+        }
+      }
+    }
+
+    // Save
+    const saveBtn = document.querySelector('button.save-btn');
+    if (saveBtn) { saveBtn.click(); await delay(1500); }
+    console.log('✅ Education done');
+  } else {
+    console.warn('Add Education button not found');
+  }
+
+  console.log('\n═══════════════════════════════════════');
+  console.log('✅ Work + Education complete');
+  console.log('═══════════════════════════════════════');
+})();
+
+-------------------------------------------------------------------------------------
+
+// ═══════════════════════════════════════════════════════════
+// [OracleCloud] FULL PAGE AUTOFILL v2 — Smart Education
+// Degree: auto-detects text vs cx-select dropdown
+// School: tries US search, skips if no results
+// Work/Education: fills what it can, user fixes the rest
+// ═══════════════════════════════════════════════════════════
+(async () => {
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+
+  // ───── HELPERS ─────
+  function fillText(selector, value) {
+    const el = document.querySelector(selector);
+    if (!el) { console.warn('SKIP:', selector); return; }
+    if (el.value.trim() && selector.includes('email')) { console.log('SKIP prefilled:', selector); return; }
+    el.focus(); el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    el.blur();
+  }
+
+  async function fillCxSelect(nameOrId, searchText, byId = false) {
+    const input = byId
+      ? document.querySelector(`input.cx-select-input[id^="${nameOrId}"]`)
+      : document.querySelector(`input.cx-select-input[name="${nameOrId}"]`)
+        || document.querySelector(`input.cx-select-input[name*="${nameOrId}"]`);
+    if (!input) { console.warn('SKIP cx-select:', nameOrId); return false; }
+    input.focus(); input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await delay(300);
+    for (const char of searchText) {
+      input.value += char;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await delay(50);
+    }
+    await delay(1000);
+    const listbox = document.getElementById(input.id + '-listbox');
+    if (!listbox) return false;
+    const items = listbox.querySelectorAll('div[role="gridcell"].cx-select__list-item');
+    if (items.length > 0) { items[0].click(); return true; }
+    return false;
+  }
+
+  // Smart Degree: tries cx-select first, falls back to text
+  async function fillDegree(searchText, textValue) {
+    // Check cx-select dropdown version
+    const cxSelect = document.querySelector('input.cx-select-input[name="contentItemId"]')
+      || document.querySelector('input.cx-select-input[aria-label*="Degree" i]');
+    if (cxSelect) {
+      console.log('Degree: cx-select dropdown detected');
+      cxSelect.focus(); cxSelect.value = '';
+      cxSelect.dispatchEvent(new Event('input', { bubbles: true }));
+      await delay(300);
+      for (const char of searchText) {
+        cxSelect.value += char;
+        cxSelect.dispatchEvent(new Event('input', { bubbles: true }));
+        await delay(50);
+      }
+      await delay(1000);
+      const listbox = document.getElementById(cxSelect.id + '-listbox');
+      if (listbox) {
+        const items = listbox.querySelectorAll('div[role="gridcell"].cx-select__list-item');
+        if (items.length > 0) {
+          const text = items[0].querySelector('span.cx-select-list-item--content')?.textContent?.trim();
+          console.log('Degree: clicking "' + text + '"');
+          items[0].click();
+          return;
+        }
+      }
+      console.warn('Degree: dropdown had no results, user must select manually');
+      return;
+    }
+    // Fallback: plain text input
+    const textInput = document.querySelector('input[name="degreeName"]');
+    if (textInput) {
+      console.log('Degree: plain text input detected');
+      textInput.focus(); textInput.value = textValue;
+      textInput.dispatchEvent(new Event('input', { bubbles: true }));
+      textInput.dispatchEvent(new Event('change', { bubbles: true }));
+      textInput.blur();
+      return;
+    }
+    console.warn('Degree: field not found');
+  }
+
+  async function typeWithKeyboard(input, text) {
+    input.focus(); input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await delay(200);
+    for (const char of text) {
+      const opts = { key: char, code: `Key${char.toUpperCase()}`, bubbles: true };
+      input.dispatchEvent(new KeyboardEvent('keydown', opts));
+      input.dispatchEvent(new KeyboardEvent('keypress', opts));
+      input.value += char;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new KeyboardEvent('keyup', opts));
+      await delay(80);
+    }
+  }
+
+
+
+==============================================================================
+
+// ═══════════════════════════════════════════════════════════
+// [OracleCloud] FULL PAGE AUTOFILL v2 — Smart Education
+// Degree: auto-detects text vs cx-select dropdown
+// School: tries US search, skips if no results
+// Work/Education: fills what it can, user fixes the rest
+// ═══════════════════════════════════════════════════════════
+(async () => {
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+
+  // ───── HELPERS ─────
+  function fillText(selector, value) {
+    const el = document.querySelector(selector);
+    if (!el) { console.warn('SKIP:', selector); return; }
+    if (el.value.trim() && selector.includes('email')) { console.log('SKIP prefilled:', selector); return; }
+    el.focus(); el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    el.dispatchEvent(new Event('change', { bubbles: true }));
+    el.blur();
+  }
+
+  async function fillCxSelect(nameOrId, searchText, byId = false) {
+    const input = byId
+      ? document.querySelector(`input.cx-select-input[id^="${nameOrId}"]`)
+      : document.querySelector(`input.cx-select-input[name="${nameOrId}"]`)
+        || document.querySelector(`input.cx-select-input[name*="${nameOrId}"]`);
+    if (!input) { console.warn('SKIP cx-select:', nameOrId); return false; }
+    input.focus(); input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await delay(300);
+    for (const char of searchText) {
+      input.value += char;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await delay(50);
+    }
+    await delay(1000);
+    const listbox = document.getElementById(input.id + '-listbox');
+    if (!listbox) return false;
+    const items = listbox.querySelectorAll('div[role="gridcell"].cx-select__list-item');
+    if (items.length > 0) { items[0].click(); return true; }
+    return false;
+  }
+
+  // Smart Degree: tries cx-select first, falls back to text
+  async function fillDegree(searchText, textValue) {
+    // Check cx-select dropdown version
+    const cxSelect = document.querySelector('input.cx-select-input[name="contentItemId"]')
+      || document.querySelector('input.cx-select-input[aria-label*="Degree" i]');
+    if (cxSelect) {
+      console.log('Degree: cx-select dropdown detected');
+      cxSelect.focus(); cxSelect.value = '';
+      cxSelect.dispatchEvent(new Event('input', { bubbles: true }));
+      await delay(300);
+      for (const char of searchText) {
+        cxSelect.value += char;
+        cxSelect.dispatchEvent(new Event('input', { bubbles: true }));
+        await delay(50);
+      }
+      await delay(1000);
+      const listbox = document.getElementById(cxSelect.id + '-listbox');
+      if (listbox) {
+        const items = listbox.querySelectorAll('div[role="gridcell"].cx-select__list-item');
+        if (items.length > 0) {
+          const text = items[0].querySelector('span.cx-select-list-item--content')?.textContent?.trim();
+          console.log('Degree: clicking "' + text + '"');
+          items[0].click();
+          return;
+        }
+      }
+      console.warn('Degree: dropdown had no results, user must select manually');
+      return;
+    }
+    // Fallback: plain text input
+    const textInput = document.querySelector('input[name="degreeName"]');
+    if (textInput) {
+      console.log('Degree: plain text input detected');
+      textInput.focus(); textInput.value = textValue;
+      textInput.dispatchEvent(new Event('input', { bubbles: true }));
+      textInput.dispatchEvent(new Event('change', { bubbles: true }));
+      textInput.blur();
+      return;
+    }
+    console.warn('Degree: field not found');
+  }
+
+  async function typeWithKeyboard(input, text) {
+    input.focus(); input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await delay(200);
+    for (const char of text) {
+      const opts = { key: char, code: `Key${char.toUpperCase()}`, bubbles: true };
+      input.dispatchEvent(new KeyboardEvent('keydown', opts));
+      input.dispatchEvent(new KeyboardEvent('keypress', opts));
+      input.value += char;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new KeyboardEvent('keyup', opts));
+      await delay(80);
+    }
+  }
+
+  console.log('═══ STARTING FULL PAGE AUTOFILL v2 ═══');
+
+  // ───── 1. CONTACT INFORMATION ─────
+  console.log('\n📋 Section 1: Contact Information');
+  fillText('input[name="lastName"]', 'Aqeel');
+  fillText('input[name="firstName"]', 'Mohammad');
+  fillText('input.phone-row__input[type="tel"]', '7169364737');
+  fillText('input[name="email"]', 'mohammadaqeel@example.com');
+  const pills = document.querySelectorAll('ul.cx-select-pills-container[aria-label="Title"] button.cx-select-pill-section');
+  for (const btn of pills) {
+    if (btn.querySelector('.cx-select-pill-name')?.textContent.trim() === 'Mr.') { btn.click(); break; }
+  }
+  console.log('✅ Contact Information done');
+
+  // ───── 2. ADDRESS ─────
+  console.log('\n📋 Section 2: Address');
+  const addr1 = document.querySelector('input.cx-select-input[name="addressLine1"]');
+  if (addr1) {
+    await typeWithKeyboard(addr1, '1600 Pennsylvania Ave NW');
+    await delay(2500);
+    const listbox = document.getElementById(addr1.id + '-listbox');
+    if (listbox) {
+      const items = listbox.querySelectorAll('div[role="gridcell"].cx-select__list-item');
+      if (items.length > 0) { items[0].click(); await delay(1500); }
+    }
+  }
+  fillText('input[name="addressLine2"]', 'Suite 100');
+  console.log('✅ Address done');
+
+  // ───── 3. WORK EXPERIENCE (skip — user fills manually) ─────
+  console.log('\n📋 Section 3: Work Experience — SKIPPED (user fills manually)');
+
+  // ───── 4. EDUCATION ─────
+  console.log('\n📋 Section 4: Education');
+  const addEduBtn = document.getElementById('timeline-add-education-button');
+  if (addEduBtn) {
+    addEduBtn.click();
+    await delay(1000);
+
+    // Degree — smart fill (dropdown OR text)
+    await fillDegree('Bachelor', 'Bachelor of Technology');
+    await delay(300);
+
+    // Major (text — works on both portal types)
+    fillText('input[name="major"]', 'Computer Science');
+
+    // School (cx-select — try US university, skip if no results)
+    const schoolFilled = await fillCxSelect('educationalEstablishment', 'University of Texas');
+    if (schoolFilled) {
+      console.log('School: selected from suggestions');
+    } else {
+      console.log('School: no results or not found — user fills manually');
+    }
+    await delay(300);
+
+    // Country
+    await fillCxSelect('countryCode', 'United States');
+    await delay(1000);
+
+    // State (wait for cascade — only if it appears)
+    for (let i = 0; i < 10; i++) {
+      if (document.querySelector('input.cx-select-input[name="stateProvinceCode"]')) break;
+      await delay(300);
+    }
+    await fillCxSelect('stateProvinceCode', 'TX');
+    await delay(300);
+
+    // City
+    fillText('input[name="city"]', 'Dallas');
+
+    // Status pill (if present) — "Completed"
+    const statusPills = document.querySelectorAll('timeline-form-inline button.cx-select-pill-section');
+    for (const btn of statusPills) {
+      if (btn.querySelector('.cx-select-pill-name')?.textContent.trim() === 'Completed') {
+        btn.click(); console.log('Status: Completed'); break;
+      }
+    }
+
+    // Date fields (only if they exist — some portals have them, some don't)
+    const monthStart = document.querySelector('input.cx-select-input[id^="month-startDate"]');
+    if (monthStart) {
+      await fillCxSelect('month-startDate', 'August', true);
+      await delay(300);
+      await fillCxSelect('year-startDate', '2021', true);
+      await delay(300);
+      await fillCxSelect('month-endDate', 'May', true);
+      await delay(300);
+      await fillCxSelect('year-endDate', '2025', true);
+    } else {
+      console.log('Dates: not present on this portal');
+    }
+
+    // Save
+    const saveBtn = document.querySelector('button.save-btn');
+    if (saveBtn) { saveBtn.click(); await delay(1000); }
+  }
+  console.log('✅ Education done');
+
+  // ───── 5. SUPPORTING DOCUMENTS ─────
+  console.log('\n📋 Section 5: Supporting Documents');
+  const resumeBlob = new Blob(['%PDF-1.4 JAOS test resume'], { type: 'application/pdf' });
+  const resumeFile = new File([resumeBlob], 'Aqeel_Resume.pdf', { type: 'application/pdf' });
+  const coverBlob = new Blob(['%PDF-1.4 JAOS test cover letter'], { type: 'application/pdf' });
+  const coverFile = new File([coverBlob], 'Aqeel_CoverLetter.pdf', { type: 'application/pdf' });
+  const resumeInput = document.querySelector('resume-upload-button input[type="file"]');
+  if (resumeInput) {
+    const dt = new DataTransfer(); dt.items.add(resumeFile);
+    resumeInput.files = dt.files;
+    resumeInput.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  await delay(500);
+  const coverInput = document.querySelector('cover-letter-upload-button input[type="file"]');
+  if (coverInput) {
+    const dt = new DataTransfer(); dt.items.add(coverFile);
+    coverInput.files = dt.files;
+    coverInput.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  console.log('✅ Documents uploaded');
+
+  // ───── 6. DISABILITY ─────
+  console.log('\n📋 Section 6: Disability');
+  for (const r of document.querySelectorAll('input[type="radio"]')) {
+    if (r.value === 'ORA_PER_NO_ANSWER_US') { r.click(); break; }
+  }
+  console.log('✅ Disability done');
+
+  // ───── 7. DIVERSITY ─────
+  console.log('\n📋 Section 7: Diversity');
+  const ethCb = document.getElementById('dq-option-PREF_NO_ANSWER');
+  if (ethCb && !ethCb.checked) ethCb.click();
+  await delay(300);
+  await fillCxSelect('GENDER', 'Prefer');
+  console.log('✅ Diversity done');
+
+  // ───── 8. VETERAN ─────
+  console.log('\n📋 Section 8: Veteran');
+  await fillCxSelect('VETERAN', 'Not');
+  console.log('✅ Veteran done');
+
+  // ───── 9. E-SIGNATURE ─────
+  console.log('\n📋 Section 9: E-Signature');
+  fillText('input[name="fullName"]', 'Mohammad Aqeel');
+  console.log('✅ E-Signature done');
+
+  console.log('\n═══════════════════════════════════════');
+  console.log('✅ FULL PAGE AUTOFILL v2 COMPLETE');
+  console.log('Review Work Experience + Education, then submit!');
+  console.log('═══════════════════════════════════════');
+})();

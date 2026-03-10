@@ -58,6 +58,7 @@
         "adapters/bamboohr-v2.js",
         "adapters/smartrecruiters-v2.js",
         "adapters/ashby-v2.js",
+        "adapters/oraclecloud-v2.js",
         "content.js"
       ],
       "run_at": "document_idle",
