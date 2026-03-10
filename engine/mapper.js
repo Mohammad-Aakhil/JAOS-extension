@@ -46,10 +46,10 @@
    * @param {object} [jobContext] — Current job context (title, company, etc.)
    * @returns {Promise<{ok: boolean, mappings?: Array, error?: string}>}
    */
-  const requestMappings = async (serializedFields, _profile, jobContext) => {
+  const requestMappings = async (serializedFields, _profile, jobContext, atsPlatform) => {
     const fieldCount = (serializedFields.fields || []).length;
     const widgetCount = (serializedFields.widgets || []).length;
-    console.log(`[JAOS Mapper] Requesting LLM mappings for ${fieldCount} fields + ${widgetCount} widgets...`);
+    console.log(`[JAOS Mapper] Requesting LLM mappings for ${fieldCount} fields + ${widgetCount} widgets (ats: ${atsPlatform || "generic"})...`);
 
     const t0 = performance.now();
 
@@ -58,6 +58,7 @@
       fields: serializedFields.fields || [],
       widgets: serializedFields.widgets || [],
       jobContext: jobContext || null,
+      atsPlatform: atsPlatform || null,
     });
 
     const elapsed = (performance.now() - t0).toFixed(0);

@@ -318,7 +318,7 @@
           onProgress?.({ phase: "mapping", stepId: step.id, total: totalFields });
           log(`  Requesting LLM mappings for ${fieldsToMap.fields.length + fieldsToMap.widgets.length} empty fields`);
 
-          const mapResult = await mapper.requestMappings(fieldsToMap, profile, jobContext);
+          const mapResult = await mapper.requestMappings(fieldsToMap, profile, jobContext, adapter.name);
 
           if (!mapResult.ok) {
             const errMsg = `LLM mapping failed on step ${step.id}: ${mapResult.error}`;

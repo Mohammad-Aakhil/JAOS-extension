@@ -270,6 +270,7 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
             fields: Array.isArray(message.fields) ? message.fields : [],
             widgets: Array.isArray(message.widgets) ? message.widgets : [],
             job_context: message.jobContext || null,
+            ats_platform: message.atsPlatform || null,
           }),
         });
 
