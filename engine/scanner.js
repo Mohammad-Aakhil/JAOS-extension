@@ -527,10 +527,16 @@
           isRequired = true;
         } else {
           // Walk up parents looking for asterisk markers (abbr/span/sup with *)
+          // Only count markers in the CLOSEST field wrapper — stop at containers
+          // that hold multiple fields (identified by having multiple inputs).
           let parent = el;
           for (let i = 0; i < 4 && !isRequired; i++) {
             parent = parent.parentElement;
             if (!parent || parent.tagName === "FORM" || parent.tagName === "BODY") break;
+            // If this container has multiple input-like children, it's a multi-field
+            // wrapper — asterisks here belong to individual fields, not all of them.
+            const inputCount = parent.querySelectorAll('input:not([type="hidden"]), select, textarea').length;
+            if (inputCount > 1) break;
             for (const m of parent.querySelectorAll("abbr, span, sup")) {
               if ((m.textContent || "").trim() === "*") { isRequired = true; break; }
             }

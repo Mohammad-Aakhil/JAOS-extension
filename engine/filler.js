@@ -819,7 +819,7 @@
 
     if (!el || !value) {
       if (!value && el) {
-        console.warn(`[JAOS Filler] Empty value for "${fieldLabel}" (type=${fieldDescriptor.type}) — skipping`);
+        console.log(`[JAOS Filler] Empty value for "${fieldLabel}" (type=${fieldDescriptor.type}) — skipping`);
       }
       return false;
     }

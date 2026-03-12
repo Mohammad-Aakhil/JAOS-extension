@@ -846,8 +846,11 @@
 
       // Check nearest container text to classify this input.
       // Greenhouse uses: <div class="file-upload" role="group" aria-labelledby="upload-label-resume">
+      // BambooHR uses: <div data-fabric-component="Flex"> wraps label (<p>) + FileUpload per field
+      // NOTE: Do NOT match FileUpload — it's too narrow (no label text inside).
       const nearbyContainer =
         input.closest(
+          '[data-fabric-component="Flex"], ' +
           'fieldset, .field, .form-group, .upload-field, [data-field], ' +
           '[class*="file-upload"], [role="group"]'
         ) ||
@@ -993,12 +996,30 @@
                 const allFileInputs = document.querySelectorAll('input[type="file"]');
                 for (const inp of allFileInputs) {
                   if (inp.closest(`#${PANEL_ID}`) || inp.closest(`#${LAUNCHER_WRAP_ID}`)) continue;
+                  // [OracleCloud] Skip import profile file inputs in fallback too
+                  const ariaLbl = (inp.getAttribute("aria-label") || "").toLowerCase();
+                  if (ariaLbl.includes("import your profile")) continue;
+                  if (inp.classList.contains("apply-flow-profile-import-awli__file-upload")) continue;
+                  if (inp.closest('[class*="profile-import"]') || inp.closest('[class*="import-awli"]')) continue;
+                  // Check the CLOSEST label container — skip if it says "cover letter"
+                  // NOTE: Do NOT match FileUpload — it's too narrow (no label text).
+                  const closestSection = inp.closest(
+                    '[data-fabric-component="Flex"], ' +
+                    'fieldset, .field, .form-group, [class*="file-upload"], [role="group"]'
+                  ) || inp.parentElement;
+                  const closestText = (closestSection?.textContent || "").toLowerCase();
+                  if (/cover.?letter/i.test(closestText) && !/resume|cv|curriculum/i.test(closestText)) {
+                    console.log("[JAOS] Skipping cover letter file input in fallback");
+                    continue;
+                  }
                   // Walk up to find a resume-related container
                   let parent = inp;
                   for (let i = 0; i < 6; i++) {
                     parent = parent.parentElement;
                     if (!parent || parent === document.body) break;
                     const txt = (parent.textContent || "").toLowerCase();
+                    // Skip if this level says "cover letter" but not "resume"
+                    if (/cover.?letter/i.test(txt) && !/resume|cv|curriculum/i.test(txt)) continue;
                     if (/resume|cv|curriculum/i.test(txt)) {
                       console.log("[JAOS] Found hidden file input in resume container:", parent.className?.substring?.(0, 50));
                       targets = [inp];
@@ -1067,14 +1088,19 @@
 
     /**
      * Walk up to 4 parent levels looking for asterisk markers.
-     * ATS platforms nest inputs inside many wrappers — the asterisk
-     * can be in a sibling heading several levels up.
+     * Only check within the field's own label wrapper — stop at containers
+     * that hold multiple fields to avoid false positives from sibling asterisks.
      */
     const hasNearbyAsterisk = (field) => {
       let el = field;
       for (let i = 0; i < 4; i++) {
         el = el.parentElement;
         if (!el || el.tagName === "FORM" || el.tagName === "BODY") break;
+
+        // If this container has multiple input-like children, it's a multi-field
+        // wrapper — asterisks here belong to individual fields, not all of them.
+        const inputCount = el.querySelectorAll('input:not([type="hidden"]), select, textarea').length;
+        if (inputCount > 1) break;
 
         // Check for asterisk in <abbr>, <span>, <sup> markers
         for (const m of el.querySelectorAll("abbr, span, sup")) {
@@ -1108,7 +1134,7 @@
       for (let i = 0; i < 4; i++) {
         el = el.parentElement;
         if (!el || el.tagName === "FORM" || el.tagName === "BODY") break;
-        const heading = el.querySelector("label, h1, h2, h3, h4, h5, h6, legend");
+        const heading = el.querySelector("label, h1, h2, h3, h4, h5, h6, legend, p[data-fabric-component], p.fab-Label");
         if (heading) {
           const text = (heading.textContent || "").replace(/\*/g, "").trim();
           if (text && text.length < 50) return text;
@@ -1121,9 +1147,19 @@
       if (field.closest(`#${PANEL_ID}`) || field.closest(`#${LAUNCHER_WRAP_ID}`)) return;
       if (field.type === "hidden" || field.type === "submit" || field.type === "button") return;
 
+      // Skip aria-hidden backing elements (Fabric UI hidden <select>, etc.)
+      if (field.getAttribute("aria-hidden") === "true") return;
+
+      // Skip honeypot / spam trap fields
+      const honeypotLabel = getFieldLabelText(field) || field.placeholder || "";
+      if (/leave this field blank|please leave this/i.test(honeypotLabel)) return;
+
       // Skip invisible fields (hidden by CSS, collapsed sections, off-screen, etc.)
-      if (!field.offsetParent && getComputedStyle(field).position !== "fixed") return;
-      if (field.offsetWidth === 0 && field.offsetHeight === 0) return;
+      // Exempt file inputs — they're almost always hidden behind styled upload buttons
+      if (field.type !== "file") {
+        if (!field.offsetParent && getComputedStyle(field).position !== "fixed") return;
+        if (field.offsetWidth === 0 && field.offsetHeight === 0) return;
+      }
 
       // Skip react-select internal inputs (they duplicate the visible dropdown)
       if (field.id && /^react-select/i.test(field.id)) return;
@@ -1156,11 +1192,20 @@
       if (field.type === "file") {
         isFilled = field.files && field.files.length > 0;
         if (!isFilled) {
+          // Check upload zone and parent containers for filename text (e.g. "resume.pdf")
           const zone =
-            field.closest('[class*="dropzone"], [class*="upload"], .field, .form-group') ||
+            field.closest('[class*="dropzone"], [class*="upload"], [class*="file-upload"], .field, .form-group, [data-fabric-component]') ||
             field.parentElement;
           if (zone) {
             isFilled = /\.(pdf|docx?|rtf|txt)\b/i.test(zone.textContent || "");
+          }
+          // Broader fallback: walk up to 4 parents checking for filename text
+          if (!isFilled) {
+            let parent = field.parentElement;
+            for (let i = 0; i < 4 && parent && !isFilled; i++) {
+              if (/\.(pdf|docx?|rtf|txt)\b/i.test(parent.textContent || "")) isFilled = true;
+              parent = parent.parentElement;
+            }
           }
         }
       } else if (field.type === "checkbox") {
@@ -1187,6 +1232,57 @@
 
       required.push({ label: cleanLabel || "Field", isFilled });
     });
+
+    // ── Fabric UI fab-SelectToggle widgets (BambooHR) ──
+    // These replace the hidden native <select> (aria-hidden) with a visible custom widget.
+    // The hidden select is skipped above, so we need to track the visible toggle button separately.
+    const fabToggles = document.querySelectorAll("button.fab-SelectToggle");
+    for (const btn of fabToggles) {
+      if (btn.closest(`#${PANEL_ID}`) || btn.closest(`#${LAUNCHER_WRAP_ID}`)) continue;
+      if (!btn.offsetParent) continue;
+
+      // Check if the backing select is required
+      const selectContainer = btn.closest(".fab-Select, [data-fabric-component*='Select']") || btn.parentElement;
+      const backingSelect = selectContainer?.querySelector("select[required], select[aria-required='true']");
+      const hasAsterisk = (() => {
+        let el = btn;
+        for (let i = 0; i < 4; i++) {
+          el = el.parentElement;
+          if (!el || el.tagName === "FORM" || el.tagName === "BODY") break;
+          for (const m of el.querySelectorAll("abbr, span, sup")) {
+            if ((m.textContent || "").trim() === "*") return true;
+          }
+          for (const h of el.querySelectorAll("label, legend")) {
+            if (/\*/.test(h.textContent || "")) return true;
+          }
+        }
+        return false;
+      })();
+
+      if (!backingSelect && !hasAsterisk) continue;
+
+      // Get label
+      let label = "";
+      let parent = btn.parentElement;
+      for (let i = 0; i < 5 && parent; i++) {
+        const lbl = parent.querySelector("label");
+        if (lbl && !btn.contains(lbl)) {
+          label = (lbl.textContent || "").replace(/\*/g, "").trim().substring(0, 40);
+          break;
+        }
+        parent = parent.parentElement;
+      }
+      if (!label) label = (btn.getAttribute("aria-label") || "").replace(/\*/g, "").trim().substring(0, 40);
+      const key = label.toLowerCase() || "fab-select";
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      // Check if filled: content text is NOT the placeholder
+      const content = (btn.querySelector(".fab-SelectToggle__content")?.textContent || "").trim();
+      const isFilled = content !== "" && !/^[-–—].*select/i.test(content) && !/^select/i.test(content);
+
+      required.push({ label: label || "Select", isFilled });
+    }
 
     return {
       total: required.length,
@@ -2260,8 +2356,14 @@
       };
 
       // ── Required section ──
+      // Show only missing required fields (red). If all filled, show compact summary.
       if (reqTotal > 0) {
-        progressCard.appendChild(makeSection("Required", requiredFields, reqFilled, reqTotal, "#2563eb"));
+        const missedRequired = requiredFields.filter((f) => !f.isFilled);
+        if (missedRequired.length > 0) {
+          // Show missed fields with full count context
+          progressCard.appendChild(makeSection("Required — Missing", missedRequired, 0, missedRequired.length, "#dc2626"));
+        }
+        // Always show filled count in the header (handled above), no need to list filled fields individually
       }
 
       // ── Optional section — only show filled optional fields ──
