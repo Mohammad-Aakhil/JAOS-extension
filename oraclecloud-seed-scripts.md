@@ -1223,6 +1223,152 @@ Master script with all fixes applied:
 })();
 ```
 
+
+---
+
+## Section 11: Application Questions (Pills + Dropdowns + Pagination)
+
+> **Date verified**: March 11, 2026
+> **Portal tested**: eofe.fa.us2.oraclecloud.com (BNY — Vice President, Application Development Manager II)
+> **Form type**: Multi-step (4 pages with NEXT button)
+
+### Field Types Discovered
+
+| Type | Count (BNY) | Example |
+|------|-------------|---------|
+| Yes/No pills | 14 | "Are you eligible to work...", "Require sponsorship..." |
+| Multi-select pill | 1 | "Do any of the following apply to you?" → "None of these apply to me" |
+| Sexual orientation pill | 1 | Options: Straight/Heterosexual, Gay, Lesbian, ..., Prefer Not to Say |
+| Salary cx-select | 2 | Compensation expectations, minimum salary requirement |
+| Currency cx-select | 1 | Salary Expectation in Local Currency (US Dollar, Euro, ...) |
+
+### Seed Script: All Application Questions
+
+```js
+// ═══ Oracle Cloud — Application Questions (All Pills + Dropdowns) ═══
+// Verified on BNY portal — 16 pills + 3 dropdowns + NEXT button
+(async () => {
+  const delay = ms => new Promise(r => setTimeout(r, ms));
+
+  const clickPill = (ariaSubstr, pillText) => {
+    for (const ul of document.querySelectorAll('ul.cx-select-pills-container')) {
+      const label = (ul.getAttribute('aria-label') || '').toLowerCase();
+      if (!label.includes(ariaSubstr.toLowerCase())) continue;
+      for (const btn of ul.querySelectorAll('button.cx-select-pill-section')) {
+        const txt = btn.querySelector('.cx-select-pill-name')?.textContent?.trim();
+        if (txt === pillText && btn.getAttribute('aria-pressed') !== 'true') {
+          btn.click();
+          console.log(`✅ "${ariaSubstr.substring(0, 50)}" → ${pillText}`);
+          return true;
+        } else if (txt === pillText) return true;
+      }
+    }
+    return false;
+  };
+
+  async function fillCxSelect(nameOrId, searchText) {
+    const input = document.querySelector(`input.cx-select-input[name*="${nameOrId}"]`);
+    if (!input) return false;
+    input.focus(); input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    await delay(300);
+    for (const char of searchText) {
+      input.value += char;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      await delay(50);
+    }
+    for (let i = 0; i < 30; i++) {
+      await delay(200);
+      const lb = document.getElementById(input.id + '-listbox');
+      if (lb) {
+        const items = lb.querySelectorAll('div[role="gridcell"]');
+        if (items.length > 0) { items[0].click(); return true; }
+      }
+    }
+    return false;
+  }
+
+  // ── Yes/No Pills ──
+  clickPill('referred by a bny', 'No');                            await delay(150);
+  clickPill('eligible to work', 'Yes');                            await delay(150);
+  clickPill('require sponsorship', 'No');                          await delay(150);
+  clickPill('suspended or barred', 'No');                          await delay(150);
+  clickPill('license or professional certification', 'No');        await delay(150);
+  clickPill('covered fund', 'No');                                 await delay(150);
+  clickPill('public accounting firm', 'No');                       await delay(150);
+  clickPill('accommodation during the recruitment', 'No');         await delay(150);
+  clickPill('previously been employed by company', 'No');          await delay(150);
+  clickPill('financial regulatory agencies', 'No');                await delay(150);
+  clickPill('contributions to any of the following', 'No');        await delay(150);
+  clickPill('relatives or members of your household', 'No');       await delay(150);
+  clickPill('close personal associates serving', 'No');            await delay(150);
+
+  // ── Multi-select pill ──
+  clickPill('do any of the following apply', 'None of these apply to me');
+  await delay(150);
+
+  // ── Sexual orientation ──
+  const sexUl = [...document.querySelectorAll('ul.cx-select-pills-container')]
+    .find(ul => (ul.getAttribute('aria-label') || '').toLowerCase().includes('sexual orientation'));
+  if (sexUl) {
+    const opts = [...sexUl.querySelectorAll('button .cx-select-pill-name')].map(s => s.textContent.trim());
+    const decline = opts.find(o => /prefer not/i.test(o));
+    if (decline) clickPill('sexual orientation', decline);
+  }
+
+  // ── Salary/Compensation dropdowns ──
+  // Search profile salary or pick first option
+  await fillCxSelect('compensation', '1');   await delay(500);
+  await fillCxSelect('salary', '1');         await delay(500);
+
+  // ── Currency dropdown — default US Dollar ──
+  // Find by toggle button aria-label
+  for (const btn of document.querySelectorAll('button.icon-dropdown-arrow')) {
+    if ((btn.getAttribute('aria-label') || '').toLowerCase().includes('local currency')) {
+      const input = btn.closest('.cx-select-container')?.querySelector('input.cx-select-input');
+      if (input && !input.value.trim()) {
+        input.focus(); input.value = '';
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        await delay(300);
+        for (const c of 'US Dollar') {
+          input.value += c;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          await delay(50);
+        }
+        for (let i = 0; i < 30; i++) {
+          await delay(200);
+          const lb = document.getElementById(input.id + '-listbox');
+          if (lb) {
+            const items = lb.querySelectorAll('div[role="gridcell"]');
+            if (items.length > 0) { items[0].click(); break; }
+          }
+        }
+      }
+      break;
+    }
+  }
+
+  // ── Log final state ──
+  console.log('\n📋 All pill states:');
+  for (const ul of document.querySelectorAll('ul.cx-select-pills-container')) {
+    const label = (ul.getAttribute('aria-label') || '').substring(0, 60);
+    const sel = ul.querySelector('button[aria-pressed="true"] .cx-select-pill-name');
+    console.log(`  • "${label}..." → ${sel?.textContent?.trim() || 'NONE'}`);
+  }
+
+  // ── Click NEXT if multi-step ──
+  const nextBtn = document.querySelector('button[data-qa="applyFlowPaginationNextButton"]');
+  if (nextBtn && !nextBtn.disabled) {
+    console.log('\n🔄 Clicking NEXT...');
+    nextBtn.click();
+  }
+
+  console.log('\n═══ Application Questions done ═══');
+})();
+```
+
+**Status**: FILL VERIFIED ✅ (all 16 pills + 2/3 dropdowns filled, currency needs "US Dollar" search text not "1")
+
 ---
 
 ## Appendix: DOM Inspection Scripts

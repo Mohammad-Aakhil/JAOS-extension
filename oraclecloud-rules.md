@@ -755,6 +755,94 @@ input.dispatchEvent(new Event('change', { bubbles: true }));
 
 ---
 
+### Application Questions (portal-specific, multi-step pages)
+
+**CRITICAL**: Application Questions vary wildly per portal. Some portals have 4 questions, others have 16+. Some are on the same scrollable page, others are on separate paginated steps (1, 2, 3, 4 with NEXT button).
+
+**Three field types used:**
+
+#### Yes/No Pill Buttons (single-select)
+Same `cx-select-pills-container` pattern as Title pills but with `isMultiselect: false`.
+```html
+<ul role="list" aria-label="Are you eligible to work..." class="cx-select-pills-container">
+  <li role="listitem">
+    <button type="button" aria-pressed="false" class="cx-select-pill-section">
+      <span class="cx-select-pill-name">Yes</span>
+    </button>
+  </li>
+  <li role="listitem">
+    <button type="button" aria-pressed="true" class="cx-select-pill-section cx-select-pill-section--selected">
+      <span class="cx-select-pill-name">No</span>
+    </button>
+  </li>
+</ul>
+```
+- **Detection**: `ul.cx-select-pills-container` with `aria-label` containing question text
+- **Fill Method**: Find button by pill name text → `.click()` → `aria-pressed` flips to `"true"`
+- **Status**: FILL VERIFIED ✅
+
+**Common Yes/No questions (BNY portal — 16 pills total):**
+| Question keyword | Safe Default |
+|-----------------|-------------|
+| eligible to work / authorized to work | Yes (profile) |
+| require sponsorship | No (profile) |
+| suspended or barred | No |
+| license or professional certification | No |
+| Covered Fund / Volcker Rule | No |
+| public accounting firm (KPMG, PwC...) | No |
+| accommodation during recruitment | No |
+| previously been employed by Company | No |
+| financial regulatory agencies | No |
+| contributions to any of the following | No |
+| relatives or members of household | No |
+| close personal associates / Government | No |
+| referred by [Company] Employee | No (unless referral) |
+| at least 18 years of age | Yes |
+
+#### Multi-Select Pill Buttons
+Parent has `cx-multi-select-pills` class. `isMultiselect: true` in Knockout binding.
+- "Do any of the following apply to you?" → click "None of these apply to me"
+- **Status**: FILL VERIFIED ✅
+
+#### Sexual Orientation Pill
+Options: Straight/Heterosexual, Gay, Lesbian, Bisexual, **Prefer Not to Say**, Asexual, Pansexual, Queer
+- **Default**: "Prefer Not to Say"
+- **Status**: FILL VERIFIED ✅
+
+#### Compensation/Salary cx-select Dropdowns
+- "total compensation expectations" — salary ranges ("0 - 10,000", "10,000 - 20,000", ...)
+- "minimum annual base salary requirement" — same salary range format
+- "Salary Expectation in Local Currency" — currency names (Euro, US Dollar, etc.)
+- **Default for currency**: "US Dollar"
+- **Status**: FILL VERIFIED ✅
+
+#### Multi-Step Pagination (NEXT Button)
+```html
+<button data-qa="applyFlowPaginationNextButton" title="Next" aria-label="Next">
+  <span class="button_label">Next</span>
+</button>
+```
+- **Selector**: `button[data-qa="applyFlowPaginationNextButton"]`
+- Page indicator: `apply-flow-navigation-pages` with numbered links (1, 2, 3, 4)
+- Adapter fills current page → clicks NEXT → recursively fills next page
+- **Status**: FILL VERIFIED ✅
+
+---
+
+## Veteran Status Options (Updated)
+
+Previously recorded: "Not a Protected Veteran", "Declines to Self-Identify", "Protected Veteran"
+
+**Updated options (verified on BNY portal)**:
+- "Declines to Self-Identify"
+- "Not a Protected Veteran"
+- "Protected Veteran Declines to Self-Identify"
+- "I am not a protected veteran" (variant on other portals)
+
+**Default**: "Declines to Self-Identify"
+
+---
+
 ## DOM Inspection Scripts
 
 ### Script 1: Full Page Structure Scanner
