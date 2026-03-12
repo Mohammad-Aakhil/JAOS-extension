@@ -1027,3 +1027,6 @@ https://fa-exki-saasfaprod1.fa.ocs.oraclecloud.com/hcmUI/CandidateExperience/en/
   console.log('Review Work Experience + Education, then submit!');
   console.log('═══════════════════════════════════════');
 })();
+
+
+https://eofe.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/69051/apply/section/1
