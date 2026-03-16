@@ -618,6 +618,77 @@
     }
   };
 
+  // ── Post-LLM URL field correction ──────────────────────────────────
+
+  /**
+   * Deterministically fix URL field mappings after LLM response.
+   *
+   * Problem: LLM often puts the same URL (usually LinkedIn) in ALL url-type
+   * fields (GitHub URL, Portfolio URL, Website, etc.) because the profile
+   * has linkedin/github/portfolio as separate keys but the LLM doesn't
+   * discriminate by label.
+   *
+   * Solution: Match each field's label against URL keywords and override
+   * with the correct profile value. This is deterministic — no LLM needed.
+   *
+   * Mirrors the V1 `resolveProfileValueForField` logic in content.js.
+   */
+  const fixUrlMappings = (ctx, mappings, scanResult) => {
+    const profile = ctx.profile || {};
+    const linkedin = profile.linkedin || "";
+    const github = profile.github || "";
+    const portfolio = profile.portfolio || profile.website || "";
+
+    // Build uid→label lookup from scan results
+    const labelByUid = new Map();
+    for (const f of [...(scanResult.fields || []), ...(scanResult.widgets || [])]) {
+      const label = (
+        f.label || f.ariaLabel || f.placeholder || f.name || f.id || ""
+      ).toLowerCase();
+      labelByUid.set(f.uid, label);
+    }
+
+    for (const mapping of mappings) {
+      const label = labelByUid.get(mapping.uid) || "";
+
+      // Only fix fields that look like URL/link fields
+      if (
+        !/(url|link|profile|website|portfolio|github|linkedin|blog|personal.?site)/i.test(label) &&
+        !/(url|link)/i.test(mapping.uid)
+      ) {
+        continue;
+      }
+
+      // Determine correct value by label keywords (most specific first).
+      // NEVER cross-contaminate: LinkedIn URL stays in LinkedIn fields only,
+      // GitHub URL stays in GitHub fields only, etc. If the profile doesn't
+      // have the specific URL, leave the field empty — don't fill GitHub
+      // with a LinkedIn link.
+      let correctValue = null;
+
+      if (/\b(linkedin)\b/i.test(label)) {
+        correctValue = linkedin;
+      } else if (/\b(github|git.?hub)\b/i.test(label)) {
+        correctValue = github;
+      } else if (
+        /\b(portfolio|website|personal.?site|blog)\b/i.test(label) &&
+        !/\b(linkedin|github)\b/i.test(label)
+      ) {
+        correctValue = portfolio;
+      } else if (/\b(url|link|profile)\b/i.test(label)) {
+        // Generic "URL" / "Profile URL" — use portfolio > linkedin > github
+        correctValue = portfolio || linkedin || github;
+      }
+
+      if (correctValue !== null && correctValue !== mapping.value) {
+        console.log(
+          `[JAOS Greenhouse] URL fix: "${label}" → "${correctValue}" (was "${mapping.value?.substring(0, 40)}")`
+        );
+        mapping.value = correctValue;
+      }
+    }
+  };
+
   // ── Flow Definition ────────────────────────────────────────────────
 
   /**
@@ -681,6 +752,10 @@
           attachWidgetOptions(scanResult);
         },
 
+        fixMappings: (ctx, mappings, scanResult) => {
+          fixUrlMappings(ctx, mappings, scanResult);
+        },
+
         afterFill: async (ctx, fillResult) => {
           const formRoot = getFormRoot();
 
@@ -727,6 +802,10 @@
       cleanupScanResult(scanResult, formRoot);
       addPhoneWidgets(scanResult, formRoot);
       attachWidgetOptions(scanResult);
+    },
+
+    fixMappings: (ctx, mappings, scanResult) => {
+      fixUrlMappings(ctx, mappings, scanResult);
     },
 
     afterFill: async (ctx) => {
@@ -824,7 +903,7 @@
           await filler.fillReactSelect(pw.element, targetText);
         }
       } catch (err) {
-        console.warn("[JAOS Greenhouse] Phone country code fill failed:", err.message);
+        console.log("[JAOS Greenhouse] Phone country code fill failed:", err.message);
       }
     }
   };

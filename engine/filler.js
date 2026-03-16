@@ -246,7 +246,7 @@
       (targetIsDecline ? options.find((o) => DECLINE_KEYWORDS.test(o.textContent)) : null);
 
     if (!match) {
-      console.warn(`[JAOS Filler] No select match for "${value}" in [${options.map((o) => o.textContent.trim()).join(", ")}]`);
+      console.log(`[JAOS Filler] No select match for "${value}" in [${options.map((o) => o.textContent.trim()).join(", ")}]`);
       return false;
     }
 
@@ -378,7 +378,7 @@
         selectInstance.selectOption(match);
         return true;
       } catch (e) {
-        console.warn("[JAOS Filler] selectOption() failed:", e.message);
+        console.log("[JAOS Filler] selectOption() failed:", e.message);
       }
     }
 
@@ -388,7 +388,7 @@
         parentFn(match);
         return true;
       } catch (e) {
-        console.warn("[JAOS Filler] parent onChange() failed:", e.message);
+        console.log("[JAOS Filler] parent onChange() failed:", e.message);
       }
     }
 
@@ -403,13 +403,14 @@
    * @param {string} value — Text to match in options
    * @returns {Promise<boolean>}
    */
-  const fillReactSelect = async (container, value) => {
+  const fillReactSelect = async (container, value, skipBridge = false) => {
     if (!value || !container) return false;
 
     // Strategy 1: MAIN world fiber bridge (selectOption via custom DOM event)
     // Content scripts run in ISOLATED world and can't access __reactFiber$.
     // The fiber-bridge.js (MAIN world) handles this via custom events.
-    {
+    // Skipped when orchestrator probe detected bridge is dead (avoids 2s timeout per field).
+    if (!skipBridge) {
       const marker = `filler-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
       container.setAttribute("data-jaos-rs", marker);
       const bridgeResult = await new Promise((resolve) => {
@@ -448,7 +449,7 @@
       control.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
       control.click();
     } else {
-      console.warn(`[JAOS Filler] React-select: no interactive element found in container`);
+      console.log(`[JAOS Filler] React-select: no interactive element found in container`);
       return false;
     }
     await delay(200, 400);
@@ -458,22 +459,38 @@
       'input[id^="react-select"], input[role="combobox"], [class*="__input"] input'
     );
 
-    // Wait for menu (standard or emotion CSS, may appear inside container or portaled to body)
-    let menu = null;
-    for (let i = 0; i < 40; i++) {
-      menu =
+    // Wait for menu via MutationObserver (reactive, no fixed polling ceiling)
+    const findMenu = () => {
+      let m =
         container.querySelector('[class*="__menu"]') ||
         container.querySelector('[class*="-menu"]:has([class*="-option"], [id*="-option-"])');
       // React-Select can portal menu to body — find by the listbox id linked to our input
-      if (!menu && searchInput) {
+      if (!m && searchInput) {
         const menuId = searchInput.getAttribute("aria-controls") || searchInput.getAttribute("aria-owns");
         if (menuId) {
           const linkedMenu = document.getElementById(menuId);
-          if (linkedMenu) menu = linkedMenu.closest('[class*="-menu"], [class*="__menu"]') || linkedMenu;
+          if (linkedMenu) m = linkedMenu.closest('[class*="-menu"], [class*="__menu"]') || linkedMenu;
         }
       }
-      if (menu) break;
-      await delay(50, 50);
+      return m;
+    };
+
+    let menu = findMenu();
+    if (!menu) {
+      menu = await new Promise((resolve) => {
+        const maxWait = setTimeout(() => { obs.disconnect(); resolve(null); }, 5000);
+        const obs = new MutationObserver(() => {
+          const found = findMenu();
+          if (found) {
+            clearTimeout(maxWait);
+            obs.disconnect();
+            resolve(found);
+          }
+        });
+        // Observe both the container (inline menu) and body (portaled menu)
+        obs.observe(container, { childList: true, subtree: true });
+        obs.observe(document.body, { childList: true, subtree: true });
+      });
     }
     if (!menu) {
       document.body.click();
@@ -546,7 +563,7 @@
     // Close without selection
     document.body.click();
     await delay(50, 100);
-    console.warn(`[JAOS Filler] React-select: no match for "${value}" in ${options.length} options`);
+    console.log(`[JAOS Filler] React-select: no match for "${value}" in ${options.length} options`);
     return false;
   };
 
@@ -671,7 +688,7 @@
     }
 
     if (!resultsUl) {
-      console.warn(`[JAOS Filler] Select2: no results found for "${descriptor.label}"`);
+      console.log(`[JAOS Filler] Select2: no results found for "${descriptor.label}"`);
       document.body.click();
       return false;
     }
@@ -772,7 +789,7 @@
       return true;
     }
 
-    console.warn(
+    console.log(
       `[JAOS Filler] Select2: no match for "${value}" in ${optionEls.length} options for "${descriptor.label}"`
     );
     // Close dropdown via Escape key
@@ -813,7 +830,7 @@
    * @returns {Promise<boolean>} — Whether the field was successfully filled
    */
   const fillField = async (fieldDescriptor, value, opts = {}) => {
-    const { humanType = false } = opts;
+    const { humanType = false, skipBridge = false } = opts;
     const el = fieldDescriptor.element;
     const fieldLabel = fieldDescriptor.label || fieldDescriptor.name || fieldDescriptor.uid;
 
@@ -826,7 +843,7 @@
 
     // Check if element is still in the DOM (React may have re-rendered during LLM wait)
     if (!el.isConnected) {
-      console.warn(`[JAOS Filler] Element DETACHED from DOM for "${fieldLabel}" (type=${fieldDescriptor.type}) — React likely re-rendered. Skipping.`);
+      console.log(`[JAOS Filler] Element DETACHED from DOM for "${fieldLabel}" (type=${fieldDescriptor.type}) — React likely re-rendered. Skipping.`);
       return false;
     }
 
@@ -839,7 +856,7 @@
     // Route by type
     if (fieldDescriptor.type === "react-select") {
       console.log(`[JAOS Filler] react-select "${fieldLabel}" → "${String(value).substring(0, 40)}"`);
-      return fillReactSelect(el, String(value));
+      return fillReactSelect(el, String(value), skipBridge);
     }
 
     if (fieldDescriptor.type === "aria-combobox") {
@@ -872,7 +889,7 @@
           break;
         }
       }
-      if (!matched) console.warn(`[JAOS Filler] radio-group "${fieldLabel}": no match for "${value}" in ${radios.length} options`);
+      if (!matched) console.log(`[JAOS Filler] radio-group "${fieldLabel}": no match for "${value}" in ${radios.length} options`);
       return matched;
     }
 
@@ -887,7 +904,13 @@
       let filled = 0;
       for (const cb of checkboxes) {
         const cbText = _getInputLabelText(cb).toLowerCase().trim();
-        const shouldCheck = targets.some((t) => cbText === t || cbText.includes(t) || t.includes(cbText) || cb.value.toLowerCase() === t);
+        // Use word-boundary matching to avoid "man" matching "woman"
+        const shouldCheck = targets.some((t) => {
+          if (cbText === t || cb.value.toLowerCase() === t) return true;
+          // Word-boundary check: "man" should NOT match "woman"
+          const wordRegex = new RegExp(`\\b${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+          return wordRegex.test(cbText);
+        });
         if (shouldCheck && !cb.checked) {
           cb.click();
           filled++;
@@ -911,7 +934,7 @@
     // Text inputs and textareas — guard against non-input elements (e.g. div containers
     // from widgets that weren't routed to their correct fill method)
     if (el.tagName !== "INPUT" && el.tagName !== "TEXTAREA" && !el.isContentEditable) {
-      console.warn(`[JAOS Filler] Cannot fill <${el.tagName}> as text for "${fieldLabel}" (type=${fieldDescriptor.type}) — element is not a text input`);
+      console.log(`[JAOS Filler] Cannot fill <${el.tagName}> as text for "${fieldLabel}" (type=${fieldDescriptor.type}) — element is not a text input`);
       return false;
     }
 

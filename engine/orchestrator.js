@@ -18,7 +18,7 @@
   if (window.__jaosOrchestrator) return;
 
   const log = (...args) => console.log("[JAOS Engine]", ...args);
-  const warn = (...args) => console.warn("[JAOS Engine]", ...args);
+  const warn = (...args) => console.log("[JAOS Engine]", ...args);
 
   // ─── V2 Adapter Registry ───────────────────────────────────────────
 
@@ -212,6 +212,34 @@
       throw new Error("Engine modules not loaded (scanner/mapper/filler)");
     }
 
+    // ── Fiber bridge health probe ──
+    // Probe once upfront (200ms) to see if the MAIN world bridge is alive.
+    // If dead, skip Strategy 1 in fillReactSelect to avoid 2s timeout per field.
+    let fiberBridgeAlive = false;
+    {
+      const anyRS = document.querySelector('[class*="-container"]:has([class*="__control"])');
+      if (anyRS) {
+        fiberBridgeAlive = await new Promise((resolve) => {
+          const probeMarker = `probe-${Date.now()}`;
+          const timeout = setTimeout(() => { cleanup(); resolve(false); }, 200);
+          const cleanup = () => {
+            clearTimeout(timeout);
+            document.removeEventListener("jaos:rs-options-result", handler);
+            anyRS.removeAttribute("data-jaos-rs");
+          };
+          const handler = (e) => {
+            if (e.detail?.marker !== probeMarker) return;
+            cleanup();
+            resolve(true);
+          };
+          document.addEventListener("jaos:rs-options-result", handler);
+          anyRS.setAttribute("data-jaos-rs", probeMarker);
+          document.dispatchEvent(new CustomEvent("jaos:rs-options", { detail: { marker: probeMarker } }));
+        });
+        log(`Fiber bridge ${fiberBridgeAlive ? "✓ alive" : "✗ dead (will use click→menu fallback)"}`);
+      }
+    }
+
     // Build the flow steps from the adapter
     const flow = adapter.getFlow?.() || [{ id: "main", label: "Application" }];
     const totalSteps = flow.length;
@@ -361,6 +389,16 @@
               log(`  Re-scan matched ${reScan.fields.length + reScan.widgets.length} fresh elements`);
             }
 
+            // 6.7. Post-map override hook — adapter can deterministically correct LLM mistakes
+            //      (e.g., URL fields where LLM puts LinkedIn URL in GitHub field)
+            if (step.fixMappings) {
+              try {
+                await step.fixMappings(ctx, mapResult.mappings, scanResult);
+              } catch (err) {
+                warn(`  fixMappings error: ${err.message}`);
+              }
+            }
+
             // 7. Build element lookup and fill
             const lookup = mapper.buildElementLookup(scanResult);
             let stepFilled = 0;
@@ -386,6 +424,7 @@
 
                 const success = await filler.fillField(descriptor, mapping.value, {
                   humanType: useHumanType,
+                  skipBridge: !fiberBridgeAlive,
                 });
 
                 if (success) {
