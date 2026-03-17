@@ -106,7 +106,7 @@
     }
 
     if (!searchInput) {
-      console.warn("[JAOS BambooHR] fab-MenuSearch__input not found after 3s of polling");
+      console.log("[JAOS BambooHR] fab-MenuSearch__input not found after 3s of polling");
       document.body.click();
       return false;
     }
@@ -128,7 +128,7 @@
       // Broader fallback — find any menu option container
       const anyOption = document.querySelector(".fab-MenuOption, [role='menuitem']");
       if (!anyOption) {
-        console.warn("[JAOS BambooHR] fab-MenuList and options not found");
+        console.log("[JAOS BambooHR] fab-MenuList and options not found");
         document.body.click();
         return false;
       }
@@ -158,7 +158,7 @@
       return true;
     }
 
-    console.warn(`[JAOS BambooHR] No matching option for "${searchValue}" in ${options.length} options`);
+    console.log(`[JAOS BambooHR] No matching option for "${searchValue}" in ${options.length} options`);
     document.body.click();
     return false;
   };

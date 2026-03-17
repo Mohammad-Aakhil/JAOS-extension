@@ -310,13 +310,13 @@
   const detectAtsPlatform = () => {
     const adapters = getAtsAdapters();
     if (adapters.length === 0) {
-      console.warn("[JAOS] detectAtsPlatform: no adapters registered in window.__jaosAtsAdapters");
+      console.log("[JAOS] detectAtsPlatform: no adapters registered in window.__jaosAtsAdapters");
     }
     for (const adapter of adapters) {
       try {
         if (adapter.detect()) return adapter;
       } catch (e) {
-        console.warn(`[JAOS] detectAtsPlatform: ${adapter.name} detect() threw:`, e.message);
+        console.log(`[JAOS] detectAtsPlatform: ${adapter.name} detect() threw:`, e.message);
         continue;
       }
     }
@@ -646,7 +646,7 @@
             console.log(`[JAOS DOM] ${ats.name} custom fill: ${customFilled} fields`);
           }
         } catch (err) {
-          console.warn(`[JAOS DOM] ${ats.name} custom fill error:`, err);
+          console.log(`[JAOS DOM] ${ats.name} custom fill error:`, err);
         }
       }
 
@@ -697,7 +697,7 @@
       };
 
       runV2Engine(profile, jobContext).catch((err) => {
-        console.warn("[JAOS] v2 engine error:", err);
+        console.log("[JAOS] v2 engine error:", err);
       });
 
       return {
@@ -2532,7 +2532,7 @@
             const result = await runV2Engine(profile, jobCtx);
             console.log("[JAOS AI] Fill complete:", result);
             console.log(`[JAOS AI] Filled: ${result.filled}/${result.scanned}, Errors: ${result.errors.length}`);
-            if (result.errors.length > 0) console.warn("[JAOS AI] Errors:", result.errors);
+            if (result.errors.length > 0) console.log("[JAOS AI] Errors:", result.errors);
             if (profile.cover_letter) uploadCoverLetterFile(profile.cover_letter);
             const onComplete = makeOnFillComplete(aiFillBtn, aiBtnBg, "Autofill (AI)");
             await onComplete(result.filled > 0, [], result.fieldLabels);
@@ -2561,7 +2561,7 @@
         // Timeout: if no response in 35s, give up
         const v2Timeout = setTimeout(() => {
           chrome.runtime.onMessage.removeListener(onV2Done);
-          console.warn("[JAOS AI] V2 fill timed out (35s), no response from any frame");
+          console.log("[JAOS AI] V2 fill timed out (35s), no response from any frame");
           const onComplete = makeOnFillComplete(aiFillBtn, aiBtnBg, "Autofill (AI)");
           onComplete(false);
         }, 35000);

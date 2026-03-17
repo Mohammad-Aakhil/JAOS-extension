@@ -55,6 +55,7 @@ const injectContentScript = async (tabId) => {
       "adapters/smartrecruiters-v2.js",
       "adapters/ashby-v2.js",
       "adapters/oraclecloud-v2.js",
+      "adapters/lever-v2.js",
       // Main content script (must be last)
       "content.js",
     ],

@@ -105,9 +105,9 @@
   const _LEVELS = { verbose: 0, info: 1, warn: 2, error: 3 };
   const _lvl = _LEVELS[LOG_LEVEL] ?? 2;
 
-  const log = (...args) => { if (_lvl <= 1) log('', ...args); };
-  const logVerbose = (...args) => { if (_lvl <= 0) log('', ...args); };
-  const logWarn = (...args) => { if (_lvl <= 2) logWarn('', ...args); };
+  const log = (...args) => { if (_lvl <= 1) console.log('[JAOS OracleCloud]', ...args); };
+  const logVerbose = (...args) => { if (_lvl <= 0) console.log('[JAOS OracleCloud]', ...args); };
+  const logWarn = (...args) => { if (_lvl <= 2) console.log('[JAOS OracleCloud]', ...args); };
   const logError = (...args) => { if (_lvl <= 3) console.error('[JAOS OracleCloud]', ...args); };
 
   // ════════════════════════════════════════════════════════════════════

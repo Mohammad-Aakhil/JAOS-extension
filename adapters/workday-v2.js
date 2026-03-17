@@ -22,7 +22,7 @@
 
   const LOG_PREFIX = "[JAOS:Workday]";
   const log = (...args) => console.log(LOG_PREFIX, ...args);
-  const warn = (...args) => console.warn(LOG_PREFIX, ...args);
+  const warn = (...args) => console.log(LOG_PREFIX, ...args);
 
   // ── Timing Constants ──────────────────────────────────────────────
   const TIMING = {

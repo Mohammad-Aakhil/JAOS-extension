@@ -874,23 +874,54 @@
     }
 
     if (fieldDescriptor.type === "radio-group") {
-      // Find the matching radio input inside the container and .click() it
-      // Must use real .click() — React-controlled radios ignore programmatic checked + events
+      // Find the best matching radio input — uses scored matching to avoid
+      // partial-substring false positives (e.g. "non-citizen seeking..." matching
+      // "non-citizen allowed..." because both contain "non-citizen").
+      // Priority: exact match > value match > includes > best overlap
       const radios = el.querySelectorAll('input[type="radio"]');
       const target = String(value).toLowerCase().trim();
-      let matched = false;
+      let bestRadio = null;
+      let bestScore = -1;
+
       for (const radio of radios) {
         const radioText = _getInputLabelText(radio).toLowerCase().trim();
-        if (radioText === target || radioText.includes(target) || target.includes(radioText) ||
-            radio.value.toLowerCase() === target) {
-          radio.click();
-          matched = true;
-          console.log(`[JAOS Filler] radio-group "${fieldLabel}" → "${radioText.substring(0, 40)}"`);
-          break;
+        const radioVal = radio.value.toLowerCase().trim();
+        let score = 0;
+
+        // Exact text match — highest priority
+        if (radioText === target || radioVal === target) {
+          score = 1000;
+        }
+        // Label contains the full target text
+        else if (radioText.includes(target)) {
+          score = 500 + target.length;
+        }
+        // Target contains the full label text
+        else if (target.includes(radioText)) {
+          score = 400 + radioText.length;
+        }
+        // Word overlap scoring — count matching words
+        else {
+          const targetWords = target.split(/\s+/);
+          const labelWords = radioText.split(/\s+/);
+          const overlap = targetWords.filter(w => w.length > 2 && labelWords.includes(w)).length;
+          if (overlap > 0) score = overlap * 50;
+        }
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestRadio = radio;
         }
       }
-      if (!matched) console.log(`[JAOS Filler] radio-group "${fieldLabel}": no match for "${value}" in ${radios.length} options`);
-      return matched;
+
+      if (bestRadio && bestScore > 0) {
+        bestRadio.click();
+        const chosenText = _getInputLabelText(bestRadio).trim();
+        console.log(`[JAOS Filler] radio-group "${fieldLabel}" → "${chosenText.substring(0, 50)}" (score: ${bestScore})`);
+        return true;
+      }
+      console.log(`[JAOS Filler] radio-group "${fieldLabel}": no match for "${value}" in ${radios.length} options`);
+      return false;
     }
 
     if (fieldDescriptor.type === "checkbox-group") {
