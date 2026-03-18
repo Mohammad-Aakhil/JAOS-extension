@@ -334,6 +334,11 @@
 
         if (fieldsToMap.fields.length === 0 && fieldsToMap.widgets.length === 0) {
           log("  All fields already filled, skipping LLM");
+          if (scanResult.preFilledLabels) {
+            for (const pf of scanResult.preFilledLabels) {
+              allFieldLabels.push({ label: pf.label, isFilled: true, isRequired: !!pf.isRequired });
+            }
+          }
           for (const f of scanResult.fields) {
             allFieldLabels.push({ label: f.label || f.placeholder || f.name || "Field", isFilled: true, isRequired: !!f.required });
           }
@@ -439,6 +444,13 @@
                 const msg = `Fill failed [${descriptor.label || descriptor.uid}]: ${err.message}`;
                 stepErrors.push(msg);
                 warn(`  ${msg}`);
+              }
+            }
+            // Include fields pre-filled by adapter augmentScan (removed from scanResult.fields
+            // but tracked in scanResult.preFilledLabels for progress UI display)
+            if (scanResult.preFilledLabels) {
+              for (const pf of scanResult.preFilledLabels) {
+                allFieldLabels.push({ label: pf.label, isFilled: true, isRequired: !!pf.isRequired });
               }
             }
             for (const f of scanResult.fields) {

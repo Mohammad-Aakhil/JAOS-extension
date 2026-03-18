@@ -2,15 +2,22 @@
  * adapters/lever-v2.js — Lever ATS adapter (v2 architecture)
  *
  * Lever uses jQuery 3.6.1 with plain HTML forms — no React, no custom widgets.
- * Single-page form with sections: basic info, links, custom cards, surveys, consent.
+ * Single-page form with sections: basic info, links, custom cards, EEO, consent.
  *
  * Quirks:
  *  - Location input has Lever's own autocomplete (dropdown-container/dropdown-results)
- *  - Demographic surveys (surveysResponses[...]) must be SKIPPED (EEO data)
- *  - consent[store] checkbox is required — auto-check it
- *  - Custom question cards use `cards[uuid][fieldN]` naming
+ *  - Card fields use `cards[uuid][fieldN]` naming — UUIDs change per job posting
+ *  - Card field labels live in `.application-label` within parent `li.application-question`
+ *  - EEO selects: eeo[gender], eeo[race], eeo[veteran] — native <select>
+ *  - consent[store] checkbox — auto-check in afterFill
  *  - Resume file input: #resume-upload-input (handled separately)
- *  - hCaptcha present — can't fill, skip
+ *  - hCaptcha present — skip
+ *  - Pronouns: checkbox group with 9+ options — skip (optional, personal)
+ *
+ * Label strategy (NO LLM needed for labels):
+ *  Standard fields → name attribute matching (name, email, phone, org, urls[*])
+ *  Card fields → DOM walk to `.application-label` in parent `li`
+ *  EEO fields → deterministic fill from profile
  *
  * Flow: detect → waitForDomStable → scan → augmentScan → LLM map → fill → afterFill
  */
@@ -21,11 +28,8 @@
   // ── Detection ──────────────────────────────────────────────────────
 
   const detect = () => {
-    // Direct Lever hostname
     if (/^jobs\.lever\.co$/i.test(window.location.hostname)) return true;
-    // Custom domains embedding Lever forms
     if (document.querySelector('#application-form input[name="origin"]')) return true;
-    // Lever-specific field naming
     if (document.querySelector('input[name="urls[LinkedIn]"], input[name="urls[GitHub]"]')) return true;
     return false;
   };
@@ -37,71 +41,207 @@
   const getFormRoot = () => {
     const form = document.querySelector("#application-form");
     if (form && form.querySelector(FORM_FIELD_CHECK)) return form;
-    // Fallback: any form with Lever-style fields
     const fallback = document.querySelector('form[action*="lever.co"]');
     if (fallback && fallback.querySelector(FORM_FIELD_CHECK)) return fallback;
     return document.body;
   };
 
-  // ── Label-based field matching ──────────────────────────────────────
-  // Maps field labels to profile keys — deterministic, no LLM needed.
-  // Returns the profile value or null (field stays in scan for LLM).
+  // ── Lever DOM label extraction ─────────────────────────────────────
+  // Lever puts question labels in `.application-label` inside the parent
+  // `li.application-question` container. This is the ONLY reliable source
+  // for card fields — the input name is just `cards[uuid][fieldN]`.
 
-  // Match fields by name attribute OR label text → profile key.
-  // Name-based matching is more reliable for Lever's consistent urls[X] naming.
-  const FIELD_MATCHERS = [
-    { name: 'urls[LinkedIn]',  labelPattern: /linkedin/i,       key: "linkedin" },
-    { name: 'urls[GitHub]',    labelPattern: /github/i,         key: "github" },
-    { name: 'urls[Portfolio]', labelPattern: /portfolio/i,      key: "portfolio" },
-    { name: 'urls[Twitter]',   labelPattern: /twitter/i,        key: "twitter" },
-    { name: 'urls[Other]',     labelPattern: /other\s*website/i, key: "website" },
-  ];
-
-  const matchField = (fieldName, label, profile) => {
-    for (const m of FIELD_MATCHERS) {
-      if (fieldName === m.name || m.labelPattern.test(label)) {
-        return profile[m.key] || "";
+  const getLeverLabel = (el) => {
+    // 1. Walk up to the question container (standard Lever DOM structure)
+    const question = el.closest("li.application-question, li.application-additional, div.application-question");
+    if (question) {
+      const lbl = question.querySelector(".application-label, label");
+      if (lbl) {
+        const text = (lbl.textContent || "").replace(/✱/g, "").replace(/\*/g, "").trim();
+        if (text && text.length < 120) return text;
       }
     }
-    return null; // no match — let LLM handle
+
+    // 2. Walk up to .application-field and check for sibling label
+    const field = el.closest(".application-field");
+    if (field) {
+      const parent = field.parentElement;
+      if (parent) {
+        const lbl = parent.querySelector(".application-label, label");
+        if (lbl && !lbl.contains(el)) {
+          const text = (lbl.textContent || "").replace(/✱/g, "").replace(/\*/g, "").trim();
+          if (text && text.length < 120) return text;
+        }
+      }
+    }
+
+    // 3. EEO survey questions + custom questions — labels live in nearby headings
+    // Lever patterns: <h3>What is your gender?</h3>, <p class="application-label">
+    // Checkbox/radio groups: the container is a fieldset or div wrapping all options
+    const surveyContainer = el.closest(
+      ".application-survey-question, fieldset, [class*='survey'], [class*='question'], " +
+      "li.application-question, li.application-additional, li.application-dropdown"
+    );
+    if (surveyContainer) {
+      const heading = surveyContainer.querySelector(
+        ".application-label, h2, h3, h4, label, legend, p:first-of-type"
+      );
+      if (heading && !heading.querySelector("input")) {
+        const text = (heading.textContent || "").replace(/✱/g, "").replace(/\*/g, "").trim();
+        if (text && text.length < 120) return text;
+      }
+    }
+
+    // 4. Walk up parents looking for .application-label sibling (card fields, custom questions)
+    // Lever DOM: <li><div class="application-label">Question</div><div class="application-field"><input></div></li>
+    let parent = el;
+    for (let i = 0; i < 6 && parent; i++) {
+      parent = parent.parentElement;
+      if (!parent || parent.tagName === "FORM" || parent.tagName === "BODY") break;
+      const lbl = parent.querySelector(".application-label");
+      if (lbl && !lbl.contains(el)) {
+        const text = (lbl.textContent || "").replace(/✱/g, "").replace(/\*/g, "").trim();
+        if (text && text.length < 120) return text;
+      }
+    }
+
+    // 5. Standard label[for] or wrapping label
+    if (el.id) {
+      const lbl = document.querySelector(`label[for="${CSS.escape(el.id)}"]`);
+      if (lbl) return (lbl.textContent || "").replace(/\*/g, "").trim().substring(0, 120);
+    }
+    const wrap = el.closest("label");
+    if (wrap) return (wrap.textContent || "").replace(/\*/g, "").trim().substring(0, 80);
+
+    return "";
   };
+
+  // ── Deterministic field matchers ───────────────────────────────────
+  // Maps name attributes to profile keys. NO LLM needed for these.
+
+  const DETERMINISTIC_FILLS = [
+    // Standard Lever fields
+    { name: "name",             profileKey: (p) => p.full_name || `${p.first_name || ""} ${p.last_name || ""}`.trim() },
+    { name: "email",            profileKey: (p) => p.email },
+    { name: "phone",            profileKey: (p) => p.phone },
+    { name: "org",              profileKey: (p) => p.current_company || p.company },
+    { name: "urls[LinkedIn]",   profileKey: (p) => p.linkedin },
+    { name: "urls[GitHub]",     profileKey: (p) => p.github },
+    { name: "urls[Portfolio]",  profileKey: (p) => p.portfolio || p.website },
+    { name: "urls[Twitter]",    profileKey: (p) => p.twitter },
+    { name: "urls[Other]",      profileKey: (p) => p.website || p.portfolio },
+  ];
+
+  // Card fields: matched by label text (NOT name, since UUIDs change per job)
+  const CARD_LABEL_FILLS = [
+    { pattern: /^legal\s*first\s*name$/i,               profileKey: (p) => p.first_name },
+    { pattern: /^legal\s*last\s*name$/i,                profileKey: (p) => p.last_name },
+    { pattern: /^(home\s*)?phone$/i,                    profileKey: (p) => p.phone },
+    { pattern: /^mailing\s*address\s*line\s*1$/i,       profileKey: (p) => p.address_line1 || p.address },
+    { pattern: /^mailing\s*address\s*line\s*2$/i,       profileKey: (p) => p.address_line2 || "" },
+    { pattern: /^city$/i,                               profileKey: (p) => p.city },
+    { pattern: /^state$/i,                              profileKey: (p) => p.state },
+    { pattern: /^zip\s*(code)?$/i,                      profileKey: (p) => p.zip || p.postal_code },
+    { pattern: /^degree$/i,                             profileKey: (p) => p.education_entries?.[0]?.degree || p.degree },
+    { pattern: /^(no\.?\s*of\s*)?years\s*(attend|work)/i, profileKey: () => "" }, // Let LLM decide — varies
+    { pattern: /full\s*legal\s*name.*signature/i,       profileKey: (p) => p.full_name || `${p.first_name || ""} ${p.last_name || ""}`.trim() },
+  ];
+
+  // Radio/Yes-No question defaults (matched by label text)
+  const YES_NO_DEFAULTS = [
+    { pattern: /referred\s*by\s*(a\s*)?(current\s*)?employee/i,   value: "No" },
+    { pattern: /previously\s*work/i,                               value: "No" },
+    { pattern: /subject\s*to\s*any\s*(type\s*of\s*)?agreement/i,  value: "No" },
+    { pattern: /legally\s*(eligible|authorized)\s*to\s*work/i,     value: "Yes" },
+    { pattern: /require\s*(visa\s*)?sponsorship/i,                 value: "No" },
+    { pattern: /graduated/i,                                        value: "Yes" },
+    { pattern: /non-?compete/i,                                     value: "No" },
+    { pattern: /background\s*check/i,                               value: "Yes" },
+    { pattern: /drug\s*(test|screen)/i,                             value: "Yes" },
+    { pattern: /18\s*years\s*(of\s*age|or\s*older)/i,              value: "Yes" },
+    { pattern: /served\s*(in\s*the\s*)?military/i,                  value: "No" },
+    { pattern: /disability/i,                                        value: "No" },
+  ];
+
+  // ── EEO radio/checkbox group fills ────────────────────────────────
+  // Some Lever portals use radio groups or checkbox groups for EEO instead
+  // of <select>. Matched by question label text, value picked from profile
+  // or sensible defaults. These run on radio-group and checkbox-group types.
+
+  const EEO_RADIO_FILLS = [
+    // Gender — radio group: "Female", "Male", "Non-binary", "Decline to answer"
+    { pattern: /gender/i, profileKey: "gender", fallback: "Decline to self-identify" },
+    // Race/ethnicity — checkbox group: "Asian", "White", "Black or African American", etc.
+    { pattern: /race|ethnicity/i, profileKey: "race_ethnicity", fallback: "Decline to Respond" },
+    // Veteran — radio group: "Yes", "No", "Decline to answer"
+    { pattern: /veteran|military|served/i, profileKey: "veteran_status", fallback: "No" },
+    // Age range — radio group: "21 or younger", "21-29", "30-39", etc.
+    { pattern: /age\s*range/i, profileKey: "age_range", fallback: null },
+  ];
+
+  // Click a radio option whose label includes the target text
+  const clickRadioOrCheckboxByText = (containerEl, targetText) => {
+    if (!containerEl || !targetText) return false;
+    const target = targetText.toLowerCase().trim();
+
+    // Find all radio/checkbox inputs inside the container
+    const inputs = containerEl.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+    for (const inp of inputs) {
+      const optLabel = (
+        inp.closest("label")?.textContent?.trim() ||
+        inp.nextElementSibling?.textContent?.trim() ||
+        inp.labels?.[0]?.textContent?.trim() ||
+        inp.value || ""
+      ).toLowerCase();
+      if (optLabel === target || optLabel.includes(target) || target.includes(optLabel)) {
+        if (!inp.checked) {
+          inp.click();
+          inp.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+        return true;
+      }
+    }
+    return false;
+  };
+
+  // Acknowledgement/initials: fields with long legal text that need initials
+  const isInitialsField = (label) =>
+    /\(please\s*initial\)/i.test(label) ||
+    /hereby\s*(acknowledge|certify|authorize)/i.test(label) ||
+    /executed\s*authorization/i.test(label) ||
+    /understand\s*that/i.test(label);
 
   // ── Helpers ────────────────────────────────────────────────────────
 
-  /** Find best matching <option> value for a profile string */
   const _matchSelectOption = (selectEl, profileValue) => {
     if (!profileValue) return "";
     const target = profileValue.toLowerCase().trim();
-    const opts = [...selectEl.options];
-    // Exact match first
-    const exact = opts.find(o => o.value.toLowerCase() === target || o.text.toLowerCase() === target);
-    if (exact) return exact.value;
-    // Partial match
-    const partial = opts.find(o =>
-      o.value.toLowerCase().includes(target) || target.includes(o.value.toLowerCase()) ||
-      o.text.toLowerCase().includes(target) || target.includes(o.text.toLowerCase())
+    // Filter out placeholder/empty options to prevent false matches
+    const opts = [...selectEl.options].filter(o =>
+      o.value && o.value !== "" && !/^select\s*\.{0,3}$/i.test(o.text.trim())
     );
+    // 1. Exact match on text or value
+    const exact = opts.find(o =>
+      o.text.toLowerCase().trim() === target || o.value.toLowerCase().trim() === target
+    );
+    if (exact) return exact.value;
+    // 2. Partial match — require minimum 3 chars to avoid garbage matches
+    const partial = opts.find(o => {
+      const oText = o.text.toLowerCase().trim();
+      return (oText.length >= 3 && target.includes(oText)) ||
+             (target.length >= 3 && oText.includes(target));
+    });
     if (partial) return partial.value;
     return "";
   };
 
   const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
-  /**
-   * Handle Lever's location autocomplete.
-   * Lever uses its OWN dropdown (not Google Places):
-   *   div.dropdown-container  (display:flex when open, none when closed)
-   *     div.dropdown-results  (clickable result items)
-   *     div.dropdown-loading-results  (spinner while fetching)
-   *     div.dropdown-no-results  ("No location found")
-   * Selecting a result populates hidden input#selected-location with JSON.
-   *
-   * IMPORTANT: Lever's jQuery + debounce only responds to char-by-char
-   * KeyboardEvent + InputEvent combos. Setting value directly does NOT trigger
-   * the location API. (Validated via DevTools trial — only Test 3 worked.)
-   */
+  // ── Location autocomplete ──────────────────────────────────────────
+  // Lever uses its OWN dropdown (not Google Places):
+  //   div.dropdown-container → div.dropdown-results (clickable items)
+  // MUST type char-by-char — setting value directly doesn't trigger Lever's API.
 
-  /** Type text char-by-char with keydown/input/keyup per character */
   const simulateCharByChar = (input, text) => {
     return new Promise((resolve) => {
       input.value = "";
@@ -119,99 +259,51 @@
     });
   };
 
+  // [Lever] Location autocomplete — type the city, wait for dropdown to appear,
+  // then leave focus on the input so the dropdown stays visible for user to click.
+  // React's controlled input makes programmatic selection unreliable (isTrusted=false
+  // events don't persist through React re-renders), so we type + show dropdown only.
   const fillLocationInput = async (input, value) => {
     if (!input || !value) return false;
-
-    // Use just the city name — Lever's API works best with short queries
-    // "Buffalo, NY" → "Buffalo", "New York, NY, USA" → "New York"
     const cityOnly = value.split(",")[0].trim();
 
-    // Find the dropdown container — DOM: label > div.application-field > input + div.dropdown-container
-    const fieldContainer = input.closest(".application-field")
-      || input.closest("label")
-      || input.parentElement;
-
-    // 1. Focus, clear, then type char-by-char
     input.focus();
     input.value = "";
     input.dispatchEvent(new Event("input", { bubbles: true }));
     await delay(200);
 
     await simulateCharByChar(input, cityOnly);
-    console.log(`[JAOS Lever] Location: typed "${cityOnly}" char-by-char, waiting for dropdown...`);
+    console.log(`[JAOS Lever] Location: typed "${cityOnly}" — user needs to pick from dropdown`);
 
-    // 2. Poll for dropdown results (8s max — API can be slow)
-    let found = false;
-    for (let i = 0; i < 40; i++) { // 40 × 200ms = 8s
+    // Wait briefly for dropdown to appear, then leave focus on input
+    // so dropdown stays visible for the user to click
+    const fieldContainer = input.closest(".application-field") || input.parentElement;
+    for (let i = 0; i < 20; i++) {
       await delay(200);
-
-      const resultsDiv = fieldContainer?.querySelector(".dropdown-results")
-        || document.querySelector(".dropdown-results");
-      const loadingDiv = fieldContainer?.querySelector(".dropdown-loading-results")
-        || document.querySelector(".dropdown-loading-results");
-
-      // Still loading — keep waiting
-      const loadingVisible = loadingDiv && getComputedStyle(loadingDiv).display !== "none";
-      if (loadingVisible) continue;
-
-      // Check for actual result children
+      const resultsDiv = fieldContainer?.querySelector(".dropdown-results") || document.querySelector(".dropdown-results");
       if (resultsDiv && resultsDiv.children.length > 0) {
-        const items = [...resultsDiv.children];
-        const target = value.toLowerCase();
-
-        // Find best match index — prefer item containing full location (city + state)
-        let bestIdx = 0;
-        for (let j = 0; j < items.length; j++) {
-          const text = (items[j].textContent || "").trim().toLowerCase();
-          if (text.includes(target) || target.includes(text.split(",")[0])) {
-            bestIdx = j;
-            break;
-          }
-        }
-        // Fallback: match by city name only
-        if (bestIdx === 0) {
-          for (let j = 0; j < items.length; j++) {
-            const text = (items[j].textContent || "").trim().toLowerCase();
-            if (text.includes(cityOnly.toLowerCase())) {
-              bestIdx = j;
-              break;
-            }
-          }
-        }
-
-        // ArrowDown to highlight the target option, then Enter to select
-        for (let j = 0; j <= bestIdx; j++) {
-          input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
-          await delay(50);
-        }
-        input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
-        input.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter", bubbles: true }));
-        await delay(300);
-
-        const selectedLocation = document.querySelector("#selected-location");
-        if (selectedLocation?.value) {
-          console.log(`[JAOS Lever] Location selected: "${items[bestIdx].textContent.trim()}" → ${selectedLocation.value}`);
-        } else {
-          console.log(`[JAOS Lever] Location highlighted: "${items[bestIdx].textContent.trim()}" (no hidden value set)`);
-        }
-        found = true;
-        break;
-      }
-
-      // "No location found" visible — stop
-      const noResults = fieldContainer?.querySelector(".dropdown-no-results")
-        || document.querySelector(".dropdown-no-results");
-      const noResultsVisible = noResults && getComputedStyle(noResults).display !== "none";
-      if (noResultsVisible) {
-        console.log(`[JAOS Lever] No location results for "${cityOnly}"`);
-        break;
+        console.log(`[JAOS Lever] Location dropdown visible with ${resultsDiv.children.length} options — waiting for user pick`);
+        return "needs_pick"; // Signal to progress UI
       }
     }
+    return false;
+  };
 
-    if (!found) {
-      console.log(`[JAOS Lever] Location dropdown timed out for "${cityOnly}"`);
+  // ── Click radio by name + label value ──────────────────────────────
+
+  const clickRadioByLabel = (name, labelValue) => {
+    const radios = document.querySelectorAll(`input[name="${CSS.escape(name)}"]`);
+    for (const r of radios) {
+      const rLabel = r.closest("label")?.textContent?.trim() || r.value || "";
+      if (rLabel.toLowerCase() === labelValue.toLowerCase()) {
+        if (!r.checked) {
+          r.click();
+          r.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+        return true;
+      }
     }
-    return found;
+    return false;
   };
 
   // ── Flow ───────────────────────────────────────────────────────────
@@ -224,168 +316,351 @@
 
         waitFor: async (ctx) => {
           const formRoot = getFormRoot();
-          await ctx.utils.waitForElement(
-            "input, select, textarea",
-            formRoot,
-            8000
-          );
+          await ctx.utils.waitForElement("input, select, textarea", formRoot, 8000);
           await ctx.utils.waitForDomStable(400, 3000);
         },
 
         getFormRoot: () => getFormRoot(),
 
-        // [Lever] Pre-fill label-matched fields + filter junk before LLM
+        // [Lever] Enrich labels, pre-fill deterministic fields, filter junk
         augmentScan: async (ctx, scanResult) => {
+          const profile = ctx.profile || {};
           const before = scanResult.fields.length;
           let preFilled = 0;
+          let enriched = 0;
 
-          // Debug: log all field labels + names so we can verify matching
-          console.log("[JAOS Lever] augmentScan fields:", scanResult.fields.map(f =>
-            `"${f.label}" (name=${f.element?.name}, type=${f.type})`
-          ));
+          // Track pre-filled fields for progress UI display.
+          // Fields removed from scanResult.fields (return false) won't appear in
+          // orchestrator's fieldLabels unless we record them here.
+          scanResult.preFilledLabels = scanResult.preFilledLabels || [];
 
+          // Helper: record a pre-filled field for progress UI
+          const recordPreFill = (label, isRequired) => {
+            if (label) {
+              // Clean label for UI: strip long legal text, keep first sentence
+              const clean = label.replace(/\*/g, "").trim();
+              const short = clean.length > 50 ? clean.substring(0, 50).replace(/\s+\S*$/, "…") : clean;
+              scanResult.preFilledLabels.push({ label: short, isRequired: !!isRequired });
+            }
+          };
+
+          // Pass 1: Enrich labels for ALL fields from DOM before any filtering.
+          // Card fields need getLeverLabel() since scanner falls back to name attr.
+          // Radio/checkbox groups need getLeverLabel() since scanner may pick first option text.
+          for (const f of scanResult.fields) {
+            const el = f.element;
+            const name = f.name || el?.name || "";
+            const type = f.type || "";
+
+            // Card fields: label falls back to "cards[uuid][fieldN]" without enrichment
+            if (name.startsWith("cards[")) {
+              if (f.label && f.label !== "-" && !/^cards\[/.test(f.label)) continue;
+              const leverLabel = getLeverLabel(el);
+              if (leverLabel) { f.label = leverLabel; enriched++; }
+              continue;
+            }
+
+            // Radio/checkbox groups: scanner may pick first option text as label
+            // (e.g. "SQL" instead of "Select the tools/languages...")
+            // Re-extract from the question container for accuracy.
+            if (type === "radio-group" || type === "checkbox-group") {
+              const leverLabel = getLeverLabel(el);
+              if (leverLabel && leverLabel.length > (f.label || "").length) {
+                f.label = leverLabel;
+                enriched++;
+              }
+            }
+
+            // surveysResponses fields: scanner label is often just the name attr
+            if (name.startsWith("surveysResponses[")) {
+              const leverLabel = getLeverLabel(el);
+              if (leverLabel) { f.label = leverLabel; enriched++; }
+            }
+          }
+          if (enriched > 0) {
+            console.log(`[JAOS Lever] Enriched ${enriched} field labels from DOM`);
+          }
+
+          // Pass 2: Filter + deterministic fill
           scanResult.fields = scanResult.fields.filter((f) => {
             const el = f.element;
-            // Use descriptor name (works for radio/checkbox groups where element is container div)
-            const name = f.name || el.name || "";
+            const name = f.name || el?.name || "";
+            const label = f.label || "";
+            const isReq = !!f.required;
 
-            // Remove file inputs (resume upload handled separately)
-            if (f.isFileInput || el.type === "file") {
-              console.log(`[JAOS Lever] Removed file input: "${f.label}"`);
-              return false;
-            }
+            // ── Remove junk fields (no UI tracking needed) ──────────
+            if (f.isFileInput || el?.type === "file") return false;
+            if (el?.type === "hidden") return false;
+            if (name === "h-captcha-response" || el?.id === "hcaptchaResponseInput") return false;
+            if (name.startsWith("consent[")) return false;
 
-            // EEO selects — fill from profile if data exists, skip if not
-            if (name === "eeo[gender]" && ctx.profile.gender) {
-              el.value = _matchSelectOption(el, ctx.profile.gender);
-              el.dispatchEvent(new Event("change", { bubbles: true }));
-              console.log(`[JAOS Lever] EEO gender → "${el.value}"`);
-              return false;
-            }
-            if (name === "eeo[race]" && ctx.profile.race_ethnicity) {
-              el.value = _matchSelectOption(el, ctx.profile.race_ethnicity);
-              el.dispatchEvent(new Event("change", { bubbles: true }));
-              console.log(`[JAOS Lever] EEO race → "${el.value}"`);
-              return false;
-            }
-            if (name === "eeo[veteran]" && ctx.profile.veteran_status) {
-              el.value = _matchSelectOption(el, ctx.profile.veteran_status);
-              el.dispatchEvent(new Event("change", { bubbles: true }));
-              console.log(`[JAOS Lever] EEO veteran → "${el.value}"`);
-              return false;
-            }
-            // Skip EEO/survey fields if NO profile data
-            if (name.startsWith("eeo[") || name.startsWith("surveysResponses[")) {
-              // Survey demographics: check if profile has matching data
-              // Gender radios
-              if (/\[field\d+\]$/.test(name)) {
-                const label = f.label?.toLowerCase() || "";
-                const hasGenderData = ctx.profile.gender && /female|male|non-binary|woman|man/i.test(label);
-                const hasRaceData = ctx.profile.race_ethnicity && /asian|white|black|hispanic|native|pacific|decline/i.test(label);
-                const hasVeteranData = ctx.profile.veteran_status && /veteran/i.test(label);
-                if (hasGenderData || hasRaceData || hasVeteranData) {
-                  // Let LLM handle with profile data available
-                  return true;
+            // Skip pronouns (optional, personal choice)
+            if (name === "pronouns" || name === "useNameOnlyPronounsOption" || name === "customPronounsOption") return false;
+            if (el?.closest?.(".custom-pronouns")) return false;
+
+            // ── EEO selects — fill deterministically if profile has data ──
+            // Uses _matchSelectOption which skips "Select ..." placeholders.
+            // Falls back to known defaults if profile field is missing.
+            if (name === "eeo[gender]") {
+              if (el?.tagName === "SELECT") {
+                const val = _matchSelectOption(el, profile.gender) ||
+                  _matchSelectOption(el, "Decline to self-identify");
+                if (val) {
+                  el.value = val;
+                  el.dispatchEvent(new Event("change", { bubbles: true }));
+                  console.log(`[JAOS Lever] EEO gender → "${el.options?.[el.selectedIndex]?.text}"`);
                 }
               }
-              console.log(`[JAOS Lever] Skipped EEO/survey (no profile data): "${f.label?.substring(0, 40)}" (name=${name})`);
-              return false;
-            }
-
-            // Remove consent fields (adapter handles these in afterFill)
-            if (name.startsWith("consent[")) {
-              console.log(`[JAOS Lever] Removed consent field: "${f.label}"`);
-              return false;
-            }
-
-            // Remove hCaptcha fields
-            if (name === "h-captcha-response" || el.id === "hcaptchaResponseInput") {
-              console.log(`[JAOS Lever] Removed hCaptcha field`);
-              return false;
-            }
-
-            // Remove hidden inputs that leaked into scan
-            if (el.type === "hidden") {
-              console.log(`[JAOS Lever] Removed hidden input: "${name}"`);
-              return false;
-            }
-
-            // Enrich card field labels — card textareas/radios only have
-            // name="cards[uuid][fieldN]" but the question text lives in a
-            // sibling/ancestor div.application-question-label or h5/p tag
-            if (name.startsWith("cards[") && (!f.label || f.label === "-" || /^cards\[/.test(f.label))) {
-              const li = el.closest("li.application-question, li") || el.closest("div.application-field")?.parentElement;
-              if (li) {
-                const labelDiv = li.querySelector(".application-question-label, .card-field-label, h5, p");
-                if (labelDiv) {
-                  f.label = (labelDiv.textContent || "").trim().substring(0, 120);
-                  console.log(`[JAOS Lever] Enriched card label: "${f.label}"`);
-                }
-              }
-            }
-
-            // Name/label-based pre-fill: URL fields, etc. — fill directly, skip LLM
-            const matched = matchField(name, f.label, ctx.profile);
-            if (matched !== null) {
-              if (matched && !el.value) {
-                el.value = matched;
-                el.dispatchEvent(new Event("input", { bubbles: true }));
-                el.dispatchEvent(new Event("change", { bubbles: true }));
-                console.log(`[JAOS Lever] Pre-filled "${f.label}" → "${matched}"`);
-              } else if (!matched) {
-                console.log(`[JAOS Lever] No profile value for "${f.label}", leaving empty`);
-              }
+              recordPreFill("Gender", false);
               preFilled++;
-              return false; // remove from scan — don't send to LLM
+              return false;
+            }
+            if (name === "eeo[race]") {
+              if (el?.tagName === "SELECT") {
+                const val = _matchSelectOption(el, profile.race_ethnicity) ||
+                  _matchSelectOption(el, "Decline to self-identify");
+                if (val) {
+                  el.value = val;
+                  el.dispatchEvent(new Event("change", { bubbles: true }));
+                  console.log(`[JAOS Lever] EEO race → "${el.options?.[el.selectedIndex]?.text}"`);
+                }
+              }
+              recordPreFill("Race / Ethnicity", false);
+              preFilled++;
+              return false;
+            }
+            if (name === "eeo[veteran]") {
+              if (el?.tagName === "SELECT") {
+                const val = _matchSelectOption(el, profile.veteran_status) ||
+                  _matchSelectOption(el, "I am not a veteran") ||
+                  _matchSelectOption(el, "not a veteran") ||
+                  _matchSelectOption(el, "Decline to self-identify");
+                if (val) {
+                  el.value = val;
+                  el.dispatchEvent(new Event("change", { bubbles: true }));
+                  console.log(`[JAOS Lever] EEO veteran → "${el.options?.[el.selectedIndex]?.text}"`);
+                } else {
+                  console.warn(`[JAOS Lever] EEO veteran — no matching option found`);
+                }
+              }
+              recordPreFill("Veteran Status", false);
+              preFilled++;
+              return false;
+            }
+            if (name.startsWith("eeo[")) return false;
+
+            // ── EEO radio/checkbox groups (surveysResponses[*]) ─────
+            if (name.startsWith("surveysResponses[") && (f.type === "radio-group" || f.type === "checkbox-group")) {
+              for (const eeo of EEO_RADIO_FILLS) {
+                if (eeo.pattern.test(label)) {
+                  const profileVal = eeo.profileKey ? profile[eeo.profileKey] : null;
+                  const target = profileVal || eeo.fallback;
+                  if (target) {
+                    const clicked = clickRadioOrCheckboxByText(el, target);
+                    if (clicked) {
+                      console.log(`[JAOS Lever] EEO radio "${label.substring(0, 40)}" → "${target}"`);
+                    } else {
+                      const declined = clickRadioOrCheckboxByText(el, "Decline") ||
+                        clickRadioOrCheckboxByText(el, "Prefer not");
+                      if (declined) console.log(`[JAOS Lever] EEO radio "${label.substring(0, 40)}" → Decline (fallback)`);
+                      else console.warn(`[JAOS Lever] EEO radio "${label.substring(0, 40)}" — no matching option for "${target}"`);
+                    }
+                  }
+                  recordPreFill(label, isReq);
+                  preFilled++;
+                  return false;
+                }
+              }
+              return false;
+            }
+            if (name.startsWith("surveysResponses[")) return false;
+
+            // ── Standard fields — fill by name attribute ──────────
+            for (const df of DETERMINISTIC_FILLS) {
+              if (name === df.name) {
+                const val = df.profileKey(profile);
+                if (val && el && !el.value) {
+                  el.value = val;
+                  el.dispatchEvent(new Event("input", { bubbles: true }));
+                  el.dispatchEvent(new Event("change", { bubbles: true }));
+                  console.log(`[JAOS Lever] Filled "${name}" → "${val.substring(0, 40)}"`);
+                }
+                // Use readable label: "Full name", "Email", "Phone" etc.
+                const readableLabel = label || name.replace(/^urls\[|\]$/g, "").replace(/([A-Z])/g, " $1").trim();
+                recordPreFill(readableLabel, isReq);
+                preFilled++;
+                return false;
+              }
             }
 
+            // ── Card fields — fill by label pattern ──────────────
+            if (name.startsWith("cards[") && label) {
+              // Initials / acknowledgement fields
+              if (isInitialsField(label)) {
+                const initials = profile.first_name && profile.last_name
+                  ? `${profile.first_name[0]}.${profile.last_name[0]}.`
+                  : profile.full_name?.split(" ").map(w => w[0]).join(".") + "." || "";
+                if (initials && el && !el.value) {
+                  el.value = initials;
+                  el.dispatchEvent(new Event("input", { bubbles: true }));
+                  el.dispatchEvent(new Event("change", { bubbles: true }));
+                  console.log(`[JAOS Lever] Initials "${label.substring(0, 40)}..." → "${initials}"`);
+                }
+                recordPreFill("Initials", isReq);
+                preFilled++;
+                return false;
+              }
+
+              // Signature field
+              if (/full\s*legal\s*name.*signature/i.test(label)) {
+                const sig = profile.full_name || `${profile.first_name || ""} ${profile.last_name || ""}`.trim();
+                if (sig && el && !el.value) {
+                  el.value = sig;
+                  el.dispatchEvent(new Event("input", { bubbles: true }));
+                  el.dispatchEvent(new Event("change", { bubbles: true }));
+                  console.log(`[JAOS Lever] Signature → "${sig}"`);
+                }
+                recordPreFill("Legal Signature", isReq);
+                preFilled++;
+                return false;
+              }
+
+              // Label-matched card fills
+              for (const clf of CARD_LABEL_FILLS) {
+                if (clf.pattern.test(label)) {
+                  const val = clf.profileKey(profile);
+                  if (val && el && !el.value) {
+                    el.value = val;
+                    el.dispatchEvent(new Event("input", { bubbles: true }));
+                    el.dispatchEvent(new Event("change", { bubbles: true }));
+                    console.log(`[JAOS Lever] Card fill "${label}" → "${val.substring(0, 40)}"`);
+                  }
+                  recordPreFill(label, isReq);
+                  preFilled++;
+                  return false;
+                }
+              }
+            }
+
+            // ── Yes/No radio defaults (cards AND non-card) ──────────
+            if (f.type === "radio-group" && label) {
+              for (const yn of YES_NO_DEFAULTS) {
+                if (yn.pattern.test(label)) {
+                  const clicked = clickRadioByLabel(name, yn.value) ||
+                    clickRadioOrCheckboxByText(el, yn.value);
+                  if (clicked) {
+                    console.log(`[JAOS Lever] Radio "${label.substring(0, 50)}" → "${yn.value}"`);
+                  } else {
+                    console.warn(`[JAOS Lever] Radio "${label.substring(0, 50)}" — couldn't click "${yn.value}"`);
+                  }
+                  recordPreFill(label, isReq);
+                  preFilled++;
+                  return false;
+                }
+              }
+            }
+
+            // ── Checkbox groups with skills/tools ────────────────────
+            if (f.type === "checkbox-group" && label && /tools|languages|skills|technologies/i.test(label)) {
+              const skills = profile.skills_list || profile.skills || [];
+              if (skills.length > 0) {
+                const inputs = el.querySelectorAll?.('input[type="checkbox"]') || [];
+                let matched = 0;
+                for (const inp of inputs) {
+                  const optText = (
+                    inp.closest("label")?.textContent?.trim() ||
+                    inp.nextElementSibling?.textContent?.trim() ||
+                    inp.value || ""
+                  ).toLowerCase();
+                  if (skills.some(s => optText.includes(s.toLowerCase()) || s.toLowerCase().includes(optText))) {
+                    if (!inp.checked) {
+                      inp.click();
+                      inp.dispatchEvent(new Event("change", { bubbles: true }));
+                    }
+                    matched++;
+                  }
+                }
+                console.log(`[JAOS Lever] Checkbox skills "${label.substring(0, 40)}" → ${matched} matched`);
+                recordPreFill(label, isReq);
+                preFilled++;
+                return false;
+              }
+            }
+
+            // ── Location input — handled in afterFill, remove from LLM scan
+            if (name === "location" || el?.id === "location-input") {
+              recordPreFill("Current Location", isReq);
+              return false;
+            }
+
+            // ── OpportunityLocation select ───────────────────────────
+            if (name === "opportunityLocationId") {
+              if (el?.tagName === "SELECT" && el.options.length > 1 && !el.value) {
+                const profileLoc = `${profile.city || ""} ${profile.state || ""}`.toLowerCase();
+                let matched = false;
+                for (const opt of el.options) {
+                  if (opt.value && opt.text.toLowerCase().includes(profileLoc.split(" ")[0])) {
+                    el.value = opt.value;
+                    el.dispatchEvent(new Event("change", { bubbles: true }));
+                    console.log(`[JAOS Lever] Location select → "${opt.text}"`);
+                    matched = true;
+                    break;
+                  }
+                }
+                if (!matched && el.options.length === 2) {
+                  el.value = el.options[1].value;
+                  el.dispatchEvent(new Event("change", { bubbles: true }));
+                  console.log(`[JAOS Lever] Location select (only option) → "${el.options[1].text}"`);
+                }
+              }
+              recordPreFill("Which location are you applying for?", isReq);
+              preFilled++;
+              return false;
+            }
+
+            // Everything else → send to LLM
             return true;
           });
 
           const removed = before - scanResult.fields.length;
-          if (removed > 0) {
-            console.log(`[JAOS Lever] augmentScan: removed ${removed} fields, pre-filled ${preFilled} (${scanResult.fields.length} remain for LLM)`);
-          }
+          console.log(`[JAOS Lever] augmentScan: ${enriched} labels enriched, ${preFilled} pre-filled (${scanResult.preFilledLabels.length} tracked for UI), ${removed} removed (${scanResult.fields.length} remain for LLM)`);
         },
 
-        // [Lever] After standard fill: handle location autocomplete + consent checkbox
+        // [Lever] After fill: location autocomplete + consent checkboxes
         afterFill: async (ctx) => {
           const formRoot = getFormRoot();
+          const profile = ctx.profile || {};
 
-          // 1. Handle location autocomplete
-          const locationInput = formRoot.querySelector("#location-input, .location-input, input[name='location']");
+          // 1. Handle location autocomplete — type city + show dropdown.
+          // User must click to select (React controlled input can't be set programmatically).
+          const locationInput = formRoot.querySelector("#location-input, input[name='location']");
           if (locationInput) {
-            const currentVal = (locationInput.value || "").trim();
-            const profileLocation = ctx.profile.city && ctx.profile.state
-              ? `${ctx.profile.city}, ${ctx.profile.state}`
-              : ctx.profile.location || ctx.profile.city || ctx.profile.state || "";
-
-            // Only fill if the hidden selected-location hasn't been set yet
-            const selectedLoc = document.querySelector("#selected-location")?.value;
-            if (!selectedLoc) {
-              const locValue = profileLocation || currentVal;
+            const hiddenLoc = document.querySelector("#selected-location");
+            const hiddenVal = hiddenLoc?.value || "";
+            // Only fill if hidden input is empty or has no real selection
+            if (!hiddenVal || hiddenVal === '{"name":""}') {
+              const locValue = profile.city && profile.state
+                ? `${profile.city}, ${profile.state}`
+                : profile.location || profile.city || "";
               if (locValue) {
-                console.log(`[JAOS Lever] Location empty, filling: "${locValue}"`);
+                console.log(`[JAOS Lever] Filling location: "${locValue}"`);
                 await fillLocationInput(locationInput, locValue);
               }
             }
           }
 
-          // 2. Auto-check ALL consent + acknowledgment checkboxes
+          // 2. Auto-check ALL consent checkboxes
           const consentBoxes = formRoot.querySelectorAll(
-            'input[type="checkbox"][name*="consent["], input[type="checkbox"][name*="[field"][value*="acknowledge"], input[type="checkbox"][name*="[field"][value*="I have read"]'
+            'input[type="checkbox"][name*="consent["]'
           );
           for (const cb of consentBoxes) {
             if (!cb.checked) {
               cb.click();
-              const label = cb.value?.substring(0, 50) || cb.name;
-              console.log(`[JAOS Lever] Auto-checked: "${label}"`);
+              console.log(`[JAOS Lever] Consent checked: "${cb.name}"`);
             }
           }
 
-          // 3. EEO selects + survey demographics — SKIP if profile has no data
-          // These are voluntary fields. Only fill if the user's profile explicitly
-          // contains gender/race/veteran data. Otherwise leave blank.
+          await delay(500);
         },
       },
     ];
@@ -403,5 +678,5 @@
     shouldOverwrite: () => false,
   });
 
-  console.log(`[JAOS Lever] v2 adapter registered (${registry.length} adapters in registry)`);
+  console.log(`[JAOS Lever] v2 adapter registered`);
 })();
