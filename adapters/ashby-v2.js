@@ -62,24 +62,26 @@
   // ── Deterministic fills (no LLM needed) ────────────────────────────
 
   const SYSTEM_FIELD_FILLS = [
-    { id: "_systemfield_name", profileKey: (p) => p.full_name || `${p.first_name || ""} ${p.last_name || ""}`.trim() },
+    { id: "_systemfield_name",  profileKey: (p) => p.full_name || `${p.first_name || ""} ${p.last_name || ""}`.trim() },
     { id: "_systemfield_email", profileKey: (p) => p.email },
-    { id: "_systemfield_phone", profileKey: (p) => p.phone },
+    // _systemfield_phone doesn't exist in all portals — phone detected by type="tel" in Pass 3
   ];
 
   // ── Yes/No button defaults (matched by question label) ─────────────
 
   const YES_NO_DEFAULTS = [
-    { pattern: /referred/i,                                      value: "No" },
-    { pattern: /commute|physically\s*in\s*office|able\s*to\s*be\s*onsite/i, value: "Yes" },
-    { pattern: /require\s*(visa\s*)?sponsorship/i,               value: "No" },
-    { pattern: /authorized\s*to\s*work|work\s*authorization/i,   value: "Yes" },
-    { pattern: /OPT|F1|H1-?B|M1\s*student\s*visa/i,             value: "Yes" },
-    { pattern: /relocat/i,                                        value: "Yes" },
-    { pattern: /background\s*check/i,                             value: "Yes" },
-    { pattern: /drug\s*(test|screen)/i,                           value: "Yes" },
-    { pattern: /18\s*years\s*(of\s*age|or\s*older)/i,            value: "Yes" },
-    { pattern: /non-?compete/i,                                   value: "No" },
+    { pattern: /referred/i,                                                           value: "No" },
+    { pattern: /commute|physically\s*in\s*office|able\s*to\s*be\s*onsite/i,          value: "Yes" },
+    { pattern: /able\s*to\s*work\s*from|\d\s*days?\s*(per|a)\s*week.*office|hq\s*\d/i, value: "Yes" },
+    { pattern: /require\s*(visa\s*)?sponsorship/i,                                    value: "No" },
+    { pattern: /authorized\s*to\s*work|work\s*authorization|legally\s*authorized/i,  value: "Yes" },
+    { pattern: /OPT|F1|H1-?B|M1\s*student\s*visa/i,                                  value: "Yes" },
+    { pattern: /relocat/i,                                                             value: "Yes" },
+    { pattern: /background\s*check/i,                                                 value: "Yes" },
+    { pattern: /drug\s*(test|screen)/i,                                               value: "Yes" },
+    { pattern: /18\s*years\s*(of\s*age|or\s*older)|at\s*least\s*18/i,               value: "Yes" },
+    { pattern: /non-?compete/i,                                                        value: "No" },
+    { pattern: /previously\s*work|prior.*employee|worked\s*here\s*before/i,           value: "No" },
   ];
 
   // ── EEO radio group fills ──────────────────────────────────────────
@@ -241,6 +243,22 @@
             return true;
           });
 
+          // ── Pass 2b: Fill phone by type="tel" (no stable ID) ────
+          // Ashby phone field uses a UUID as id/name — not _systemfield_phone.
+          // Detect by input[type="tel"] and fill if empty.
+          if (profile.phone) {
+            const telInput = formRoot.querySelector('input[type="tel"]:not([id="_systemfield_phone"])');
+            if (telInput && !telInput.value) {
+              telInput.value = profile.phone;
+              triggerReactSync(telInput);
+              console.log(`[JAOS Ashby] Phone (tel input) → "${profile.phone}"`);
+              recordPreFill("Phone Number", true);
+              preFilled++;
+              // Remove from LLM scan
+              scanResult.fields = scanResult.fields.filter(f => f.element !== telInput);
+            }
+          }
+
           // ── Pass 3: Handle Yes/No button groups ─────────────────
           // These are NOT captured as form fields (they're <button> elements).
           // We scan the form for button groups and fill them deterministically.
@@ -270,11 +288,15 @@
           }
 
           // ── Pass 4: Handle EEO radio groups ─────────────────────
-          // Ashby EEO uses <input type="radio"> inside fieldsets with legend text.
+          // Ashby EEO uses <input type="radio"> inside <fieldset> elements.
+          // IMPORTANT: Ashby fieldsets have NO <legend> — label is in firstElementChild.
           const fieldsets = formRoot.querySelectorAll("fieldset");
           for (const fs of fieldsets) {
-            const legend = fs.querySelector("legend, label, h3, h4");
-            const legendText = (legend?.textContent || "").replace(/\*/g, "").trim();
+            // Ashby fieldsets have NO <legend> — label is a <label class="ashby-application-form-question-title">
+            // as the first child of the fieldset. Stable class name confirmed across portals.
+            const labelEl = fs.querySelector(".ashby-application-form-question-title, legend");
+            const legendText = (labelEl?.textContent || fs.firstElementChild?.textContent || "")
+              .replace(/\*/g, "").trim();
             if (!legendText) continue;
 
             const radios = fs.querySelectorAll('input[type="radio"]');
