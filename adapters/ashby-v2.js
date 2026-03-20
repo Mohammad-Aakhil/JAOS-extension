@@ -69,19 +69,36 @@
 
   // ── Yes/No button defaults (matched by question label) ─────────────
 
+  // IMPORTANT: Order matters — first match wins. "require" + immigration keywords
+  // MUST come before "authorized to work" to avoid false-positive on questions
+  // like "Do you require work authorization / sponsorship?" (answer = No).
   const YES_NO_DEFAULTS = [
     { pattern: /referred/i,                                                           value: "No" },
+    // ── Sponsorship / immigration (BEFORE authorization!) ──────
+    { pattern: /require.*(?:sponsorship|sponsor|immigration|work\s*permit)/i,         value: "No" },
+    { pattern: /sponsor\s*you|commence.*sponsor/i,                                    value: "No" },
+    { pattern: /require\s*(?:work\s*)?(?:authorization|visa).*(?:sponsorship)?/i,     value: "No" },
+    // ── Authorization (only if NOT preceded by "require") ──────
+    { pattern: /authorized\s*to\s*work|legally\s*(authorized|entitled)|legal\s*right\s*to\s*work|proof.*work/i, value: "Yes" },
+    // ── Office / onsite / commute ──────────────────────────────
     { pattern: /commute|physically\s*in\s*office|able\s*to\s*be\s*onsite/i,          value: "Yes" },
-    { pattern: /able\s*to\s*work\s*from|\d\s*days?\s*(per|a)\s*week.*office|hq\s*\d/i, value: "Yes" },
-    { pattern: /require\s*(visa\s*)?sponsorship/i,                                    value: "No" },
-    { pattern: /authorized\s*to\s*work|work\s*authorization|legally\s*authorized/i,  value: "Yes" },
+    { pattern: /able\s*to\s*work\s*from|\d\s*days?\s*(per|a)\s*week|hq\s*\d/i,      value: "Yes" },
+    { pattern: /on-?site.*office|requires?\s*being\s*on-?site|in-?person/i,          value: "Yes" },
+    { pattern: /RTO\s*require|office.*location.*(?:require|work\s*for\s*you)/i,      value: "Yes" },
+    // ── Visa type ──────────────────────────────────────────────
     { pattern: /OPT|F1|H1-?B|M1\s*student\s*visa/i,                                  value: "Yes" },
+    // ── Relocation / age / misc ────────────────────────────────
     { pattern: /relocat/i,                                                             value: "Yes" },
+    { pattern: /18\s*years\s*(of\s*age|or\s*older)|at\s*least\s*18/i,               value: "Yes" },
     { pattern: /background\s*check/i,                                                 value: "Yes" },
     { pattern: /drug\s*(test|screen)/i,                                               value: "Yes" },
-    { pattern: /18\s*years\s*(of\s*age|or\s*older)|at\s*least\s*18/i,               value: "Yes" },
+    { pattern: /salary.*align|compensation.*align|align.*salary|does\s*this\s*align/i, value: "Yes" },
+    // ── Negative defaults ──────────────────────────────────────
     { pattern: /non-?compete/i,                                                        value: "No" },
     { pattern: /previously\s*work|prior.*employee|worked\s*here\s*before/i,           value: "No" },
+    { pattern: /relative.*currently\s*work|family.*work.*for/i,                       value: "No" },
+    // ── Agreement / policy ─────────────────────────────────────
+    { pattern: /agree.*policy|read.*agree|indicate.*yes.*policy/i,                    value: "Yes" },
   ];
 
   // ── EEO radio group fills ──────────────────────────────────────────
