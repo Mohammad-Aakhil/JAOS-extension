@@ -947,8 +947,12 @@
    * Upload resume to the FIRST resume file input only.
    * Handles Greenhouse "Attach" button pattern (hidden file input behind a button).
    */
+  // DISABLED: recruiters groom resumes manually — re-enable by removing this line and the stub below
+  const RESUME_UPLOAD_ENABLED = false;
   const uploadResumeToFileInputs = (resumeData) =>
     new Promise((resolve) => {
+      if (!RESUME_UPLOAD_ENABLED) { resolve(false); return; }
+
       if (!resumeData || !resumeData.file_path) {
         resolve(false);
         return;
