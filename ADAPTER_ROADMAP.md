@@ -1,163 +1,153 @@
-
 # JAOS Adapter Roadmap
 
-
-> **Source**: 5,349 deduplicated jobs across 44 ATS platforms (15 data files, March 2026)
-> **Last updated**: 2026-03-18
-
----
-
-## Coverage Summary
-
-| Status | ATS Count | Jobs Covered | % of Total |
-|--------|-----------|-------------|------------|
-| Strong adapters (prod-ready) | 4 | 2,509 | 47% |
-| Partial / in-progress | 3 | 1,110 | 21% |
-| Not started (priority) | 5 | 693 | 13% |
-| Not started (low priority) | 11 | 468 | 9% |
-| Long tail (21 platforms) | 21 | ~569 | 10% |
-| **Total** | **44** | **5,349** | **100%** |
+> **Dataset**: 7-day pull (2026-03-20), 4,999 unique job URLs across 41 ATS platforms
+> **Last updated**: 2026-03-23
+> **Deployment context**: IgniteLegends applicants team — 40-45 apps/day for OPT/CPT clients
 
 ---
 
-## Tier 1 — Strong Adapters (Production-Ready)
+## At a Glance — What Needs Doing
 
-These have v2 adapters with tested ATS-specific logic, LLM prompts, and multi-portal validation.
-
-| # | ATS | Jobs | Companies | Adapter File | Status | Notes |
-|---|-----|------|-----------|-------------|--------|-------|
-| 1 | **Workday** | 1,675 | 521 | `workday-v2.js` | Prod | Multi-step tabs, Knockout.js. Tabs 3-6 need work |
-| 2 | **Greenhouse** | 573 | 321 | `greenhouse-v2.js` | Prod | React-select, resume override, fiber bridge |
-| 3 | **OracleCloud** | 236 | 86 | `oraclecloud-v2.js` | Prod | Knockout/JET, cascade address, portal variants |
-| 4 | **BambooHR** | 25 | 22 | `bamboohr-v2.js` | Prod | Fabric UI, fab-SelectToggle, honeypot detection |
-
-**Subtotal: 2,509 jobs (47%)**
-
----
-
-## Tier 2 — In Progress (Partial V2 Adapters)
-
-These have v2 adapter files but need enhancements, bug fixes, or multi-portal validation.
-
-| # | ATS | Jobs | Companies | Adapter File | Status | Known Issues |
-|---|-----|------|-----------|-------------|--------|-------------|
-| 5 | **Lever** | 802 | 55 | `lever-v2.js` | 90% | Location typeahead needs manual pick (React controlled). EEO radio/checkbox/select all handled. Card field label enrichment done. Skills checkbox matching done. |
-| 6 | **Ashby** | 175 | 120 | `ashby-v2.js` | 20% | Basic detection only. React 18 SPA, CSS Modules, stable `ashby-*` class anchors. Framework analysis done. No field fill logic yet. |
-| 7 | **SmartRecruiters** | 133 | 40 | `smartrecruiters-v2.js` | 10% | Skeleton adapter. Multi-page wizard, pre-fill button detection needed. |
-
-**Subtotal: 1,110 jobs (21%)**
+| Action | ATS | Volume | Why |
+|--------|-----|--------|-----|
+| 🧪 **Test + standardize** | Greenhouse | 1,583 | v2 built, needs 30-URL validation |
+| 🧪 **Test + standardize** | Oracle Cloud | 446 | v2 built, needs 30-URL validation |
+| 🧪 **Test + standardize** | SmartRecruiters | 203 | v2 built, needs 30-URL validation |
+| 🧪 **Test + standardize** | Workday | 139 | v2 built, needs 30-URL validation |
+| 🧪 **Test + standardize** | Ashby | 45 | v2 built, needs 30-URL validation |
+| 🧪 **Test + standardize** | Lever | 3 | v2 built, needs 30-URL validation |
+| 🧪 **Test + standardize** | BambooHR | 7 | v2 built, needs 30-URL validation |
+| 🔨 **Build new (HIGH)** | ADP | 544 | Biggest gap — no adapter at all |
+| 🔨 **Build new (HIGH)** | UltiPro | 288 | No adapter |
+| ⬆️ **Upgrade v1 → v2** | Paylocity | 465 | v1 only — high volume |
+| ⬆️ **Upgrade v1 → v2** | iCIMS | 309 | v1 only — high volume |
+| ⬆️ **Upgrade v1 → v2** | Taleo | 196 | v1 only |
+| 🔨 **Build new (MED)** | Workable | 190 | No adapter |
+| 🔨 **Build new (MED)** | EightFold | 129 | No adapter |
+| 🔨 **Build new (LOW)** | PhenomPeople | 87 | No adapter |
+| 🔨 **Build new (LOW)** | Paycor | 76 | No adapter |
+| 🔨 **Build new (LOW)** | Rippling | 47 | No adapter |
 
 ---
 
-## Tier 3 — Priority Build Queue (No V2 Adapter Yet)
+## Volume Ranking — Full Dataset
 
-Ordered by job volume × unique companies. These are the next adapters to build.
-
-| # | ATS | Jobs | Companies | Domain Pattern | Framework | Priority |
-|---|-----|------|-----------|---------------|-----------|----------|
-| 8 | **iCIMS** | 294 | 140 | `*.icims.com` | iframe-heavy, custom file upload | HIGH |
-| 9 | **Eightfold** | 192 | 30 | `apply.careers.*` | Unknown — needs recon | HIGH |
-| 10 | **Phenompeople** | 182 | 68 | `careers.*.com` | Unknown — needs recon | MEDIUM |
-| 11 | **JazzHR** | 197 | 95 | `*.applytojob.com` | Unknown — needs recon | MEDIUM |
-| 12 | **ADP** | 129 | 90 | `workforcenow.adp.com` | Shadow DOM, 3 subdomain variants | MEDIUM |
-
-**Subtotal: 994 jobs (19%)**
+| Rank | ATS | 7-day Jobs | Adapter | Status |
+|------|-----|-----------|---------|--------|
+| 1 | **Greenhouse** | 1,583 | `greenhouse-v2.js` | ✅ v2 — test |
+| 2 | **ADP** | 544 | — | ❌ Build needed |
+| 3 | **Paylocity** | 465 | `paylocity.js` | ⚠️ v1 only — upgrade |
+| 4 | **Oracle Cloud** | 446 | `oraclecloud-v2.js` | ✅ v2 — test |
+| 5 | **iCIMS** | 309 | `icims.js` | ⚠️ v1 only — upgrade |
+| 6 | **UltiPro** | 288 | — | ❌ Build needed |
+| 7 | **SmartRecruiters** | 203 | `smartrecruiters-v2.js` | ✅ v2 — test |
+| 8 | **Taleo** | 196 | `taleo.js` | ⚠️ v1 only — upgrade |
+| 9 | **Workable** | 190 | — | ❌ Build needed |
+| 10 | **Workday** | 139 | `workday-v2.js` | ✅ v2 — test |
+| 11 | **EightFold** | 129 | — | ❌ Build needed |
+| 12 | **PhenomPeople** | 87 | — | ❌ Build needed |
+| 13 | **Paycor** | 76 | — | ❌ Build needed |
+| 14 | **Rippling** | 47 | — | ❌ Build needed |
+| 15 | **Ashby** | 45 | `ashby-v2.js` | ✅ v2 — test |
+| 16 | **In-house** | 41 | — | ⛔ Skip (Amazon, Google custom) |
+| 17 | **Dayforce** | 31 | — | Low priority |
+| 18 | **SuccessFactors** | 29 | — | Low priority |
+| 19 | **Comeet** | 18 | — | Low priority |
+| 20 | **Hireology** | 14 | — | Low priority |
+| 21 | **TeamTailor** | 14 | — | Low priority |
+| 22 | **Gem** | 12 | — | Low priority |
+| 23 | **Paycom** | 12 | — | Low priority |
+| 24 | **CSOD** | 10 | — | Low priority |
+| 25 | **Rival** | 10 | — | Low priority |
+| 26 | **Kula** | 7 | — | Low priority |
+| 27 | **BambooHR** | 7 | `bamboohr-v2.js` | ✅ v2 — test |
+| 28 | **Trinet** | 8 | — | Low priority |
+| 29 | **CareerPlug** | 6 | — | Low priority |
+| 30 | **JazzHR** | 6 | — | Low priority |
+| 31 | **Pinpoint** | 6 | — | Low priority |
+| 32 | **Lever** | 3 | `lever-v2.js` | ✅ v2 — test |
+| 33 | **Zoho** | 3 | — | Low priority |
+| 34 | **HiBob** | 3 | — | Low priority |
+| 35 | **iSolved** | 3 | — | Low priority |
+| 36 | **Paradox** | 2 | — | Low priority |
+| 37 | **HiringThing** | 2 | — | Low priority |
+| 38 | **Trakstar** | 2 | — | Low priority |
+| 39 | **FreshTeam** | 1 | — | Skip |
+| 40 | **Join.com** | 1 | — | Skip |
+| 41 | **Manatal** | 1 | — | Skip |
 
 ---
 
-## Tier 4 — Future Adapters (Lower Priority)
+## Phase 1 — Standardize Existing v2 (Do This First)
 
-| # | ATS | Jobs | Companies | Domain | Notes |
-|---|-----|------|-----------|--------|-------|
-| 13 | SuccessFactors | 104 | 63 | Various custom domains | SAP-based |
-| 14 | Paylocity | 68 | 55 | `recruiting.paylocity.com` | |
-| 15 | Taleo | 66 | 25 | `*.taleo.net` | Legacy DOM, session-based |
-| 16 | GoHire | 56 | 1 | `jobs.gohire.io` | Single company — low ROI |
-| 17 | Workable | 46 | 27 | `jobs.workable.com` | |
-| 18 | UltiPro | 31 | 20 | `*.ultipro.com` | |
-| 19 | Jobvite | 30 | 14 | `jobs.jobvite.com` | iframe embed |
-| 20 | CareerPlug | 29 | 21 | `*.careerplug.com` | |
-| 21 | Comeet | 26 | 10 | `comeet.com` | |
-| 22 | Rippling | 24 | 23 | `ats.rippling.com` | Select-control widgets |
-| 23 | In-house | 132 | 4 | `amazon.jobs`, `google.com` | Custom — not worth adapting |
+Test each with 30 URLs from `test_urls_30_per_ats.txt`. Fix gaps. Commit.
 
-**Subtotal: 612 jobs (11%)**
+| ATS | Test URLs | Key Things to Verify |
+|-----|-----------|---------------------|
+| Greenhouse | 30 ready | React-select, phone intl, EEO, multi-step nav |
+| Oracle Cloud | 30 ready | Yes/No pills, cascade address, salary dropdown, multi-step |
+| SmartRecruiters | 30 ready | Multi-page wizard, pre-fill button, EEO |
+| Workday | 30 ready | Multi-entry (exp/edu), section navigation, dropdowns |
+| Ashby | 30 ready | Yes/No ordering, EEO fieldsets, phone tel-type |
+| EightFold | 30 ready | Unknown DOM — needs live inspection first |
+| iCIMS | 30 ready | iframe-heavy — v1 adapter, identify gaps |
+| Paylocity | 30 ready | v1 adapter — identify what's missing vs v2 |
+| Taleo | 30 ready | v1 adapter — session-based, legacy DOM |
+| Lever | manual | Location typeahead (known partial), card fields |
+| BambooHR | 7 only | fab-SelectToggle, honeypot, state/country |
 
 ---
 
-## Build Priority Formula
+## Phase 2 — Build Queue (After Phase 1)
+
+Priority order by volume:
 
 ```
-Score = (total_jobs × 0.4) + (unique_companies × 0.6)
+1. ADP          (544 jobs)  — Shadow DOM, 3 subdomain variants
+2. Paylocity    (465 jobs)  — Upgrade v1 → v2
+3. UltiPro      (288 jobs)  — *.ultipro.com
+4. iCIMS        (309 jobs)  — Upgrade v1 → v2, iframe-heavy
+5. Workable     (190 jobs)  — jobs.workable.com
+6. Taleo        (196 jobs)  — Upgrade v1 → v2
+7. EightFold    (129 jobs)  — apply.careers.* — needs recon
+8. PhenomPeople (87 jobs)   — careers.*.com — needs recon
 ```
 
-Why companies matter more: each unique company may have different form configurations.
-High company count = more variant coverage = more reliable adapter.
-
-| ATS | Jobs × 0.4 | Companies × 0.6 | Score | Rank |
-|-----|-----------|----------------|-------|------|
-| Lever | 320.8 | 33.0 | 353.8 | 1 (in progress) |
-| iCIMS | 117.6 | 84.0 | 201.6 | 2 |
-| Ashby | 70.0 | 72.0 | 142.0 | 3 (in progress) |
-| JazzHR | 78.8 | 57.0 | 135.8 | 4 |
-| ADP | 51.6 | 54.0 | 105.6 | 5 |
-| Eightfold | 76.8 | 18.0 | 94.8 | 6 |
-| Phenompeople | 72.8 | 40.8 | 113.6 | 7 |
-| SmartRecruiters | 53.2 | 24.0 | 77.2 | 8 (in progress) |
-
 ---
 
-## Coverage Milestones
+## Coverage Progress
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│ Tier 1 (done)     ████████████████████░░░░░  47%        │
-│ + Tier 2 (WIP)    ████████████████████████░  68%        │
-│ + Tier 3 (next)   █████████████████████████  87%        │
-│ + Tier 4 (future) █████████████████████████  98%        │
-└─────────────────────────────────────────────────────────┘
+Current (v2 tested):     Greenhouse + OracleCloud + SR + Workday + Ashby
+                         1,583 + 446 + 203 + 139 + 45 = 2,416 / 4,999 = 48%
+
+After Phase 1 complete:  + Lever + BambooHR + (v1 validated: Paylocity, iCIMS, Taleo)
+                         ≈ 3,616 / 4,999 = 72%
+
+After Phase 2 complete:  + ADP + UltiPro + Workable + EightFold
+                         ≈ 4,562 / 4,999 = 91%
 ```
 
-**Target: Tier 1 + 2 + 3 = 87% coverage (4,613 / 5,349 jobs)**
+---
+
+## Known Adapter Quirks (Quick Reference)
+
+| ATS | Framework | Key Quirk |
+|-----|-----------|-----------|
+| Greenhouse | React 16+ | intl-tel-input, React-select, resume remove before upload |
+| Oracle Cloud | Knockout.js + JET | Yes/No pill buttons, cascade country→state, multi-step |
+| SmartRecruiters | React | Multi-page wizard, iframe on some portals |
+| Workday | Workday proprietary | Multi-entry sections, section-scoped selects |
+| Ashby | React 18 (Vite) | No `<form>` tag, stable `ashby-*` CSS classes, UUID field ids |
+| Lever | jQuery | Location autocomplete needs user pick (React isTrusted) |
+| BambooHR | Fabric UI (MUI) | fab-SelectToggle for state/country, honeypot `preferredName` |
+| ADP | Shadow DOM | 3 subdomain variants (`workforcenow`, `recruiting`, custom) |
+| iCIMS | iframe-heavy | Form inside iframe, custom file upload widget |
+| Taleo | Legacy | Session-based, old-school DOM, no React |
 
 ---
 
-## Lever Adapter — Session Log (2026-03-18)
+## Test URL File
 
-### What was done
-- **EEO radio/checkbox groups**: New `EEO_RADIO_FILLS` table handles portals where gender/race/veteran/age are radio groups instead of `<select>`
-- **Skills checkbox groups**: Matches profile skills against checkbox options (e.g., "Select tools/languages you have experience in")
-- **Label enrichment**: Extended to radio-groups, checkbox-groups, and `surveysResponses[*]` fields — not just `cards[*]`
-- **`getLeverLabel()` hardened**: Added `.application-label` search in `li.application-question` + parent walk (6 levels)
-- **`_matchSelectOption` fix**: Filters out "Select ..." placeholders, requires 3+ char overlap for partial matches
-- **Veteran status**: Fallback cascade: profile → "I am not a veteran" → "Decline to self-identify"
-- **`preFilledLabels` tracking**: Progress UI now shows clean readable labels instead of `cards[uuid][field8]`
-- **Orchestrator update**: Reads `scanResult.preFilledLabels[]` for pre-filled field display
-
-### Known limitation
-- **Location typeahead**: React-controlled input — programmatic selection gets cleared on blur (`isTrusted: false` events). Current behavior: types city + shows dropdown, user clicks to select (1 click). Acceptable UX tradeoff.
-
----
-
-## Framework Detection Results (Ashby — 3 portals)
-
-| Pattern | Result | Reliability |
-|---------|--------|-------------|
-| React root | `div#root` always | 100% |
-| React version | 18+ (`createRoot`, fiber key on children) | 100% |
-| Fiber key | Available but hash changes per build | Dynamic discovery needed |
-| CSS strategy | CSS Modules (`_name_hash_num`) — unstable | Never use as selectors |
-| Stable classes | `ashby-job-posting-*`, `ashby-application-*` | Safe to use |
-| `<form>` tag | 0 on all portals | Use `.ashby-application-form` as root |
-| Shadow DOM | 0 | Simple traversal |
-| SPA framework | Not Next.js — vanilla React (Vite bundle) | N/A |
-| reCAPTCHA | Present on some portals (same key) | Ignore in adapter |
-
----
-
-## Next Steps
-
-1. **Ashby adapter** — Build full v2 adapter using framework analysis + seed scripts
-2. **iCIMS recon** — Grab 15-20 URLs, run recon scan, analyze iframe patterns
-3. **Lever location** — Revisit with Playwright MCP for trusted event dispatch (future)
-4. **Multi-portal validation** — Run each adapter against 15-20 URLs to catch field variants
+`C:\Users\Mohammad Aqeel\Desktop\My Practices\jobs_research\test_urls_30_per_ats.txt`
+277 URLs — 30 per ATS where available. Generated 2026-03-23 from 7-day job dataset.
