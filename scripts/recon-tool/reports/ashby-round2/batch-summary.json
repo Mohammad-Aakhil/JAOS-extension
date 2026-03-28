@@ -1,0 +1,260 @@
+{
+  "ats": "ashby-round2",
+  "scanDate": "2026-03-18T06:04:05.848Z",
+  "totalUrls": 3,
+  "successfulScans": 2,
+  "failedUrls": [
+    {
+      "url": "https://jobs.ashbyhq.com/acquisition/82b99c43-0ea1-4b12-a11f-bc006dce1606",
+      "company": "acquisition",
+      "error": "No form fields found after navigation + Apply click"
+    }
+  ],
+  "portals": [
+    {
+      "index": 1,
+      "directory": "portal-001-GrowthX%20AI",
+      "url": "https://jobs.ashbyhq.com/GrowthX%20AI/06c2188e-8966-45c7-b3f8-80acefc428cc",
+      "company": "GrowthX%20AI",
+      "fieldCount": 26,
+      "requiredFieldCount": 9,
+      "widgetTypes": [
+        "file-upload"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "status": "success"
+    },
+    {
+      "index": 2,
+      "directory": "portal-002-zettabyte-space",
+      "url": "https://jobs.ashbyhq.com/zettabyte-space/7dbb7b3a-90e0-4983-8833-6dfc5a451edb",
+      "company": "zettabyte-space",
+      "fieldCount": 5,
+      "requiredFieldCount": 4,
+      "widgetTypes": [
+        "file-upload"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "status": "success"
+    },
+    {
+      "index": 3,
+      "directory": "portal-003-acquisition",
+      "url": "https://jobs.ashbyhq.com/acquisition/82b99c43-0ea1-4b12-a11f-bc006dce1606",
+      "company": "acquisition",
+      "status": "failed",
+      "error": "No form fields found after navigation + Apply click"
+    }
+  ],
+  "fieldFrequency": {
+    "field_0": {
+      "count": 2,
+      "requiredCount": 0,
+      "type": "file",
+      "labels": []
+    },
+    "name": {
+      "count": 2,
+      "requiredCount": 2,
+      "type": "text",
+      "labels": [
+        "Name"
+      ]
+    },
+    "email": {
+      "count": 2,
+      "requiredCount": 2,
+      "type": "email",
+      "labels": [
+        "Email"
+      ]
+    },
+    "resume": {
+      "count": 2,
+      "requiredCount": 2,
+      "type": "file",
+      "labels": [
+        "Resume"
+      ]
+    },
+    "field_4": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "combobox",
+      "labels": []
+    },
+    "linkedin_profile": {
+      "count": 1,
+      "requiredCount": 1,
+      "type": "text",
+      "labels": [
+        "LinkedIn Profile"
+      ]
+    },
+    "introduce_yourself_and_share_your_story_we_d_love_to_hear_about_your_technical_background_and_career_experience_that_you_feel_is_relevant_to_this_role_please_also_share_what_excites_you_most_about_this_opportunity": {
+      "count": 1,
+      "requiredCount": 1,
+      "type": "textarea",
+      "labels": [
+        "Introduce yourself and share your story. We’d love to hear about your technical background and career experience that you feel is relevant to this role. Please also share what excites you most about this opportunity."
+      ]
+    },
+    "can_you_describe_a_project_where_you_worked_full_stack_that_you_played_a_significant_role_in_or_owned_what_was_the_tech_stack_what_was_the_reach_and_challenges_please_be_as_detailed_as_possible": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "textarea",
+      "labels": [
+        "Can you describe a project where you worked full stack that you played a significant role in or owned? What was the tech stack? What was the reach and challenges? Please be as detailed as possible."
+      ]
+    },
+    "what_is_your_experience_as_a_marketer_growth_hacker_or_content_professional": {
+      "count": 1,
+      "requiredCount": 1,
+      "type": "textarea",
+      "labels": [
+        "What is your experience as a marketer, growth hacker, or content professional?"
+      ]
+    },
+    "what_are_your_thoughts_on_automated_testing_how_do_you_decide_what_to_test_and_what_not_to_test": {
+      "count": 1,
+      "requiredCount": 1,
+      "type": "textarea",
+      "labels": [
+        "What are your thoughts on automated testing? How do you decide what to test and what not to test?"
+      ]
+    },
+    "in_your_opinion_what_software_engineering_rituals_or_best_practices_are_critical_if_any_for_an_early_stage_startup_and_which_ones_you_think_are_not_so_important_please_explain_the_reasoning": {
+      "count": 1,
+      "requiredCount": 1,
+      "type": "textarea",
+      "labels": [
+        "In your opinion, what software engineering rituals or best practices are critical (if any) for an early-stage startup? And which ones you think are not so important? Please, explain the reasoning."
+      ]
+    },
+    "can_you_explain_how_you_ve_utilized_ai_tools_like_cursor_or_claude_to_become_a_better_developer": {
+      "count": 1,
+      "requiredCount": 1,
+      "type": "textarea",
+      "labels": [
+        "Can you explain how you've utilized AI tools like Cursor or Claude to become a better developer?"
+      ]
+    },
+    "male": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Male"
+      ]
+    },
+    "female": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Female"
+      ]
+    },
+    "decline_to_self_identify": {
+      "count": 2,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Decline to self-identify"
+      ]
+    },
+    "hispanic_or_latino": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Hispanic or Latino"
+      ]
+    },
+    "white_not_hispanic_or_latino": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "White (Not Hispanic or Latino)"
+      ]
+    },
+    "black_or_african_american_not_hispanic_or_latino": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Black or African American (Not Hispanic or Latino)"
+      ]
+    },
+    "native_hawaiian_or_other_pacific_islander_not_hispanic_or_latino": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Native Hawaiian or Other Pacific Islander (Not Hispanic or Latino)"
+      ]
+    },
+    "asian_not_hispanic_or_latino": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Asian (Not Hispanic or Latino)"
+      ]
+    },
+    "american_indian_or_alaska_native_not_hispanic_or_latino": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "American Indian or Alaska Native (Not Hispanic or Latino)"
+      ]
+    },
+    "two_or_more_races_not_hispanic_or_latino": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Two or More Races (Not Hispanic or Latino)"
+      ]
+    },
+    "i_identify_as_one_or_more_of_the_classifications_of_protected_veteran_listed_above": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "I identify as one or more of the classifications of protected veteran listed above"
+      ]
+    },
+    "i_am_not_a_protected_veteran": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "I am not a protected veteran"
+      ]
+    },
+    "i_decline_to_self_identify_for_protected_veteran_status": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "I decline to self-identify for protected veteran status"
+      ]
+    },
+    "have_you_worked_for_start_up_company_as_hr_manager_lead_or_office_manager_if_yes_what_is_name_of_the_company": {
+      "count": 1,
+      "requiredCount": 1,
+      "type": "text",
+      "labels": [
+        "Have you worked for start-up company as HR Manager/Lead or Office Manager? If yes, what is name of the company?"
+      ]
+    }
+  },
+  "optionRegistry": {}
+}

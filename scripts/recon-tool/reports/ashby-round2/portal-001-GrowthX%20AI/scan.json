@@ -1,0 +1,2024 @@
+{
+  "meta": {
+    "url": "https://jobs.ashbyhq.com/GrowthX%20AI/06c2188e-8966-45c7-b3f8-80acefc428cc/application",
+    "portalIndex": 1,
+    "company": "GrowthX%20AI",
+    "timestamp": "2026-03-18T06:03:23.971Z",
+    "ats": {
+      "platform": "Ashby",
+      "hostname": "jobs.ashbyhq.com",
+      "urlPattern": "https://jobs.ashbyhq.com/GrowthX%20AI/06c2188e-8966-45c7-b3f8-80acefc428cc/application"
+    },
+    "frameworks": [
+      "React"
+    ],
+    "stepsScanned": [
+      "Main Page"
+    ]
+  },
+  "structure": {
+    "sections": [
+      {
+        "tag": "h1",
+        "text": "Forward Deployed Engineer",
+        "level": "1"
+      },
+      {
+        "tag": "h2",
+        "text": "Location",
+        "level": "2"
+      },
+      {
+        "tag": "h2",
+        "text": "Employment Type",
+        "level": "2"
+      },
+      {
+        "tag": "h2",
+        "text": "Location Type",
+        "level": "2"
+      },
+      {
+        "tag": "h2",
+        "text": "Department",
+        "level": "2"
+      },
+      {
+        "tag": "h2",
+        "text": "Compensation",
+        "level": "2"
+      },
+      {
+        "tag": "h3",
+        "text": "Autofill from resume",
+        "level": "3"
+      },
+      {
+        "tag": "h2",
+        "text": "Application Questions",
+        "level": "2"
+      }
+    ],
+    "fieldsets": [
+      {
+        "legend": "Name",
+        "fieldCount": 6,
+        "classes": [
+          "_section_oj0x8_87",
+          "ashby-application-form-section-container"
+        ]
+      },
+      {
+        "legend": "Application Questions",
+        "fieldCount": 6,
+        "classes": [
+          "_section_oj0x8_87",
+          "ashby-application-form-section-container"
+        ]
+      },
+      {
+        "legend": "U.S. EQUAL EMPLOYMENT OPPORTUNITY INFORMATION   (Completion is voluntary and will not subject you to",
+        "fieldCount": 11,
+        "classes": [
+          "_section_oj0x8_87",
+          "ashby-application-form-section-container"
+        ]
+      },
+      {
+        "legend": "Gender",
+        "fieldCount": 3,
+        "classes": [
+          "_container_1v5e2_29",
+          "_fieldEntry_17tft_29"
+        ]
+      },
+      {
+        "legend": "Race",
+        "fieldCount": 8,
+        "classes": [
+          "_container_1v5e2_29",
+          "_fieldEntry_17tft_29"
+        ]
+      },
+      {
+        "legend": "SELF-IDENTIFICATION OF VETERAN STATUS  (Completion is voluntary and will not subject you to adverse ",
+        "fieldCount": 3,
+        "classes": [
+          "_section_oj0x8_87",
+          "ashby-application-form-section-container"
+        ]
+      },
+      {
+        "legend": "Veteran Status",
+        "fieldCount": 3,
+        "classes": [
+          "_container_1v5e2_29",
+          "_fieldEntry_17tft_29"
+        ]
+      }
+    ],
+    "buttons": [
+      {
+        "tag": "button",
+        "text": "Upload file",
+        "type": "submit",
+        "classes": [
+          "_button_8wvgw_29",
+          "_secondary_8wvgw_114",
+          "_ctaButton_xd2v0_94"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Upload File",
+        "type": "submit",
+        "classes": [
+          "_button_8wvgw_29",
+          "_secondary_8wvgw_114",
+          "_button_1fd3o_107"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Yes",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "No",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Submit Application",
+        "type": "submit",
+        "classes": [
+          "_button_8wvgw_29",
+          "_primary_8wvgw_96",
+          "_greedy_8wvgw_218",
+          "_submitButton_oj0x8_408",
+          "ashby-application-form-submit-button"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      }
+    ],
+    "tabs": [
+      {
+        "text": "Overview",
+        "selected": false,
+        "classes": [
+          "_tab_oj0x8_30"
+        ]
+      },
+      {
+        "text": "Application",
+        "selected": true,
+        "classes": [
+          "_tab_oj0x8_30",
+          "_active_oj0x8_57"
+        ]
+      }
+    ],
+    "iframes": [
+      {
+        "src": "https://www.recaptcha.net/recaptcha/api2/anchor?ar=1&k=6LeFb_YUAAAAALUD5h-BiQEp8JaFChe0e0A6r49Y&co=aHR0cHM6Ly9qb2JzLmFzaGJ5aHEuY29tOjQ0Mw..&hl=en&v=QvLuXwupqtKCyjBw2xIzFLIf&size=invisible&anchor-ms=20000&execute-ms=30000&cb=p5pqjkskjr4d",
+        "id": null,
+        "name": "a-bq0do892wpuy"
+      },
+      {
+        "src": "",
+        "id": null,
+        "name": null
+      }
+    ]
+  },
+  "fields": [
+    {
+      "index": 0,
+      "tag": "input",
+      "type": "file",
+      "id": null,
+      "name": null,
+      "classes": [],
+      "label": "",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#form > div._autofillPane_oj0x8_445.ashby-application-form-autofill-uploader:nth-of-type(1) > div._root_xd2v0_1.ashby-application-form-autofill-input-root > input",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_root_xd2v0_1",
+            "ashby-application-form-autofill-input-root"
+          ],
+          "role": "presentation"
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_autofillPane_oj0x8_445",
+            "ashby-application-form-autofill-uploader",
+            "_container_101oc_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": "form",
+          "classes": [],
+          "role": "tabpanel"
+        }
+      ],
+      "rect": {
+        "x": 511,
+        "y": 256,
+        "w": 1,
+        "h": 1
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div role=\"presentation\" class=\"_root_xd2v0_1 ashby-application-form-autofill-input-root\" data-state=\"default\"><input accept=\"application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf\" type=\"file\" tabindex=\"-1\" style=\"border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;\"><div class=\"_base_xd2v0_31 ashby-application-form-autofill-input-base-layer\"><div class=\"_content_xd2v0_36\"><div class=\"_header_xd2v0_43\"><div class=\"_iconContainer_xd2v0_50\"><svg viewBox=\"0 0 576 512\" fill=\"none\" height=\"1em\" class=\"_icon_xd2v0_50 ashby-application-form-autofill-input-icon\"><path d=\"M234.7 42.7L197 56.8c-3 1.1-5 4-5 7.2s2 6.1 5 7.2l37.7 14.1L248.8 123c1.1 3 4 5 7.2 5s6.1-2 7.2-5l14.1-37.7L315 71.2c3-1.1 5-4 5-7.2s-2-6.1-5-7.2L277.3 42.7 263.2 5c-1.1-3-4-5-7.2-5s-6.1 2-7.2 5L234.7 42.7zM461.4 48L496 82.6 386.2 192.3l-34.6-34.6L461.4 48zM80 429.4L317.7 191.7l34.6 34.6L114.6 464 80 429.4zM427.4 14.1L46.1 395.4c-18.7 18.7-18.7 49.1 0 67.9l34.6 34.6c18.7 18.7 49.1 18.7 67.9 0L529.9 116.5c18.7-18.7 18.7-49.1 0-67.9L495.3 14.1c-18.7-18.7-49.1-18.7-67.9 0zM7.5 117.2C3 118.9 0 123.2 0 128s3 9.1 7.5 10.8L64 160l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L128 160l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L128 96 106.8 39.5C105.1 35 100.8 32 96 32s-9.1 3-10.8 7.5L64 96 7.5 117.2zm352 256c-4.5 1.7-7.5 6-7.5 10.8s3 9.1 7.5 10.8L416 416l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L480 416l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L480 352l-21.2-56.5c-1.7-4.5-6-7.5-10.8-7.5s-9.1 3-10.8 7.5L416 352l-56.5 21.2z\"></path></svg></div><h3 class=\"_title_xd2v0_64 ashby-application-form-autofill-input-title\">Autofill from resume</h3></div><p class=\"_description_xd2v0_76 ashby-application-form-autofill-input-description\">U",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 0,
+        "label": "",
+        "clicked": false,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": [
+          "Click failed: elementHandle.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m   "
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "tag": "input",
+      "type": "text",
+      "id": "_systemfield_name",
+      "name": "_systemfield_name",
+      "classes": [
+        "_input_1wkz4_28",
+        "_input_17tft_33"
+      ],
+      "label": "Name",
+      "placeholder": "Type here...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#_systemfield_name",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 378,
+        "w": 668,
+        "h": 54
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_name\">Name</label><div><input placeholder=\"Type here...\" name=\"_systemfield_name\" required=\"\" id=\"_systemfield_name\" type=\"text\" class=\"_input_1wkz4_28 _input_17tft_33\" value=\"\"></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 1,
+        "label": "Name",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 2,
+      "tag": "input",
+      "type": "email",
+      "id": "_systemfield_email",
+      "name": "_systemfield_email",
+      "classes": [
+        "_input_1wkz4_28",
+        "_input_17tft_33"
+      ],
+      "label": "Email",
+      "placeholder": "hello@example.com...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#_systemfield_email",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 486,
+        "w": 668,
+        "h": 54
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_email\">Email</label><div><input placeholder=\"hello@example.com...\" name=\"_systemfield_email\" required=\"\" id=\"_systemfield_email\" type=\"email\" class=\"_input_1wkz4_28 _input_17tft_33\" value=\"\"></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 2,
+        "label": "Email",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 3,
+      "tag": "input",
+      "type": "file",
+      "id": "_systemfield_resume",
+      "name": null,
+      "classes": [],
+      "label": "Resume",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#_systemfield_resume",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_container_1fd3o_71"
+          ],
+          "role": "presentation"
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 527,
+        "y": 627,
+        "w": 1,
+        "h": 1
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_resume\">Resume</label><div role=\"presentation\" class=\"_container_1fd3o_71 \"><input accept=\"application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf,image/*,video/*,audio/*\" type=\"file\" tabindex=\"-1\" id=\"_systemfield_resume\" required=\"\" style=\"border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;\"><div class=\"_instructions_1fd3o_34\"><button class=\"_button_8wvgw_29 _secondary_8wvgw_114    _button_1fd3o_107\"><svg viewBox=\"0 0 448 512\" fill=\"none\" height=\"1em\"><path d=\"M375 73c-26-26-68.1-26-94.1 0L89 265C45.3 308.6 45.3 379.4 89 423s114.4 43.6 158.1 0L399 271c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L281 457c-62.4 62.4-163.5 62.4-225.9 0S-7.4 293.4 55 231L247 39C291.7-5.7 364.2-5.7 409 39s44.7 117.2 0 161.9L225.2 384.7c-31.6 31.6-83.6 28.7-111.5-6.2c-23.8-29.8-21.5-72.8 5.5-99.8L271 127c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L153.2 312.7c-9.7 9.7-10.6 25.1-2 35.8c10 12.5 28.7 13.6 40 2.2L375 167c26-26 26-68.1 0-94.1z\"></path></svg><span><span>Upload File</span></span></button><p class=\"_dragInstructions_1fd3o_29\">or drag and drop here</p></div></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 3,
+        "label": "Resume",
+        "clicked": false,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": [
+          "Click failed: elementHandle.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m   "
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "tag": "input",
+      "type": "combobox",
+      "id": null,
+      "name": null,
+      "classes": [
+        "_input_v5ami_28"
+      ],
+      "label": "",
+      "placeholder": "Start typing...",
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": "combobox",
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#form > div._jobPostingForm_oj0x8_399.ashby-application-form-container:nth-of-type(2) > div._section_oj0x8_87.ashby-application-form-section-container:nth-of-type(1) > div._fieldEntry_17tft_29.ashby-application-form-field-entry:nth-of-type(4) > div._inputContainer_v5ami_28 > input._input_v5ami_28",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_inputContainer_v5ami_28"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 765,
+        "w": 668,
+        "h": 54
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"76f31072-de7c-4ce5-a8bf-3e4b5bef1bee\">Location</label><div class=\"_inputContainer_v5ami_28\"><input class=\"_input_v5ami_28\" placeholder=\"Start typing...\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"listbox\" role=\"combobox\" value=\"\"><button class=\"_container_pjyt6_1 _toggleButton_v5ami_32\"><svg viewBox=\"0 0 448 512\" fill=\"none\" height=\"1em\"><path d=\"M207.029 381.476L12.686 187.132C3.313 177.759 3.313 162.563 12.686 153.191L35.353 130.524C44.71 121.167 59.875 121.149 69.254 130.484L224 284.505L378.745 130.484C388.124 121.149 403.289 121.167 412.646 130.524L435.313 153.191C444.686 162.564 444.686 177.76 435.313 187.132L240.971 381.476C231.598 390.848 216.402 390.848 207.029 381.476Z\"></path></svg></button></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 4,
+        "label": "",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected",
+          "DOM changed significantly after interaction (+1632 chars)"
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "tag": "input",
+      "type": "text",
+      "id": "91751a42-6b83-4cd3-bea7-8739923d6828",
+      "name": "91751a42-6b83-4cd3-bea7-8739923d6828",
+      "classes": [
+        "_input_1wkz4_28",
+        "_input_17tft_33"
+      ],
+      "label": "LinkedIn Profile",
+      "placeholder": "Type here...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#\\39 1751a42-6b83-4cd3-bea7-8739923d6828",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 872,
+        "w": 668,
+        "h": 54
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"91751a42-6b83-4cd3-bea7-8739923d6828\">LinkedIn Profile</label><div><input placeholder=\"Type here...\" name=\"91751a42-6b83-4cd3-bea7-8739923d6828\" required=\"\" id=\"91751a42-6b83-4cd3-bea7-8739923d6828\" type=\"text\" class=\"_input_1wkz4_28 _input_17tft_33\" value=\"\"></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 5,
+        "label": "LinkedIn Profile",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 6,
+      "tag": "textarea",
+      "type": "textarea",
+      "id": "b3f8adb9-af79-4b50-9955-277468fae172",
+      "name": "b3f8adb9-af79-4b50-9955-277468fae172",
+      "classes": [
+        "_input_1wnh2_29",
+        "_input_17tft_33"
+      ],
+      "label": "Introduce yourself and share your story. We’d love to hear about your technical background and career experience that you feel is relevant to this role. Please also share what excites you most about this opportunity.",
+      "placeholder": "Type here...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#b3f8adb9-af79-4b50-9955-277468fae172",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_jobPostingForm_oj0x8_399",
+            "ashby-application-form-container",
+            "_container_101oc_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 1259,
+        "w": 668,
+        "h": 131
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"b3f8adb9-af79-4b50-9955-277468fae172\">Introduce yourself and share your story. We’d love to hear about your technical background and career experience that you feel is relevant to this role. Please also share what excites you most about this opportunity.</label><textarea placeholder=\"Type here...\" required=\"\" name=\"b3f8adb9-af79-4b50-9955-277468fae172\" id=\"b3f8adb9-af79-4b50-9955-277468fae172\" class=\"_input_1wnh2_29 _input_17tft_33 \" rows=\"4\"></textarea></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 6,
+        "label": "Introduce yourself and share your story. We’d love to hear about your technical background and career experience that you feel is relevant to this role. Please also share what excites you most about this opportunity.",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 7,
+      "tag": "textarea",
+      "type": "textarea",
+      "id": "e029777f-4429-4404-80ff-f1029f1ae16d",
+      "name": "e029777f-4429-4404-80ff-f1029f1ae16d",
+      "classes": [
+        "_input_1wnh2_29",
+        "_input_17tft_33"
+      ],
+      "label": "Can you describe a project where you worked full stack that you played a significant role in or owned? What was the tech stack? What was the reach and challenges? Please be as detailed as possible.",
+      "placeholder": "Type here...",
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#e029777f-4429-4404-80ff-f1029f1ae16d",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_jobPostingForm_oj0x8_399",
+            "ashby-application-form-container",
+            "_container_101oc_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 1492,
+        "w": 668,
+        "h": 131
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"e029777f-4429-4404-80ff-f1029f1ae16d\">Can you describe a project where you worked full stack that you played a significant role in or owned? What was the tech stack? What was the reach and challenges? Please be as detailed as possible.</label><textarea placeholder=\"Type here...\" name=\"e029777f-4429-4404-80ff-f1029f1ae16d\" id=\"e029777f-4429-4404-80ff-f1029f1ae16d\" class=\"_input_1wnh2_29 _input_17tft_33 \" rows=\"4\"></textarea></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 7,
+        "label": "Can you describe a project where you worked full stack that you played a significant role in or owned? What was the tech stack? What was the reach and challenges? Please be as detailed as possible.",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 8,
+      "tag": "textarea",
+      "type": "textarea",
+      "id": "5fbfc9b2-1c82-4160-807e-59d034f8fa5e",
+      "name": "5fbfc9b2-1c82-4160-807e-59d034f8fa5e",
+      "classes": [
+        "_input_1wnh2_29",
+        "_input_17tft_33"
+      ],
+      "label": "What is your experience as a marketer, growth hacker, or content professional?",
+      "placeholder": "Type here...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#\\35 fbfc9b2-1c82-4160-807e-59d034f8fa5e",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_jobPostingForm_oj0x8_399",
+            "ashby-application-form-container",
+            "_container_101oc_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 1677,
+        "w": 668,
+        "h": 131
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"5fbfc9b2-1c82-4160-807e-59d034f8fa5e\">What is your experience as a marketer, growth hacker, or content professional?&nbsp;</label><textarea placeholder=\"Type here...\" required=\"\" name=\"5fbfc9b2-1c82-4160-807e-59d034f8fa5e\" id=\"5fbfc9b2-1c82-4160-807e-59d034f8fa5e\" class=\"_input_1wnh2_29 _input_17tft_33 \" rows=\"4\"></textarea></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 8,
+        "label": "What is your experience as a marketer, growth hacker, or content professional?",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 9,
+      "tag": "textarea",
+      "type": "textarea",
+      "id": "ef0e08f0-48ef-4e54-802b-9722c79bcee0",
+      "name": "ef0e08f0-48ef-4e54-802b-9722c79bcee0",
+      "classes": [
+        "_input_1wnh2_29",
+        "_input_17tft_33"
+      ],
+      "label": "What are your thoughts on automated testing? How do you decide what to test and what not to test?",
+      "placeholder": "Type here...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#ef0e08f0-48ef-4e54-802b-9722c79bcee0",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_jobPostingForm_oj0x8_399",
+            "ashby-application-form-container",
+            "_container_101oc_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 1886,
+        "w": 668,
+        "h": 131
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"ef0e08f0-48ef-4e54-802b-9722c79bcee0\">What are your thoughts on automated testing? How do you decide what to test and what not to test?</label><textarea placeholder=\"Type here...\" required=\"\" name=\"ef0e08f0-48ef-4e54-802b-9722c79bcee0\" id=\"ef0e08f0-48ef-4e54-802b-9722c79bcee0\" class=\"_input_1wnh2_29 _input_17tft_33 \" rows=\"4\"></textarea></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 9,
+        "label": "What are your thoughts on automated testing? How do you decide what to test and what not to test?",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 10,
+      "tag": "textarea",
+      "type": "textarea",
+      "id": "da5afadf-3496-41b9-8b7a-b297e64ac723",
+      "name": "da5afadf-3496-41b9-8b7a-b297e64ac723",
+      "classes": [
+        "_input_1wnh2_29",
+        "_input_17tft_33"
+      ],
+      "label": "In your opinion, what software engineering rituals or best practices are critical (if any) for an early-stage startup? And which ones you think are not so important? Please, explain the reasoning.",
+      "placeholder": "Type here...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#da5afadf-3496-41b9-8b7a-b297e64ac723",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_jobPostingForm_oj0x8_399",
+            "ashby-application-form-container",
+            "_container_101oc_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 2119,
+        "w": 668,
+        "h": 131
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"da5afadf-3496-41b9-8b7a-b297e64ac723\">In your opinion, what software engineering rituals or best practices are critical (if any) for an early-stage startup? And which ones you think are not so important? Please, explain the reasoning.</label><textarea placeholder=\"Type here...\" required=\"\" name=\"da5afadf-3496-41b9-8b7a-b297e64ac723\" id=\"da5afadf-3496-41b9-8b7a-b297e64ac723\" class=\"_input_1wnh2_29 _input_17tft_33 \" rows=\"4\"></textarea></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 10,
+        "label": "In your opinion, what software engineering rituals or best practices are critical (if any) for an early-stage startup? And which ones you think are not so important? Please, explain the reasoning.",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 11,
+      "tag": "textarea",
+      "type": "textarea",
+      "id": "19f5da4b-7a18-46d0-bcc5-701c1d52546a",
+      "name": "19f5da4b-7a18-46d0-bcc5-701c1d52546a",
+      "classes": [
+        "_input_1wnh2_29",
+        "_input_17tft_33"
+      ],
+      "label": "Can you explain how you've utilized AI tools like Cursor or Claude to become a better developer?",
+      "placeholder": "Type here...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#\\31 9f5da4b-7a18-46d0-bcc5-701c1d52546a",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_jobPostingForm_oj0x8_399",
+            "ashby-application-form-container",
+            "_container_101oc_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 2328,
+        "w": 668,
+        "h": 131
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"19f5da4b-7a18-46d0-bcc5-701c1d52546a\">Can you explain how you've utilized AI tools like Cursor or Claude to become a better developer?</label><textarea placeholder=\"Type here...\" required=\"\" name=\"19f5da4b-7a18-46d0-bcc5-701c1d52546a\" id=\"19f5da4b-7a18-46d0-bcc5-701c1d52546a\" class=\"_input_1wnh2_29 _input_17tft_33 \" rows=\"4\"></textarea></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 11,
+        "label": "Can you explain how you've utilized AI tools like Cursor or Claude to become a better developer?",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 12,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-0",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender",
+      "classes": [],
+      "label": "Male",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-0",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 2976,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_gender\">Gender</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><p>Input gender</p></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-0\" class=\"_label_1v5e2_43 \">Male</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-1\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-1\" class=\"_label_1v5e2_43 \">Female</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-2\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-2\" class=\"_label_1v5e2_43 \">Decline to self-identify</label></div></fieldset>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 12,
+        "label": "Male",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 13,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-1",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender",
+      "classes": [],
+      "label": "Female",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-1",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 3009,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_gender\">Gender</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><p>Input gender</p></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-0\" class=\"_label_1v5e2_43 \">Male</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-1\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-1\" class=\"_label_1v5e2_43 \">Female</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-2\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-2\" class=\"_label_1v5e2_43 \">Decline to self-identify</label></div></fieldset>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 13,
+        "label": "Female",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 14,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-2",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender",
+      "classes": [],
+      "label": "Decline to self-identify",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-2",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 3043,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_gender\">Gender</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><p>Input gender</p></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-0\" class=\"_label_1v5e2_43 \">Male</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-1\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-1\" class=\"_label_1v5e2_43 \">Female</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-2\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_gender-labeled-radio-2\" class=\"_label_1v5e2_43 \">Decline to self-identify</label></div></fieldset>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 14,
+        "label": "Decline to self-identify",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 15,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-0",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "classes": [],
+      "label": "Hispanic or Latino",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-0",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 3564,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_race\">Race</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><ul><li><p><strong>Hispanic or Latino </strong>- A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race.</p></li></ul><ul><li><p><strong>White</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of Europe, the Middle East, or North Africa.</p></li><li><p><strong>Black or African American</strong> (Not Hispanic or Latino) - A person having origins in any of the black racial groups of Africa.</p></li><li><p><strong>Native Hawaiian or Other Pacific Islander</strong> (Not Hispanic or Latino) - A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands.</p></li><li><p><strong>Asian</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam.</p></li><li><p><strong>American Indian or Alaska Native</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment.</p></li><li><p><strong>Two or More Races</strong> (Not Hispanic or Latino) - All persons who identify with more than one of the above five races.</p></li></ul></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 15,
+        "label": "Hispanic or Latino",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 16,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-1",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "classes": [],
+      "label": "White (Not Hispanic or Latino)",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-1",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 3598,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_race\">Race</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><ul><li><p><strong>Hispanic or Latino </strong>- A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race.</p></li></ul><ul><li><p><strong>White</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of Europe, the Middle East, or North Africa.</p></li><li><p><strong>Black or African American</strong> (Not Hispanic or Latino) - A person having origins in any of the black racial groups of Africa.</p></li><li><p><strong>Native Hawaiian or Other Pacific Islander</strong> (Not Hispanic or Latino) - A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands.</p></li><li><p><strong>Asian</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam.</p></li><li><p><strong>American Indian or Alaska Native</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment.</p></li><li><p><strong>Two or More Races</strong> (Not Hispanic or Latino) - All persons who identify with more than one of the above five races.</p></li></ul></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 16,
+        "label": "White (Not Hispanic or Latino)",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 17,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-2",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "classes": [],
+      "label": "Black or African American (Not Hispanic or Latino)",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-2",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 3631,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_race\">Race</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><ul><li><p><strong>Hispanic or Latino </strong>- A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race.</p></li></ul><ul><li><p><strong>White</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of Europe, the Middle East, or North Africa.</p></li><li><p><strong>Black or African American</strong> (Not Hispanic or Latino) - A person having origins in any of the black racial groups of Africa.</p></li><li><p><strong>Native Hawaiian or Other Pacific Islander</strong> (Not Hispanic or Latino) - A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands.</p></li><li><p><strong>Asian</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam.</p></li><li><p><strong>American Indian or Alaska Native</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment.</p></li><li><p><strong>Two or More Races</strong> (Not Hispanic or Latino) - All persons who identify with more than one of the above five races.</p></li></ul></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 17,
+        "label": "Black or African American (Not Hispanic or Latino)",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 18,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-3",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "classes": [],
+      "label": "Native Hawaiian or Other Pacific Islander (Not Hispanic or Latino)",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-3",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 3665,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_race\">Race</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><ul><li><p><strong>Hispanic or Latino </strong>- A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race.</p></li></ul><ul><li><p><strong>White</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of Europe, the Middle East, or North Africa.</p></li><li><p><strong>Black or African American</strong> (Not Hispanic or Latino) - A person having origins in any of the black racial groups of Africa.</p></li><li><p><strong>Native Hawaiian or Other Pacific Islander</strong> (Not Hispanic or Latino) - A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands.</p></li><li><p><strong>Asian</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam.</p></li><li><p><strong>American Indian or Alaska Native</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment.</p></li><li><p><strong>Two or More Races</strong> (Not Hispanic or Latino) - All persons who identify with more than one of the above five races.</p></li></ul></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 18,
+        "label": "Native Hawaiian or Other Pacific Islander (Not Hispanic or Latino)",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 19,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-4",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "classes": [],
+      "label": "Asian (Not Hispanic or Latino)",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-4",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 3699,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_race\">Race</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><ul><li><p><strong>Hispanic or Latino </strong>- A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race.</p></li></ul><ul><li><p><strong>White</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of Europe, the Middle East, or North Africa.</p></li><li><p><strong>Black or African American</strong> (Not Hispanic or Latino) - A person having origins in any of the black racial groups of Africa.</p></li><li><p><strong>Native Hawaiian or Other Pacific Islander</strong> (Not Hispanic or Latino) - A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands.</p></li><li><p><strong>Asian</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam.</p></li><li><p><strong>American Indian or Alaska Native</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment.</p></li><li><p><strong>Two or More Races</strong> (Not Hispanic or Latino) - All persons who identify with more than one of the above five races.</p></li></ul></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 19,
+        "label": "Asian (Not Hispanic or Latino)",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 20,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-5",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "classes": [],
+      "label": "American Indian or Alaska Native (Not Hispanic or Latino)",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-5",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 3732,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_race\">Race</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><ul><li><p><strong>Hispanic or Latino </strong>- A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race.</p></li></ul><ul><li><p><strong>White</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of Europe, the Middle East, or North Africa.</p></li><li><p><strong>Black or African American</strong> (Not Hispanic or Latino) - A person having origins in any of the black racial groups of Africa.</p></li><li><p><strong>Native Hawaiian or Other Pacific Islander</strong> (Not Hispanic or Latino) - A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands.</p></li><li><p><strong>Asian</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam.</p></li><li><p><strong>American Indian or Alaska Native</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment.</p></li><li><p><strong>Two or More Races</strong> (Not Hispanic or Latino) - All persons who identify with more than one of the above five races.</p></li></ul></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 20,
+        "label": "American Indian or Alaska Native (Not Hispanic or Latino)",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 21,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-6",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "classes": [],
+      "label": "Two or More Races (Not Hispanic or Latino)",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-6",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 3766,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_race\">Race</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><ul><li><p><strong>Hispanic or Latino </strong>- A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race.</p></li></ul><ul><li><p><strong>White</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of Europe, the Middle East, or North Africa.</p></li><li><p><strong>Black or African American</strong> (Not Hispanic or Latino) - A person having origins in any of the black racial groups of Africa.</p></li><li><p><strong>Native Hawaiian or Other Pacific Islander</strong> (Not Hispanic or Latino) - A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands.</p></li><li><p><strong>Asian</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam.</p></li><li><p><strong>American Indian or Alaska Native</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment.</p></li><li><p><strong>Two or More Races</strong> (Not Hispanic or Latino) - All persons who identify with more than one of the above five races.</p></li></ul></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 21,
+        "label": "Two or More Races (Not Hispanic or Latino)",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 22,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-7",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "classes": [],
+      "label": "Decline to self-identify",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-7",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 3799,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_race\">Race</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><ul><li><p><strong>Hispanic or Latino </strong>- A person of Cuban, Mexican, Puerto Rican, South or Central American, or other Spanish culture or origin regardless of race.</p></li></ul><ul><li><p><strong>White</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of Europe, the Middle East, or North Africa.</p></li><li><p><strong>Black or African American</strong> (Not Hispanic or Latino) - A person having origins in any of the black racial groups of Africa.</p></li><li><p><strong>Native Hawaiian or Other Pacific Islander</strong> (Not Hispanic or Latino) - A person having origins in any of the peoples of Hawaii, Guam, Samoa, or other Pacific Islands.</p></li><li><p><strong>Asian</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of the Far East, Southeast Asia, or the Indian Subcontinent, including, for example, Cambodia, China, India, Japan, Korea, Malaysia, Pakistan, the Philippine Islands, Thailand, and Vietnam.</p></li><li><p><strong>American Indian or Alaska Native</strong> (Not Hispanic or Latino) - A person having origins in any of the original peoples of North and South America (including Central America), and who maintain tribal affiliation or community attachment.</p></li><li><p><strong>Two or More Races</strong> (Not Hispanic or Latino) - All persons who identify with more than one of the above five races.</p></li></ul></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_race",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 22,
+        "label": "Decline to self-identify",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 23,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-0",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status",
+      "classes": [],
+      "label": "I identify as one or more of the classifications of protected veteran listed above",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-0",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 4493,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_veteran_status\">Veteran Status</label><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-0\" class=\"_label_1v5e2_43 \">I identify as one or more of the classifications of protected veteran listed above</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-1\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-1\" class=\"_label_1v5e2_43 \">I am not a protected veteran</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-2\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-2\" class=\"_label_1v5e2_43 \">I decline to self-identify for protected veteran status</label></div></fieldset>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 23,
+        "label": "I identify as one or more of the classifications of protected veteran listed above",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 24,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-1",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status",
+      "classes": [],
+      "label": "I am not a protected veteran",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-1",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 4526,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_veteran_status\">Veteran Status</label><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-0\" class=\"_label_1v5e2_43 \">I identify as one or more of the classifications of protected veteran listed above</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-1\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-1\" class=\"_label_1v5e2_43 \">I am not a protected veteran</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-2\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-2\" class=\"_label_1v5e2_43 \">I decline to self-identify for protected veteran status</label></div></fieldset>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 24,
+        "label": "I am not a protected veteran",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 25,
+      "tag": "input",
+      "type": "radio",
+      "id": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-2",
+      "name": "52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status",
+      "classes": [],
+      "label": "I decline to self-identify for protected veteran status",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\35 2909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-2",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 4560,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_eeoc_veteran_status\">Veteran Status</label><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-0\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-0\" class=\"_label_1v5e2_43 \">I identify as one or more of the classifications of protected veteran listed above</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-1\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-1\" class=\"_label_1v5e2_43 \">I am not a protected veteran</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-2\" name=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status\"></span><label for=\"52909c64-591c-4792-8ba7-3e3330bc02a9__systemfield_eeoc_veteran_status-labeled-radio-2\" class=\"_label_1v5e2_43 \">I decline to self-identify for protected veteran status</label></div></fieldset>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 25,
+        "label": "I decline to self-identify for protected veteran status",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    }
+  ],
+  "widgets": [
+    {
+      "type": "file-upload",
+      "selector": "input[type=\"file\"][name=\"\"]",
+      "accept": "application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf",
+      "multiple": false,
+      "parentClasses": [
+        "_autofillPane_oj0x8_445",
+        "ashby-application-form-autofill-uploader",
+        "_container_101oc_29"
+      ],
+      "labelText": "Autofill from resumeUpload your resume here to autofill key application fields.Upload fileDrop your "
+    },
+    {
+      "type": "file-upload",
+      "selector": "#_systemfield_resume",
+      "accept": "application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf,image/*,video/*,audio/*",
+      "multiple": false,
+      "parentClasses": [
+        "_container_1fd3o_71",
+        ""
+      ],
+      "labelText": "Upload Fileor drag and drop here"
+    }
+  ]
+}

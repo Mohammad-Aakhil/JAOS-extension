@@ -1,0 +1,11 @@
+{
+  "name": "jaos-ats-recon",
+  "version": "1.0.0",
+  "description": "Playwright recon tool — connects to your authenticated browser, scans ATS forms, dumps field map for adapter building",
+  "scripts": {
+    "recon": "node recon.js"
+  },
+  "dependencies": {
+    "playwright-core": "^1.49.0"
+  }
+}

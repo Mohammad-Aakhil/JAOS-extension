@@ -1,0 +1,135 @@
+{
+  "url": "https://jobs.ashbyhq.com/openrouter/89ff6b47-ba08-4418-b24b-c136dbf2ef82",
+  "company": "jobs",
+  "timestamp": "2026-03-18T07:41:36.488Z",
+  "summary": {
+    "textFields": 3,
+    "radioGroups": 0,
+    "checkboxes": 2,
+    "selects": 0,
+    "textareas": 1,
+    "yesNoButtons": 2,
+    "comboboxes": 1,
+    "fileInputs": 2,
+    "conditionalFields": 0
+  },
+  "widgets": [
+    {
+      "label": "Do you currently require visa sponsorship to work in the United States?",
+      "yesSelector": null,
+      "noSelector": null,
+      "containerIndex": 11,
+      "yesBtnText": "Yes",
+      "noBtnText": "No",
+      "yesClasses": "_container_pjyt6_1 _option_y2cw4_33 ",
+      "noClasses": "_container_pjyt6_1 _option_y2cw4_33 ",
+      "type": "yesno-button",
+      "clickBehavior": "error",
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Yes\")').nth(11)\u001b[22m\n"
+    },
+    {
+      "label": "Will you require visa sponsorship in the future to work in the United States?",
+      "yesSelector": null,
+      "noSelector": null,
+      "containerIndex": 13,
+      "yesBtnText": "Yes",
+      "noBtnText": "No",
+      "yesClasses": "_container_pjyt6_1 _option_y2cw4_33 ",
+      "noClasses": "_container_pjyt6_1 _option_y2cw4_33 ",
+      "type": "yesno-button",
+      "clickBehavior": "error",
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Yes\")').nth(13)\u001b[22m\n"
+    },
+    {
+      "type": "combobox",
+      "label": "Start typing...",
+      "id": "",
+      "opensOnClick": true,
+      "opensOnType": true,
+      "listboxLocation": "not-found",
+      "selectMethod": "unknown",
+      "filteredOptionCount": 0
+    }
+  ],
+  "radioGroups": [],
+  "fileInputs": [
+    {
+      "type": "file",
+      "id": "",
+      "purpose": "autofill-pane",
+      "hidden": false,
+      "acceptTypes": "application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf",
+      "contextLabel": "Autofill from resumeUpload your resume here to autofill key application fields.U"
+    },
+    {
+      "type": "file",
+      "id": "_systemfield_resume",
+      "purpose": "resume",
+      "hidden": false,
+      "acceptTypes": "application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf,image/*,video/*,audio/*",
+      "contextLabel": "ResumeUpload Fileor drag and drop here"
+    }
+  ],
+  "conditionalFields": [],
+  "catalog": {
+    "textFields": [
+      {
+        "tag": "input",
+        "inputType": "text",
+        "id": "_systemfield_name",
+        "name": "_systemfield_name",
+        "label": "Name",
+        "placeholder": "Type here...",
+        "required": true
+      },
+      {
+        "tag": "input",
+        "inputType": "email",
+        "id": "_systemfield_email",
+        "name": "_systemfield_email",
+        "label": "Email",
+        "placeholder": "hello@example.com...",
+        "required": true
+      },
+      {
+        "tag": "input",
+        "inputType": "text",
+        "id": "",
+        "name": "",
+        "label": "Start typing...",
+        "placeholder": "Start typing...",
+        "required": false
+      }
+    ],
+    "selects": [],
+    "checkboxes": [
+      {
+        "id": "",
+        "name": "4c1c6a6d-14dd-4988-a863-e01e580fb416",
+        "label": "Do you currently require visa sponsorship to work in the United States?",
+        "checked": false,
+        "hidden": true
+      },
+      {
+        "id": "",
+        "name": "37805c1c-f8d6-4cfd-9deb-6c6234575364",
+        "label": "Will you require visa sponsorship in the future to work in the United States?",
+        "checked": false,
+        "hidden": true
+      }
+    ],
+    "textareas": [
+      {
+        "id": "e4833b22-03a4-4a4b-930a-3cd205906576",
+        "name": "e4833b22-03a4-4a4b-930a-3cd205906576",
+        "label": "Why OpenRouter?",
+        "required": true
+      }
+    ]
+  },
+  "adapterHints": [
+    "Combobox \"Start typing...\" opens on click -- click to open, then type to filter and click option",
+    "1 file input(s) in autofill pane -- skip these, they are for ATS profile import, not resume upload",
+    "Resume file input found (id=\"_systemfield_resume\") -- use DataTransfer API to upload, accept: \"application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf,image/*,video/*,audio/*\""
+  ]
+}

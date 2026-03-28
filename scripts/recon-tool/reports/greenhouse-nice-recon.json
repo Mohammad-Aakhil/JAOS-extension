@@ -1,0 +1,2561 @@
+{
+  "meta": {
+    "url": "https://job-boards.eu.greenhouse.io/nice/jobs/4799358101?gh_jid=4799358101",
+    "timestamp": "2026-03-16T03:07:42.423Z",
+    "ats": {
+      "platform": "Greenhouse",
+      "hostname": "job-boards.eu.greenhouse.io",
+      "urlPattern": "https://job-boards.eu.greenhouse.io/nice/jobs/4799358101"
+    },
+    "frameworks": [],
+    "stepsScanned": [
+      "Main Page"
+    ]
+  },
+  "structure": {
+    "sections": [
+      {
+        "tag": "h1",
+        "text": "Senior Software Engineer,CX – Platform Data",
+        "level": "1"
+      },
+      {
+        "tag": "h2",
+        "text": "Apply for this job",
+        "level": "2"
+      },
+      {
+        "tag": "legend",
+        "text": "Phone",
+        "level": "?"
+      },
+      {
+        "tag": "h2",
+        "text": "Voluntary Self-Identification",
+        "level": "2"
+      },
+      {
+        "tag": "h2",
+        "text": "Voluntary Self-Identification of Disability",
+        "level": "2"
+      }
+    ],
+    "fieldsets": [
+      {
+        "legend": "Phone",
+        "fieldCount": 4,
+        "classes": [
+          "phone-input"
+        ]
+      },
+      {
+        "legend": "",
+        "fieldCount": 1,
+        "classes": [
+          "file-upload"
+        ]
+      },
+      {
+        "legend": "",
+        "fieldCount": 1,
+        "classes": [
+          "file-upload"
+        ]
+      }
+    ],
+    "buttons": [
+      {
+        "tag": "button",
+        "text": "Apply",
+        "type": "button",
+        "classes": [
+          "btn",
+          "btn--pill"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Autofill with MyGreenhouse",
+        "type": "button",
+        "classes": [
+          "btn",
+          "btn--pill",
+          "btn--secondary"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Attach",
+        "type": "button",
+        "classes": [
+          "btn",
+          "btn--pill"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Dropbox",
+        "type": "button",
+        "classes": [
+          "btn",
+          "btn--pill"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Google Drive",
+        "type": "button",
+        "classes": [
+          "btn",
+          "btn--pill"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Enter manually",
+        "type": "button",
+        "classes": [
+          "btn",
+          "btn--pill"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Submit application",
+        "type": "submit",
+        "classes": [
+          "btn",
+          "btn--pill"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "x",
+        "type": "button",
+        "classes": [
+          ""
+        ],
+        "id": "jaos-floating-unpin",
+        "dataAutomationId": null
+      }
+    ],
+    "tabs": [],
+    "iframes": [
+      {
+        "src": "https://www.recaptcha.net/recaptcha/enterprise/anchor?ar=1&k=6LfmcbcpAAAAAChNTbhUShzUOAMj_wY9LQIvLFX0&co=aHR0cHM6Ly9qb2ItYm9hcmRzLmV1LmdyZWVuaG91c2UuaW86NDQz&hl=en&v=QvLuXwupqtKCyjBw2xIzFLIf&size=invisible&anchor-ms=20000&execute-ms=30000&cb=g0o1vlid90ck",
+        "id": null,
+        "name": "a-7icb1vt6yqfd",
+        "visible": true
+      }
+    ]
+  },
+  "fields": [
+    {
+      "index": 0,
+      "tag": "input",
+      "type": "text",
+      "id": "first_name",
+      "name": null,
+      "classes": [
+        "input",
+        "input__single-line"
+      ],
+      "label": "First Name*",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": "First Name",
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": "first_name-description first_name-error first_name-help",
+      "role": null,
+      "autocomplete": "given-name",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#first_name",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "input-wrapper",
+            "input-wrapper--active"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "text-input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "field-wrapper"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 260,
+        "y": 307,
+        "w": 600,
+        "h": 34
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"input-wrapper input-wrapper--active\"><label id=\"first_name-label\" for=\"first_name\" class=\"label label\">First Name<span aria-hidden=\"true\">*</span></label><input id=\"first_name\" class=\"input input__single-line\" aria-label=\"First Name\" aria-describedby=\"first_name-description first_name-error first_name-help\" aria-invalid=\"false\" aria-errormessage=\"first_name-error\" aria-required=\"true\" type=\"text\" maxlength=\"255\" autocomplete=\"given-name\" value=\"\" style=\"\"></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 0,
+        "label": "First Name*",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "tag": "input",
+      "type": "text",
+      "id": "last_name",
+      "name": null,
+      "classes": [
+        "input",
+        "input__single-line"
+      ],
+      "label": "Last Name*",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": "Last Name",
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": "last_name-description last_name-error last_name-help",
+      "role": null,
+      "autocomplete": "family-name",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#last_name",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "text-input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "field-wrapper"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 260,
+        "y": 383,
+        "w": 600,
+        "h": 34
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"input-wrapper\"><label id=\"last_name-label\" for=\"last_name\" class=\"label label\">Last Name<span aria-hidden=\"true\">*</span></label><input id=\"last_name\" class=\"input input__single-line\" aria-label=\"Last Name\" aria-describedby=\"last_name-description last_name-error last_name-help\" aria-invalid=\"false\" aria-errormessage=\"last_name-error\" aria-required=\"true\" type=\"text\" maxlength=\"255\" autocomplete=\"family-name\" value=\"\" style=\"\"></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 1,
+        "label": "Last Name*",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "tag": "input",
+      "type": "text",
+      "id": "email",
+      "name": null,
+      "classes": [
+        "input",
+        "input__single-line"
+      ],
+      "label": "Email*",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": "Email",
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": "email-description email-error email-help",
+      "role": null,
+      "autocomplete": "email",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#email",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "text-input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "field-wrapper"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 260,
+        "y": 459,
+        "w": 600,
+        "h": 34
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"input-wrapper\"><label id=\"email-label\" for=\"email\" class=\"label label\">Email<span aria-hidden=\"true\">*</span></label><input id=\"email\" class=\"input input__single-line\" aria-label=\"Email\" aria-describedby=\"email-description email-error email-help\" aria-invalid=\"false\" aria-errormessage=\"email-error\" aria-required=\"true\" type=\"text\" maxlength=\"255\" autocomplete=\"email\" value=\"\" style=\"\"></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 2,
+        "label": "Email*",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 3,
+      "tag": "input",
+      "type": "text",
+      "id": "country",
+      "name": null,
+      "classes": [
+        "select__input"
+      ],
+      "label": "Country*",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": "country-label",
+      "ariaDescribedBy": "react-select-country-placeholder country-error",
+      "role": "combobox",
+      "autocomplete": "off",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#country",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__input-container",
+            "remix-css-19bb58m"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__value-container",
+            "remix-css-hlgwow"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__control",
+            "remix-css-13cymwt-control"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 276,
+        "y": 539,
+        "w": 3,
+        "h": 20
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"phone-input\"><legend class=\"visually-hidden\">Phone</legend><div class=\"phone-input__country\"><div class=\"select\"><div class=\"select__container\"><label id=\"country-label\" for=\"country\" class=\"label select__label\">Country<span aria-hidden=\"true\">*</span></label><div class=\"select-shell remix-css-b62m3t-container\"><span id=\"react-select-country-live-region\" class=\"remix-css-7pg0cj-a11yText\"></span><span aria-live=\"polite\" aria-atomic=\"false\" aria-relevant=\"additions text\" role=\"log\" class=\"remix-css-7pg0cj-a11yText\"></span><div><div class=\"select__control remix-css-13cymwt-control\"><div class=\"select__value-container remix-css-hlgwow\"><div class=\"select__placeholder remix-css-1jqq78o-placeholder\" id=\"react-select-country-placeholder\"></div><div class=\"select__input-container remix-css-19bb58m\" data-value=\"\"><input class=\"select__input\" style=\"color: inherit; background: 0px center; opacity: 1; width: 100%; grid-area: 1 / 2; font: inherit; min-width: 2px; border: 0px; margin: 0px; outline: 0px; padding: 0px;\" autocapitalize=\"none\" autocomplete=\"off\" autocorrect=\"off\" id=\"country\" spellcheck=\"false\" tabindex=\"0\" type=\"text\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-errormessage=\"country-error\" aria-invalid=\"false\" aria-labelledby=\"country-label\" aria-required=\"true\" role=\"combobox\" aria-activedescendant=\"\" aria-describedby=\"react-select-country-placeholder country-error\" enterkeyhint=\"done\" value=\"\"></div></div><div class=\"select__indicators remix-css-1wy0on6\"><button type=\"button\" class=\"icon-button icon-button--sm\" aria-label=\"Toggle flyout\" tabindex=\"-1\"><svg class=\"svg-icon\" fill=\"none\" height=\"20\" width=\"20\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path class=\"icon--primary-color\" d=\"M11.4534 16.0667L5.90983 9.13729C5.54316 8.67895 5.86948 8 6.45644 8H17.5436C18.1305 8 18.4568 8.67895 18.0902 9.13729L12.5466 16.0667C12.2664 16.417 11.7336 16.417 11.4534 16.0667Z\"></path></svg></button></div></div></div><",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 3,
+        "label": "Country*",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "United States +1",
+          "Afghanistan +93",
+          "Åland Islands +358",
+          "Albania +355",
+          "Algeria +213",
+          "American Samoa +1",
+          "Andorra +376",
+          "Angola +244",
+          "Anguilla +1",
+          "Antigua & Barbuda +1",
+          "Argentina +54",
+          "Armenia +374",
+          "Aruba +297",
+          "Ascension Island +247",
+          "Australia +61",
+          "Austria +43",
+          "Azerbaijan +994",
+          "Bahamas +1",
+          "Bahrain +973",
+          "Bangladesh +880",
+          "Barbados +1",
+          "Belarus +375",
+          "Belgium +32",
+          "Belize +501",
+          "Benin +229",
+          "Bermuda +1",
+          "Bhutan +975",
+          "Bolivia +591",
+          "Bosnia & Herzegovina +387",
+          "Botswana +267"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "tag": "input",
+      "type": "tel",
+      "id": "phone",
+      "name": null,
+      "classes": [
+        "input",
+        "input__single-line",
+        "iti__tel-input"
+      ],
+      "label": "Phone*",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": "Phone",
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": "phone-description phone-error phone-help",
+      "role": null,
+      "autocomplete": "off",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#phone",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "iti",
+            "iti--allow-dropdown",
+            "iti--show-flags",
+            "iti--inline-dropdown"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "text-input-wrapper"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 411,
+        "y": 535,
+        "w": 449,
+        "h": 34
+      },
+      "dataAttributes": {
+        "data-intl-tel-input-id": "0"
+      },
+      "rawHTML": "<div class=\"input-wrapper\"><label id=\"phone-label\" for=\"phone\" class=\"label label\">Phone<span aria-hidden=\"true\">*</span></label><div class=\"iti iti--allow-dropdown iti--show-flags iti--inline-dropdown\"><div class=\"iti__country-container\" style=\"left: 0px;\"><button type=\"button\" class=\"iti__selected-country\" aria-expanded=\"false\" aria-label=\"Select country\" aria-haspopup=\"dialog\" aria-controls=\"iti-0__dropdown-content\" title=\"Select country\"><div class=\"iti__selected-country-primary\"><div class=\"iti__flag iti__globe\"></div><div class=\"iti__arrow\" aria-hidden=\"true\"></div></div></button><div id=\"iti-0__dropdown-content\" class=\"iti__dropdown-content iti__hide \" role=\"dialog\" aria-modal=\"true\"><div class=\"iti__search-input-wrapper\"><span class=\"iti__search-icon\" aria-hidden=\"true\">\n            <svg class=\"iti__search-icon-svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" focusable=\"false\" aria-hidden=\"true\">\n              <circle cx=\"11\" cy=\"11\" r=\"7\"></circle>\n              <line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"></line>\n            </svg></span><input id=\"iti-0__search-input\" type=\"search\" class=\"iti__search-input\" placeholder=\"Search\" role=\"combobox\" aria-expanded=\"true\" aria-label=\"Search\" aria-controls=\"iti-0__country-listbox\" aria-autocomplete=\"list\" autocomplete=\"off\" style=\"\"><button type=\"button\" class=\"iti__search-clear iti__hide\" aria-label=\"Clear search\" tabindex=\"-1\">\n            <svg class=\"iti__search-clear-svg\" width=\"12\" height=\"12\" viewBox=\"0 0 16 16\" aria-hidden=\"true\" focusable=\"false\">\n              <mask id=\"iti-0-clear-mask\" maskUnits=\"userSpaceOnUse\">\n                <rect width=\"16\" height=\"16\" fill=\"white\"></rect>\n                <path d=\"M5.2 5.2 L10.8 10.8 M10.8 5.2 L5.2 10.8\" stroke=\"black\" stroke-linecap=\"round\" class=\"iti__search-clear-x\"></path>\n              </mask>\n              <circle cx=\"8\" cy=\"8\" r=\"8\" class=\"iti__search-clear-bg\" mask=\"url(#iti-0-clear-mask)\"></circle>\n            </svg></button></div><span class=\"iti__a11y-text",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 4,
+        "label": "Phone*",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 5,
+      "tag": "input",
+      "type": "file",
+      "id": "resume",
+      "name": null,
+      "classes": [
+        "visually-hidden"
+      ],
+      "label": "Attach",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#resume",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "secondary-button"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "button-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 559,
+        "y": 614,
+        "w": 1,
+        "h": 1
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"field-wrapper\"><div role=\"group\" aria-labelledby=\"upload-label-resume\" aria-required=\"true\" class=\"file-upload\" data-allow-s3=\"false\"><div id=\"upload-label-resume\" class=\"label upload-label\">Resume/CV<span class=\"required\">*</span></div><div class=\"file-upload__wrapper\"><div class=\"button-container\"><div class=\"secondary-button\"><div><button type=\"button\" class=\"btn btn--pill\">Attach</button><label class=\"visually-hidden\" for=\"resume\">Attach</label><input id=\"resume\" class=\"visually-hidden\" type=\"file\" accept=\".pdf,.doc,.docx,.txt,.rtf\" style=\"\"></div></div><div class=\"secondary-button\"><button type=\"button\" class=\"btn btn--pill\" data-testid=\"resume-dropbox\">Dropbox</button></div><div class=\"secondary-button\"><button type=\"button\" class=\"btn btn--pill\">Google Drive</button></div><div class=\"secondary-button\"><div><button type=\"button\" class=\"btn btn--pill\" data-testid=\"resume-text\">Enter manually</button><label class=\"visually-hidden\" for=\"resume_text\">Enter manually</label></div></div><p id=\"accepted-filetypes\" class=\"file-upload__filetypes\">Accepted file types: pdf, doc, docx, txt, rtf</p></div></div></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 5,
+        "label": "Attach",
+        "clicked": false,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": [
+          "Click failed: elementHandle.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m   "
+        ]
+      }
+    },
+    {
+      "index": 6,
+      "tag": "input",
+      "type": "file",
+      "id": "cover_letter",
+      "name": null,
+      "classes": [
+        "visually-hidden"
+      ],
+      "label": "Attach",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#cover_letter",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "secondary-button"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "button-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 559,
+        "y": 880,
+        "w": 1,
+        "h": 1
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"field-wrapper\"><div role=\"group\" aria-labelledby=\"upload-label-cover_letter\" aria-required=\"false\" class=\"file-upload\" data-allow-s3=\"false\"><div id=\"upload-label-cover_letter\" class=\"label upload-label\">Cover Letter</div><div class=\"file-upload__wrapper\"><div class=\"button-container\"><div class=\"secondary-button\"><div><button type=\"button\" class=\"btn btn--pill\">Attach</button><label class=\"visually-hidden\" for=\"cover_letter\">Attach</label><input id=\"cover_letter\" class=\"visually-hidden\" type=\"file\" accept=\".pdf,.doc,.docx,.txt,.rtf\" style=\"\"></div></div><div class=\"secondary-button\"><button type=\"button\" class=\"btn btn--pill\" data-testid=\"cover_letter-dropbox\">Dropbox</button></div><div class=\"secondary-button\"><button type=\"button\" class=\"btn btn--pill\">Google Drive</button></div><div class=\"secondary-button\"><div><button type=\"button\" class=\"btn btn--pill\" data-testid=\"cover_letter-text\">Enter manually</button><label class=\"visually-hidden\" for=\"cover_letter_text\">Enter manually</label></div></div><p id=\"accepted-filetypes\" class=\"file-upload__filetypes\">Accepted file types: pdf, doc, docx, txt, rtf</p></div></div></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 6,
+        "label": "Attach",
+        "clicked": false,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": [
+          "Click failed: elementHandle.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m   "
+        ]
+      }
+    },
+    {
+      "index": 7,
+      "tag": "input",
+      "type": "text",
+      "id": "question_8366613101",
+      "name": null,
+      "classes": [
+        "input",
+        "input__single-line"
+      ],
+      "label": "LinkedIn Profile",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": "LinkedIn Profile",
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": "question_8366613101-description question_8366613101-error question_8366613101-help",
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#question_8366613101",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "text-input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "field-wrapper"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 260,
+        "y": 1183,
+        "w": 600,
+        "h": 34
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"input-wrapper\"><label id=\"question_8366613101-label\" for=\"question_8366613101\" class=\"label label\">LinkedIn Profile</label><input id=\"question_8366613101\" class=\"input input__single-line\" aria-label=\"LinkedIn Profile\" aria-describedby=\"question_8366613101-description question_8366613101-error question_8366613101-help\" aria-invalid=\"false\" aria-errormessage=\"question_8366613101-error\" aria-required=\"false\" type=\"text\" maxlength=\"255\" value=\"\" style=\"\"></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 7,
+        "label": "LinkedIn Profile",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 8,
+      "tag": "input",
+      "type": "text",
+      "id": "question_8366614101",
+      "name": null,
+      "classes": [
+        "input",
+        "input__single-line"
+      ],
+      "label": "Website",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": "Website",
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": "question_8366614101-description question_8366614101-error question_8366614101-help",
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#question_8366614101",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "text-input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "field-wrapper"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 260,
+        "y": 1259,
+        "w": 600,
+        "h": 34
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"input-wrapper\"><label id=\"question_8366614101-label\" for=\"question_8366614101\" class=\"label label\">Website</label><input id=\"question_8366614101\" class=\"input input__single-line\" aria-label=\"Website\" aria-describedby=\"question_8366614101-description question_8366614101-error question_8366614101-help\" aria-invalid=\"false\" aria-errormessage=\"question_8366614101-error\" aria-required=\"false\" type=\"text\" maxlength=\"255\" value=\"\" style=\"\"></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 8,
+        "label": "Website",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 9,
+      "tag": "input",
+      "type": "text",
+      "id": "question_8366615101",
+      "name": null,
+      "classes": [
+        "select__input"
+      ],
+      "label": "Do you have any first-degree relatives (spouse, parent, child, sibling) that are currently employed by NICE or any of its subsidiaries?*",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": "question_8366615101-label",
+      "ariaDescribedBy": "react-select-question_8366615101-placeholder question_8366615101-error",
+      "role": "combobox",
+      "autocomplete": "off",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#question_8366615101",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__input-container",
+            "remix-css-19bb58m"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__value-container",
+            "remix-css-hlgwow"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__control",
+            "remix-css-13cymwt-control"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 276,
+        "y": 1357,
+        "w": 3,
+        "h": 20
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"field-wrapper\"><div class=\"select\"><div class=\"select__container\"><label id=\"question_8366615101-label\" for=\"question_8366615101\" class=\"label select__label\">Do you have any first-degree relatives (spouse, parent, child, sibling) that are currently employed by NICE or any of its subsidiaries?<span aria-hidden=\"true\">*</span></label><div class=\"select-shell remix-css-b62m3t-container\"><span id=\"react-select-question_8366615101-live-region\" class=\"remix-css-7pg0cj-a11yText\"></span><span aria-live=\"polite\" aria-atomic=\"false\" aria-relevant=\"additions text\" role=\"log\" class=\"remix-css-7pg0cj-a11yText\"></span><div><div class=\"select__control remix-css-13cymwt-control\"><div class=\"select__value-container remix-css-hlgwow\"><div class=\"select__placeholder remix-css-1jqq78o-placeholder\" id=\"react-select-question_8366615101-placeholder\">Select...</div><div class=\"select__input-container remix-css-19bb58m\" data-value=\"\"><input class=\"select__input\" style=\"color: inherit; background: 0px center; opacity: 1; width: 100%; grid-area: 1 / 2; font: inherit; min-width: 2px; border: 0px; margin: 0px; outline: 0px; padding: 0px;\" autocapitalize=\"none\" autocomplete=\"off\" autocorrect=\"off\" id=\"question_8366615101\" spellcheck=\"false\" tabindex=\"0\" type=\"text\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-errormessage=\"question_8366615101-error\" aria-invalid=\"false\" aria-labelledby=\"question_8366615101-label\" aria-required=\"true\" role=\"combobox\" aria-activedescendant=\"\" aria-describedby=\"react-select-question_8366615101-placeholder question_8366615101-error\" enterkeyhint=\"done\" value=\"\"></div></div><div class=\"select__indicators remix-css-1wy0on6\"><button type=\"button\" class=\"icon-button icon-button--sm\" aria-label=\"Toggle flyout\" tabindex=\"-1\"><svg class=\"svg-icon\" fill=\"none\" height=\"20\" width=\"20\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path class=\"icon--primary-color\" d=\"M11.4534 16.0667L5.90983 9.13729C5.54316 8.67895 5.86948 8 6.4",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 9,
+        "label": "Do you have any first-degree relatives (spouse, parent, child, sibling) that are currently employed by NICE or any of its subsidiaries?*",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 10,
+      "tag": "input",
+      "type": "text",
+      "id": "question_8366616101",
+      "name": null,
+      "classes": [
+        "select__input"
+      ],
+      "label": "Have you ever worked at NICE or any of it's subsidiaries?*",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": "question_8366616101-label",
+      "ariaDescribedBy": "react-select-question_8366616101-placeholder question_8366616101-error",
+      "role": "combobox",
+      "autocomplete": "off",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#question_8366616101",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__input-container",
+            "remix-css-19bb58m"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__value-container",
+            "remix-css-hlgwow"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__control",
+            "remix-css-13cymwt-control"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 276,
+        "y": 1433,
+        "w": 3,
+        "h": 20
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"field-wrapper\"><div class=\"select\"><div class=\"select__container\"><label id=\"question_8366616101-label\" for=\"question_8366616101\" class=\"label select__label\">Have you ever worked at NICE or any of it's subsidiaries?<span aria-hidden=\"true\">*</span></label><div class=\"select-shell remix-css-b62m3t-container\"><span id=\"react-select-question_8366616101-live-region\" class=\"remix-css-7pg0cj-a11yText\"></span><span aria-live=\"polite\" aria-atomic=\"false\" aria-relevant=\"additions text\" role=\"log\" class=\"remix-css-7pg0cj-a11yText\"></span><div><div class=\"select__control remix-css-13cymwt-control\"><div class=\"select__value-container remix-css-hlgwow\"><div class=\"select__placeholder remix-css-1jqq78o-placeholder\" id=\"react-select-question_8366616101-placeholder\">Select...</div><div class=\"select__input-container remix-css-19bb58m\" data-value=\"\"><input class=\"select__input\" style=\"color: inherit; background: 0px center; opacity: 1; width: 100%; grid-area: 1 / 2; font: inherit; min-width: 2px; border: 0px; margin: 0px; outline: 0px; padding: 0px;\" autocapitalize=\"none\" autocomplete=\"off\" autocorrect=\"off\" id=\"question_8366616101\" spellcheck=\"false\" tabindex=\"0\" type=\"text\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-errormessage=\"question_8366616101-error\" aria-invalid=\"false\" aria-labelledby=\"question_8366616101-label\" aria-required=\"true\" role=\"combobox\" aria-activedescendant=\"\" aria-describedby=\"react-select-question_8366616101-placeholder question_8366616101-error\" enterkeyhint=\"done\" value=\"\"></div></div><div class=\"select__indicators remix-css-1wy0on6\"><button type=\"button\" class=\"icon-button icon-button--sm\" aria-label=\"Toggle flyout\" tabindex=\"-1\"><svg class=\"svg-icon\" fill=\"none\" height=\"20\" width=\"20\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path class=\"icon--primary-color\" d=\"M11.4534 16.0667L5.90983 9.13729C5.54316 8.67895 5.86948 8 6.45644 8H17.5436C18.1305 8 18.4568 8.67895 18.0902 9.13729L12.5466 16.0667C12.26",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 10,
+        "label": "Have you ever worked at NICE or any of it's subsidiaries?*",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 11,
+      "tag": "input",
+      "type": "text",
+      "id": "question_8366617101",
+      "name": null,
+      "classes": [
+        "select__input"
+      ],
+      "label": "Are you willing to come into the office two days a week on a flex-hybrid schedule?*",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": "question_8366617101-label",
+      "ariaDescribedBy": "react-select-question_8366617101-placeholder question_8366617101-error",
+      "role": "combobox",
+      "autocomplete": "off",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#question_8366617101",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__input-container",
+            "remix-css-19bb58m"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__value-container",
+            "remix-css-hlgwow"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__control",
+            "remix-css-13cymwt-control"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 276,
+        "y": 1509,
+        "w": 3,
+        "h": 20
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"field-wrapper\"><div class=\"select\"><div class=\"select__container\"><label id=\"question_8366617101-label\" for=\"question_8366617101\" class=\"label select__label\">Are you willing to come into the office two days a week on a flex-hybrid schedule?<span aria-hidden=\"true\">*</span></label><div class=\"select-shell remix-css-b62m3t-container\"><span id=\"react-select-question_8366617101-live-region\" class=\"remix-css-7pg0cj-a11yText\"></span><span aria-live=\"polite\" aria-atomic=\"false\" aria-relevant=\"additions text\" role=\"log\" class=\"remix-css-7pg0cj-a11yText\"></span><div><div class=\"select__control remix-css-13cymwt-control\"><div class=\"select__value-container remix-css-hlgwow\"><div class=\"select__placeholder remix-css-1jqq78o-placeholder\" id=\"react-select-question_8366617101-placeholder\">Select...</div><div class=\"select__input-container remix-css-19bb58m\" data-value=\"\"><input class=\"select__input\" style=\"color: inherit; background: 0px center; opacity: 1; width: 100%; grid-area: 1 / 2; font: inherit; min-width: 2px; border: 0px; margin: 0px; outline: 0px; padding: 0px;\" autocapitalize=\"none\" autocomplete=\"off\" autocorrect=\"off\" id=\"question_8366617101\" spellcheck=\"false\" tabindex=\"0\" type=\"text\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-errormessage=\"question_8366617101-error\" aria-invalid=\"false\" aria-labelledby=\"question_8366617101-label\" aria-required=\"true\" role=\"combobox\" aria-activedescendant=\"\" aria-describedby=\"react-select-question_8366617101-placeholder question_8366617101-error\" enterkeyhint=\"done\" value=\"\"></div></div><div class=\"select__indicators remix-css-1wy0on6\"><button type=\"button\" class=\"icon-button icon-button--sm\" aria-label=\"Toggle flyout\" tabindex=\"-1\"><svg class=\"svg-icon\" fill=\"none\" height=\"20\" width=\"20\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path class=\"icon--primary-color\" d=\"M11.4534 16.0667L5.90983 9.13729C5.54316 8.67895 5.86948 8 6.45644 8H17.5436C18.1305 8 18.4568 8.67895 18.0902 9.13",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 11,
+        "label": "Are you willing to come into the office two days a week on a flex-hybrid schedule?*",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 12,
+      "tag": "input",
+      "type": "text",
+      "id": "question_8366618101",
+      "name": null,
+      "classes": [
+        "input",
+        "input__single-line"
+      ],
+      "label": "What is your desired base salary?*",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": "What is your desired base salary?",
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": "question_8366618101-description question_8366618101-error question_8366618101-help",
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#question_8366618101",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "text-input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "field-wrapper"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 260,
+        "y": 1581,
+        "w": 600,
+        "h": 34
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"input-wrapper\"><label id=\"question_8366618101-label\" for=\"question_8366618101\" class=\"label label\">What is your desired base salary?<span aria-hidden=\"true\">*</span></label><input id=\"question_8366618101\" class=\"input input__single-line\" aria-label=\"What is your desired base salary?\" aria-describedby=\"question_8366618101-description question_8366618101-error question_8366618101-help\" aria-invalid=\"false\" aria-errormessage=\"question_8366618101-error\" aria-required=\"true\" type=\"text\" maxlength=\"255\" value=\"\" style=\"\"></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 12,
+        "label": "What is your desired base salary?*",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 13,
+      "tag": "input",
+      "type": "text",
+      "id": "question_8366619101",
+      "name": null,
+      "classes": [
+        "select__input"
+      ],
+      "label": "Are you a US Citizen or Green Card Holder? *",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": "question_8366619101-label",
+      "ariaDescribedBy": "react-select-question_8366619101-placeholder question_8366619101-error",
+      "role": "combobox",
+      "autocomplete": "off",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#question_8366619101",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__input-container",
+            "remix-css-19bb58m"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__value-container",
+            "remix-css-hlgwow"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__control",
+            "remix-css-13cymwt-control"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 276,
+        "y": 1661,
+        "w": 3,
+        "h": 20
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"field-wrapper\"><div class=\"select\"><div class=\"select__container\"><label id=\"question_8366619101-label\" for=\"question_8366619101\" class=\"label select__label\">Are you a US Citizen or Green Card Holder? <span aria-hidden=\"true\">*</span></label><div class=\"select-shell remix-css-b62m3t-container\"><span id=\"react-select-question_8366619101-live-region\" class=\"remix-css-7pg0cj-a11yText\"></span><span aria-live=\"polite\" aria-atomic=\"false\" aria-relevant=\"additions text\" role=\"log\" class=\"remix-css-7pg0cj-a11yText\"></span><div><div class=\"select__control remix-css-13cymwt-control\"><div class=\"select__value-container remix-css-hlgwow\"><div class=\"select__placeholder remix-css-1jqq78o-placeholder\" id=\"react-select-question_8366619101-placeholder\">Select...</div><div class=\"select__input-container remix-css-19bb58m\" data-value=\"\"><input class=\"select__input\" style=\"color: inherit; background: 0px center; opacity: 1; width: 100%; grid-area: 1 / 2; font: inherit; min-width: 2px; border: 0px; margin: 0px; outline: 0px; padding: 0px;\" autocapitalize=\"none\" autocomplete=\"off\" autocorrect=\"off\" id=\"question_8366619101\" spellcheck=\"false\" tabindex=\"0\" type=\"text\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-errormessage=\"question_8366619101-error\" aria-invalid=\"false\" aria-labelledby=\"question_8366619101-label\" aria-required=\"true\" role=\"combobox\" aria-activedescendant=\"\" aria-describedby=\"react-select-question_8366619101-placeholder question_8366619101-error\" enterkeyhint=\"done\" value=\"\"></div></div><div class=\"select__indicators remix-css-1wy0on6\"><button type=\"button\" class=\"icon-button icon-button--sm\" aria-label=\"Toggle flyout\" tabindex=\"-1\"><svg class=\"svg-icon\" fill=\"none\" height=\"20\" width=\"20\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path class=\"icon--primary-color\" d=\"M11.4534 16.0667L5.90983 9.13729C5.54316 8.67895 5.86948 8 6.45644 8H17.5436C18.1305 8 18.4568 8.67895 18.0902 9.13729L12.5466 16.0667C12.2664 16.417 11.7",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 13,
+        "label": "Are you a US Citizen or Green Card Holder? *",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 14,
+      "tag": "textarea",
+      "type": "textarea",
+      "id": "question_8366620101",
+      "name": null,
+      "classes": [
+        "input",
+        "input__multi-line"
+      ],
+      "label": "What is your current address?*",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": "What is your current address?",
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": "question_8366620101-description question_8366620101-error question_8366620101-help",
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#question_8366620101",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "input-wrapper",
+            "input-wrapper__multi-line"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "text-input-wrapper"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "field-wrapper",
+            "field-wrapper--multiline"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 260,
+        "y": 1741,
+        "w": 852,
+        "h": 88
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"input-wrapper input-wrapper__multi-line\"><label id=\"question_8366620101-label\" for=\"question_8366620101\" class=\"label label\">What is your current address?<span aria-hidden=\"true\">*</span></label><textarea id=\"question_8366620101\" class=\"input input__multi-line\" aria-label=\"What is your current address?\" aria-describedby=\"question_8366620101-description question_8366620101-error question_8366620101-help\" aria-invalid=\"false\" aria-errormessage=\"question_8366620101-error\" aria-required=\"true\" rows=\"4\" style=\"\"></textarea></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 14,
+        "label": "What is your current address?*",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 15,
+      "tag": "input",
+      "type": "text",
+      "id": "question_8418215101",
+      "name": null,
+      "classes": [
+        "select__input"
+      ],
+      "label": "Do you currently live in the Atlanta, GA Metro (within 50 miles) area? *",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": "question_8418215101-label",
+      "ariaDescribedBy": "react-select-question_8418215101-placeholder question_8418215101-error",
+      "role": "combobox",
+      "autocomplete": "off",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#question_8418215101",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__input-container",
+            "remix-css-19bb58m"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__value-container",
+            "remix-css-hlgwow"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__control",
+            "remix-css-13cymwt-control"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 276,
+        "y": 1875,
+        "w": 3,
+        "h": 20
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"field-wrapper\"><div class=\"select\"><div class=\"select__container\"><label id=\"question_8418215101-label\" for=\"question_8418215101\" class=\"label select__label\">Do you currently live in the Atlanta, GA Metro (within 50 miles) area? <span aria-hidden=\"true\">*</span></label><div class=\"select-shell remix-css-b62m3t-container\"><span id=\"react-select-question_8418215101-live-region\" class=\"remix-css-7pg0cj-a11yText\"></span><span aria-live=\"polite\" aria-atomic=\"false\" aria-relevant=\"additions text\" role=\"log\" class=\"remix-css-7pg0cj-a11yText\"></span><div><div class=\"select__control remix-css-13cymwt-control\"><div class=\"select__value-container remix-css-hlgwow\"><div class=\"select__placeholder remix-css-1jqq78o-placeholder\" id=\"react-select-question_8418215101-placeholder\">Select...</div><div class=\"select__input-container remix-css-19bb58m\" data-value=\"\"><input class=\"select__input\" style=\"color: inherit; background: 0px center; opacity: 1; width: 100%; grid-area: 1 / 2; font: inherit; min-width: 2px; border: 0px; margin: 0px; outline: 0px; padding: 0px;\" autocapitalize=\"none\" autocomplete=\"off\" autocorrect=\"off\" id=\"question_8418215101\" spellcheck=\"false\" tabindex=\"0\" type=\"text\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-errormessage=\"question_8418215101-error\" aria-invalid=\"false\" aria-labelledby=\"question_8418215101-label\" aria-required=\"true\" role=\"combobox\" aria-activedescendant=\"\" aria-describedby=\"react-select-question_8418215101-placeholder question_8418215101-error\" enterkeyhint=\"done\" value=\"\"></div></div><div class=\"select__indicators remix-css-1wy0on6\"><button type=\"button\" class=\"icon-button icon-button--sm\" aria-label=\"Toggle flyout\" tabindex=\"-1\"><svg class=\"svg-icon\" fill=\"none\" height=\"20\" width=\"20\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path class=\"icon--primary-color\" d=\"M11.4534 16.0667L5.90983 9.13729C5.54316 8.67895 5.86948 8 6.45644 8H17.5436C18.1305 8 18.4568 8.67895 18.0902 9.13729L12.5466",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 15,
+        "label": "Do you currently live in the Atlanta, GA Metro (within 50 miles) area? *",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 16,
+      "tag": "input",
+      "type": "text",
+      "id": "gender",
+      "name": null,
+      "classes": [
+        "select__input"
+      ],
+      "label": "Gender",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": "gender-label",
+      "ariaDescribedBy": "react-select-gender-placeholder gender-error",
+      "role": "combobox",
+      "autocomplete": "off",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#gender",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__input-container",
+            "remix-css-19bb58m"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__value-container",
+            "remix-css-hlgwow"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__control",
+            "remix-css-13cymwt-control"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 276,
+        "y": 2229,
+        "w": 3,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"select__input-container remix-css-19bb58m\" data-value=\"\"><input class=\"select__input\" style=\"color: inherit; background: 0px center; opacity: 1; width: 100%; grid-area: 1 / 2; font: inherit; min-width: 2px; border: 0px; margin: 0px; outline: 0px; padding: 0px;\" autocapitalize=\"none\" autocomplete=\"off\" autocorrect=\"off\" id=\"gender\" spellcheck=\"false\" tabindex=\"0\" type=\"text\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-errormessage=\"gender-error\" aria-invalid=\"false\" aria-labelledby=\"gender-label\" aria-required=\"false\" role=\"combobox\" aria-activedescendant=\"\" aria-describedby=\"react-select-gender-placeholder gender-error\" enterkeyhint=\"done\" value=\"\"></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 16,
+        "label": "Gender",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 17,
+      "tag": "input",
+      "type": "text",
+      "id": "hispanic_ethnicity",
+      "name": null,
+      "classes": [
+        "select__input"
+      ],
+      "label": "Are you Hispanic/Latino?",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": "hispanic_ethnicity-label",
+      "ariaDescribedBy": "react-select-hispanic_ethnicity-placeholder hispanic_ethnicity-error",
+      "role": "combobox",
+      "autocomplete": "off",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#hispanic_ethnicity",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__input-container",
+            "remix-css-19bb58m"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__value-container",
+            "remix-css-hlgwow"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__control",
+            "remix-css-13cymwt-control"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 276,
+        "y": 2305,
+        "w": 3,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"select__input-container remix-css-19bb58m\" data-value=\"\"><input class=\"select__input\" style=\"color: inherit; background: 0px center; opacity: 1; width: 100%; grid-area: 1 / 2; font: inherit; min-width: 2px; border: 0px; margin: 0px; outline: 0px; padding: 0px;\" autocapitalize=\"none\" autocomplete=\"off\" autocorrect=\"off\" id=\"hispanic_ethnicity\" spellcheck=\"false\" tabindex=\"0\" type=\"text\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-errormessage=\"hispanic_ethnicity-error\" aria-invalid=\"false\" aria-labelledby=\"hispanic_ethnicity-label\" aria-required=\"false\" role=\"combobox\" aria-activedescendant=\"\" aria-describedby=\"react-select-hispanic_ethnicity-placeholder hispanic_ethnicity-error\" enterkeyhint=\"done\" value=\"\"></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 17,
+        "label": "Are you Hispanic/Latino?",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 18,
+      "tag": "input",
+      "type": "text",
+      "id": "veteran_status",
+      "name": null,
+      "classes": [
+        "select__input"
+      ],
+      "label": "Veteran Status",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": "veteran_status-label",
+      "ariaDescribedBy": "react-select-veteran_status-placeholder veteran_status-error",
+      "role": "combobox",
+      "autocomplete": "off",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#veteran_status",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__input-container",
+            "remix-css-19bb58m"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__value-container",
+            "remix-css-hlgwow"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__control",
+            "remix-css-13cymwt-control"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 276,
+        "y": 2885,
+        "w": 3,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"select__input-container remix-css-19bb58m\" data-value=\"\"><input class=\"select__input\" style=\"color: inherit; background: 0px center; opacity: 1; width: 100%; grid-area: 1 / 2; font: inherit; min-width: 2px; border: 0px; margin: 0px; outline: 0px; padding: 0px;\" autocapitalize=\"none\" autocomplete=\"off\" autocorrect=\"off\" id=\"veteran_status\" spellcheck=\"false\" tabindex=\"0\" type=\"text\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-errormessage=\"veteran_status-error\" aria-invalid=\"false\" aria-labelledby=\"veteran_status-label\" aria-required=\"false\" role=\"combobox\" aria-activedescendant=\"\" aria-describedby=\"react-select-veteran_status-placeholder veteran_status-error\" enterkeyhint=\"done\" value=\"\"></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 18,
+        "label": "Veteran Status",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    },
+    {
+      "index": 19,
+      "tag": "input",
+      "type": "text",
+      "id": "disability_status",
+      "name": null,
+      "classes": [
+        "select__input"
+      ],
+      "label": "Disability Status",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": "disability_status-label",
+      "ariaDescribedBy": "react-select-disability_status-placeholder disability_status-error",
+      "role": "combobox",
+      "autocomplete": "off",
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#disability_status",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__input-container",
+            "remix-css-19bb58m"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__value-container",
+            "remix-css-hlgwow"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "select__control",
+            "remix-css-13cymwt-control"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 276,
+        "y": 4106,
+        "w": 3,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"select__input-container remix-css-19bb58m\" data-value=\"\"><input class=\"select__input\" style=\"color: inherit; background: 0px center; opacity: 1; width: 100%; grid-area: 1 / 2; font: inherit; min-width: 2px; border: 0px; margin: 0px; outline: 0px; padding: 0px;\" autocapitalize=\"none\" autocomplete=\"off\" autocorrect=\"off\" id=\"disability_status\" spellcheck=\"false\" tabindex=\"0\" type=\"text\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"true\" aria-errormessage=\"disability_status-error\" aria-invalid=\"false\" aria-labelledby=\"disability_status-label\" aria-required=\"false\" role=\"combobox\" aria-activedescendant=\"\" aria-describedby=\"react-select-disability_status-placeholder disability_status-error\" enterkeyhint=\"done\" value=\"\"></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 19,
+        "label": "Disability Status",
+        "clicked": true,
+        "dropdownAppeared": true,
+        "dropdownOptions": [
+          "Afghanistan+93",
+          "Åland Islands+358",
+          "Albania+355",
+          "Algeria+213",
+          "American Samoa+1",
+          "Andorra+376",
+          "Angola+244",
+          "Anguilla+1",
+          "Antigua & Barbuda+1",
+          "Argentina+54",
+          "Armenia+374",
+          "Aruba+297",
+          "Ascension Island+247",
+          "Australia+61",
+          "Austria+43",
+          "Azerbaijan+994",
+          "Bahamas+1",
+          "Bahrain+973",
+          "Bangladesh+880",
+          "Barbados+1",
+          "Belarus+375",
+          "Belgium+32",
+          "Belize+501",
+          "Benin+229",
+          "Bermuda+1",
+          "Bhutan+975",
+          "Bolivia+591",
+          "Bosnia & Herzegovina+387",
+          "Botswana+267",
+          "Brazil+55"
+        ],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected"
+        ]
+      }
+    }
+  ],
+  "widgets": [
+    {
+      "type": "react-select",
+      "selector": "[class=\"select-shell remix-css-b62m3t-container\"]",
+      "classes": [
+        "select-shell",
+        "remix-css-b62m3t-container"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__value-container remix-css-hlgwow\"]",
+      "classes": [
+        "select__value-container",
+        "remix-css-hlgwow"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__input-container remix-css-19bb58m\"]",
+      "classes": [
+        "select__input-container",
+        "remix-css-19bb58m"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select-shell remix-css-b62m3t-container\"]",
+      "classes": [
+        "select-shell",
+        "remix-css-b62m3t-container"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__value-container remix-css-hlgwow\"]",
+      "classes": [
+        "select__value-container",
+        "remix-css-hlgwow"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__input-container remix-css-19bb58m\"]",
+      "classes": [
+        "select__input-container",
+        "remix-css-19bb58m"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select-shell remix-css-b62m3t-container\"]",
+      "classes": [
+        "select-shell",
+        "remix-css-b62m3t-container"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__value-container remix-css-hlgwow\"]",
+      "classes": [
+        "select__value-container",
+        "remix-css-hlgwow"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__input-container remix-css-19bb58m\"]",
+      "classes": [
+        "select__input-container",
+        "remix-css-19bb58m"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select-shell remix-css-b62m3t-container\"]",
+      "classes": [
+        "select-shell",
+        "remix-css-b62m3t-container"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__value-container remix-css-hlgwow\"]",
+      "classes": [
+        "select__value-container",
+        "remix-css-hlgwow"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__input-container remix-css-19bb58m\"]",
+      "classes": [
+        "select__input-container",
+        "remix-css-19bb58m"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select-shell remix-css-b62m3t-container\"]",
+      "classes": [
+        "select-shell",
+        "remix-css-b62m3t-container"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__value-container remix-css-hlgwow\"]",
+      "classes": [
+        "select__value-container",
+        "remix-css-hlgwow"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__input-container remix-css-19bb58m\"]",
+      "classes": [
+        "select__input-container",
+        "remix-css-19bb58m"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select-shell remix-css-b62m3t-container\"]",
+      "classes": [
+        "select-shell",
+        "remix-css-b62m3t-container"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__value-container remix-css-hlgwow\"]",
+      "classes": [
+        "select__value-container",
+        "remix-css-hlgwow"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__input-container remix-css-19bb58m\"]",
+      "classes": [
+        "select__input-container",
+        "remix-css-19bb58m"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select-shell remix-css-b62m3t-container\"]",
+      "classes": [
+        "select-shell",
+        "remix-css-b62m3t-container"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__value-container remix-css-hlgwow\"]",
+      "classes": [
+        "select__value-container",
+        "remix-css-hlgwow"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__input-container remix-css-19bb58m\"]",
+      "classes": [
+        "select__input-container",
+        "remix-css-19bb58m"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select-shell remix-css-b62m3t-container\"]",
+      "classes": [
+        "select-shell",
+        "remix-css-b62m3t-container"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__value-container remix-css-hlgwow\"]",
+      "classes": [
+        "select__value-container",
+        "remix-css-hlgwow"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__input-container remix-css-19bb58m\"]",
+      "classes": [
+        "select__input-container",
+        "remix-css-19bb58m"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select-shell remix-css-b62m3t-container\"]",
+      "classes": [
+        "select-shell",
+        "remix-css-b62m3t-container"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__value-container remix-css-hlgwow\"]",
+      "classes": [
+        "select__value-container",
+        "remix-css-hlgwow"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__input-container remix-css-19bb58m\"]",
+      "classes": [
+        "select__input-container",
+        "remix-css-19bb58m"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select-shell remix-css-b62m3t-container\"]",
+      "classes": [
+        "select-shell",
+        "remix-css-b62m3t-container"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__value-container remix-css-hlgwow\"]",
+      "classes": [
+        "select__value-container",
+        "remix-css-hlgwow"
+      ],
+      "hasValue": false,
+      "placeholder": "Select...",
+      "step": "Main Page"
+    },
+    {
+      "type": "react-select",
+      "selector": "[class=\"select__input-container remix-css-19bb58m\"]",
+      "classes": [
+        "select__input-container",
+        "remix-css-19bb58m"
+      ],
+      "hasValue": false,
+      "placeholder": "",
+      "step": "Main Page"
+    },
+    {
+      "type": "file-upload",
+      "selector": "#resume",
+      "accept": ".pdf,.doc,.docx,.txt,.rtf",
+      "multiple": false,
+      "parentClasses": [
+        "file-upload__wrapper"
+      ],
+      "labelText": "AttachAttachDropboxGoogle DriveEnter manuallyEnter manuallyAccepted file types: pdf, doc, docx, txt,",
+      "step": "Main Page"
+    },
+    {
+      "type": "file-upload",
+      "selector": "#cover_letter",
+      "accept": ".pdf,.doc,.docx,.txt,.rtf",
+      "multiple": false,
+      "parentClasses": [
+        "file-upload__wrapper"
+      ],
+      "labelText": "AttachAttachDropboxGoogle DriveEnter manuallyEnter manuallyAccepted file types: pdf, doc, docx, txt,",
+      "step": "Main Page"
+    }
+  ]
+}

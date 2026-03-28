@@ -1,0 +1,632 @@
+{
+  "meta": {
+    "url": "https://jobs.ashbyhq.com/Tabs/a305abb8-306b-4c47-a547-493c952712c9/application",
+    "portalIndex": 3,
+    "company": "Tabs",
+    "timestamp": "2026-03-18T05:43:02.503Z",
+    "ats": {
+      "platform": "Ashby",
+      "hostname": "jobs.ashbyhq.com",
+      "urlPattern": "https://jobs.ashbyhq.com/Tabs/a305abb8-306b-4c47-a547-493c952712c9/application"
+    },
+    "frameworks": [
+      "React"
+    ],
+    "stepsScanned": [
+      "Main Page"
+    ]
+  },
+  "structure": {
+    "sections": [
+      {
+        "tag": "h1",
+        "text": "Senior Technical Talent Acquisition Partner",
+        "level": "1"
+      },
+      {
+        "tag": "h2",
+        "text": "Location",
+        "level": "2"
+      },
+      {
+        "tag": "h2",
+        "text": "Employment Type",
+        "level": "2"
+      },
+      {
+        "tag": "h2",
+        "text": "Location Type",
+        "level": "2"
+      },
+      {
+        "tag": "h2",
+        "text": "Department",
+        "level": "2"
+      },
+      {
+        "tag": "h2",
+        "text": "Compensation",
+        "level": "2"
+      },
+      {
+        "tag": "h3",
+        "text": "Autofill from resume",
+        "level": "3"
+      }
+    ],
+    "fieldsets": [
+      {
+        "legend": "Name",
+        "fieldCount": 7,
+        "classes": [
+          "_section_oj0x8_87",
+          "ashby-application-form-section-container"
+        ]
+      },
+      {
+        "legend": "How many years of experience do you have as an internal recruiter?",
+        "fieldCount": 1,
+        "classes": [
+          "_container_nh65k_29",
+          "_fieldEntry_17tft_29"
+        ]
+      }
+    ],
+    "buttons": [
+      {
+        "tag": "button",
+        "text": "Upload file",
+        "type": "submit",
+        "classes": [
+          "_button_8wvgw_29",
+          "_secondary_8wvgw_114",
+          "_ctaButton_xd2v0_94"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Upload File",
+        "type": "submit",
+        "classes": [
+          "_button_8wvgw_29",
+          "_secondary_8wvgw_114",
+          "_button_1fd3o_107"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Yes",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "No",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Yes",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "No",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Submit Application",
+        "type": "submit",
+        "classes": [
+          "_button_8wvgw_29",
+          "_primary_8wvgw_96",
+          "_greedy_8wvgw_218",
+          "_submitButton_oj0x8_408",
+          "ashby-application-form-submit-button"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      }
+    ],
+    "tabs": [
+      {
+        "text": "Overview",
+        "selected": false,
+        "classes": [
+          "_tab_oj0x8_30"
+        ]
+      },
+      {
+        "text": "Application",
+        "selected": true,
+        "classes": [
+          "_tab_oj0x8_30",
+          "_active_oj0x8_57"
+        ]
+      }
+    ],
+    "iframes": [
+      {
+        "src": "https://www.recaptcha.net/recaptcha/api2/anchor?ar=1&k=6LeFb_YUAAAAALUD5h-BiQEp8JaFChe0e0A6r49Y&co=aHR0cHM6Ly9qb2JzLmFzaGJ5aHEuY29tOjQ0Mw..&hl=en&v=QvLuXwupqtKCyjBw2xIzFLIf&size=invisible&anchor-ms=20000&execute-ms=30000&cb=wec7wrsy30h",
+        "id": null,
+        "name": "a-loeeolrm9wu2"
+      },
+      {
+        "src": "",
+        "id": null,
+        "name": null
+      }
+    ]
+  },
+  "fields": [
+    {
+      "index": 0,
+      "tag": "input",
+      "type": "file",
+      "id": null,
+      "name": null,
+      "classes": [],
+      "label": "",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#form > div._autofillPane_oj0x8_445.ashby-application-form-autofill-pane:nth-of-type(1) > div._root_xd2v0_1.ashby-application-form-autofill-input-root > input",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_root_xd2v0_1",
+            "ashby-application-form-autofill-input-root"
+          ],
+          "role": "presentation"
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_autofillPane_oj0x8_445",
+            "ashby-application-form-autofill-pane",
+            "_container_101oc_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": "form",
+          "classes": [],
+          "role": "tabpanel"
+        }
+      ],
+      "rect": {
+        "x": 511,
+        "y": 256,
+        "w": 1,
+        "h": 1
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div role=\"presentation\" class=\"_root_xd2v0_1 ashby-application-form-autofill-input-root\" data-state=\"default\"><input accept=\"application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf\" type=\"file\" tabindex=\"-1\" style=\"border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;\"><div class=\"_base_xd2v0_31 ashby-application-form-autofill-input-base-layer\"><div class=\"_content_xd2v0_36\"><div class=\"_header_xd2v0_43\"><div class=\"_iconContainer_xd2v0_50\"><svg viewBox=\"0 0 576 512\" fill=\"none\" height=\"1em\" class=\"_icon_xd2v0_50 ashby-application-form-autofill-input-icon\"><path d=\"M234.7 42.7L197 56.8c-3 1.1-5 4-5 7.2s2 6.1 5 7.2l37.7 14.1L248.8 123c1.1 3 4 5 7.2 5s6.1-2 7.2-5l14.1-37.7L315 71.2c3-1.1 5-4 5-7.2s-2-6.1-5-7.2L277.3 42.7 263.2 5c-1.1-3-4-5-7.2-5s-6.1 2-7.2 5L234.7 42.7zM461.4 48L496 82.6 386.2 192.3l-34.6-34.6L461.4 48zM80 429.4L317.7 191.7l34.6 34.6L114.6 464 80 429.4zM427.4 14.1L46.1 395.4c-18.7 18.7-18.7 49.1 0 67.9l34.6 34.6c18.7 18.7 49.1 18.7 67.9 0L529.9 116.5c18.7-18.7 18.7-49.1 0-67.9L495.3 14.1c-18.7-18.7-49.1-18.7-67.9 0zM7.5 117.2C3 118.9 0 123.2 0 128s3 9.1 7.5 10.8L64 160l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L128 160l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L128 96 106.8 39.5C105.1 35 100.8 32 96 32s-9.1 3-10.8 7.5L64 96 7.5 117.2zm352 256c-4.5 1.7-7.5 6-7.5 10.8s3 9.1 7.5 10.8L416 416l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L480 416l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L480 352l-21.2-56.5c-1.7-4.5-6-7.5-10.8-7.5s-9.1 3-10.8 7.5L416 352l-56.5 21.2z\"></path></svg></div><h3 class=\"_title_xd2v0_64 ashby-application-form-autofill-input-title\">Autofill from resume</h3></div><p class=\"_description_xd2v0_76 ashby-application-form-autofill-input-description\">U",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 0,
+        "label": "",
+        "clicked": false,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": [
+          "Click failed: elementHandle.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m   "
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "tag": "input",
+      "type": "text",
+      "id": "_systemfield_name",
+      "name": "_systemfield_name",
+      "classes": [
+        "_input_1wkz4_28",
+        "_input_17tft_33"
+      ],
+      "label": "Name",
+      "placeholder": "Type here...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#_systemfield_name",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 378,
+        "w": 668,
+        "h": 54
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_name\">Name</label><div><input placeholder=\"Type here...\" name=\"_systemfield_name\" required=\"\" id=\"_systemfield_name\" type=\"text\" class=\"_input_1wkz4_28 _input_17tft_33\" value=\"\"></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 1,
+        "label": "Name",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 2,
+      "tag": "input",
+      "type": "email",
+      "id": "_systemfield_email",
+      "name": "_systemfield_email",
+      "classes": [
+        "_input_1wkz4_28",
+        "_input_17tft_33"
+      ],
+      "label": "Email",
+      "placeholder": "hello@example.com...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#_systemfield_email",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 486,
+        "w": 668,
+        "h": 54
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_email\">Email</label><div><input placeholder=\"hello@example.com...\" name=\"_systemfield_email\" required=\"\" id=\"_systemfield_email\" type=\"email\" class=\"_input_1wkz4_28 _input_17tft_33\" value=\"\"></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 2,
+        "label": "Email",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 3,
+      "tag": "input",
+      "type": "file",
+      "id": "_systemfield_resume",
+      "name": null,
+      "classes": [],
+      "label": "Resume",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#_systemfield_resume",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_container_1fd3o_71"
+          ],
+          "role": "presentation"
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 527,
+        "y": 627,
+        "w": 1,
+        "h": 1
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_resume\">Resume</label><div role=\"presentation\" class=\"_container_1fd3o_71 \"><input accept=\"application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf,image/*,video/*,audio/*\" type=\"file\" tabindex=\"-1\" id=\"_systemfield_resume\" required=\"\" style=\"border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;\"><div class=\"_instructions_1fd3o_34\"><button class=\"_button_8wvgw_29 _secondary_8wvgw_114    _button_1fd3o_107\"><svg viewBox=\"0 0 448 512\" fill=\"none\" height=\"1em\"><path d=\"M375 73c-26-26-68.1-26-94.1 0L89 265C45.3 308.6 45.3 379.4 89 423s114.4 43.6 158.1 0L399 271c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L281 457c-62.4 62.4-163.5 62.4-225.9 0S-7.4 293.4 55 231L247 39C291.7-5.7 364.2-5.7 409 39s44.7 117.2 0 161.9L225.2 384.7c-31.6 31.6-83.6 28.7-111.5-6.2c-23.8-29.8-21.5-72.8 5.5-99.8L271 127c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L153.2 312.7c-9.7 9.7-10.6 25.1-2 35.8c10 12.5 28.7 13.6 40 2.2L375 167c26-26 26-68.1 0-94.1z\"></path></svg><span><span>Upload File</span></span></button><p class=\"_dragInstructions_1fd3o_29\">or drag and drop here</p></div></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 3,
+        "label": "Resume",
+        "clicked": false,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": [
+          "Click failed: elementHandle.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m   "
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "tag": "input",
+      "type": "combobox",
+      "id": null,
+      "name": null,
+      "classes": [
+        "_input_v5ami_28"
+      ],
+      "label": "",
+      "placeholder": "Start typing...",
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": "combobox",
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#form > div._jobPostingForm_oj0x8_399.ashby-application-form-container:nth-of-type(2) > div._section_oj0x8_87.ashby-application-form-section-container > fieldset._container_nh65k_29._fieldEntry_17tft_29 > div._inputContainer_v5ami_28 > input._input_v5ami_28",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_inputContainer_v5ami_28"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_nh65k_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 765,
+        "w": 668,
+        "h": 54
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_nh65k_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"6cb641e6-f028-41d7-a431-f8ae38697170\">How many years of experience do you have as an internal recruiter?</label><div class=\"_inputContainer_v5ami_28\"><input class=\"_input_v5ami_28\" placeholder=\"Start typing...\" aria-autocomplete=\"list\" aria-expanded=\"false\" aria-haspopup=\"listbox\" role=\"combobox\" value=\"\"><button class=\"_container_pjyt6_1 _toggleButton_v5ami_32\"><svg viewBox=\"0 0 448 512\" fill=\"none\" height=\"1em\"><path d=\"M207.029 381.476L12.686 187.132C3.313 177.759 3.313 162.563 12.686 153.191L35.353 130.524C44.71 121.167 59.875 121.149 69.254 130.484L224 284.505L378.745 130.484C388.124 121.149 403.289 121.167 412.646 130.524L435.313 153.191C444.686 162.564 444.686 177.76 435.313 187.132L240.971 381.476C231.598 390.848 216.402 390.848 207.029 381.476Z\"></path></svg></button></div></fieldset>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 4,
+        "label": "",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": true,
+        "errorsOnBlur": [],
+        "notes": [
+          "Typeahead/autocomplete detected",
+          "DOM changed significantly after interaction (+2768 chars)"
+        ]
+      }
+    },
+    {
+      "index": 5,
+      "tag": "input",
+      "type": "text",
+      "id": "140e280d-4f2f-4818-b80c-b54bfe4100be",
+      "name": "140e280d-4f2f-4818-b80c-b54bfe4100be",
+      "classes": [
+        "_input_1wkz4_28",
+        "_input_17tft_33"
+      ],
+      "label": "Linkedin Profile URL",
+      "placeholder": "Type here...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#\\31 40e280d-4f2f-4818-b80c-b54bfe4100be",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 872,
+        "w": 668,
+        "h": 54
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"140e280d-4f2f-4818-b80c-b54bfe4100be\">Linkedin Profile URL</label><div><input placeholder=\"Type here...\" name=\"140e280d-4f2f-4818-b80c-b54bfe4100be\" required=\"\" id=\"140e280d-4f2f-4818-b80c-b54bfe4100be\" type=\"text\" class=\"_input_1wkz4_28 _input_17tft_33\" value=\"\"></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 5,
+        "label": "Linkedin Profile URL",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    }
+  ],
+  "widgets": [
+    {
+      "type": "file-upload",
+      "selector": "input[type=\"file\"][name=\"\"]",
+      "accept": "application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf",
+      "multiple": false,
+      "parentClasses": [
+        "_root_xd2v0_1",
+        "ashby-application-form-autofill-input-root"
+      ],
+      "labelText": "Autofill from resumeUpload your resume here to autofill key application fields.Upload fileDrop your "
+    },
+    {
+      "type": "file-upload",
+      "selector": "#_systemfield_resume",
+      "accept": "application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf,image/*,video/*,audio/*",
+      "multiple": false,
+      "parentClasses": [
+        "_container_1fd3o_71",
+        ""
+      ],
+      "labelText": "Upload Fileor drag and drop here"
+    }
+  ]
+}

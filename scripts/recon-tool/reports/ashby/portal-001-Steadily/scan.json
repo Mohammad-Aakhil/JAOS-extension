@@ -1,0 +1,822 @@
+{
+  "meta": {
+    "url": "https://jobs.ashbyhq.com/Steadily/92028e82-7d07-4e7d-8f19-0c67a06e0535/application",
+    "portalIndex": 1,
+    "company": "Steadily",
+    "timestamp": "2026-03-18T05:42:01.215Z",
+    "ats": {
+      "platform": "Ashby",
+      "hostname": "jobs.ashbyhq.com",
+      "urlPattern": "https://jobs.ashbyhq.com/Steadily/92028e82-7d07-4e7d-8f19-0c67a06e0535/application"
+    },
+    "frameworks": [
+      "React"
+    ],
+    "stepsScanned": [
+      "Main Page"
+    ]
+  },
+  "structure": {
+    "sections": [
+      {
+        "tag": "h1",
+        "text": "Insurance Product Analyst",
+        "level": "1"
+      },
+      {
+        "tag": "h2",
+        "text": "Location",
+        "level": "2"
+      },
+      {
+        "tag": "h2",
+        "text": "Employment Type",
+        "level": "2"
+      },
+      {
+        "tag": "h2",
+        "text": "Department",
+        "level": "2"
+      }
+    ],
+    "fieldsets": [
+      {
+        "legend": "Name",
+        "fieldCount": 12,
+        "classes": [
+          "_section_oj0x8_87",
+          "ashby-application-form-section-container"
+        ]
+      },
+      {
+        "legend": "How comfortable are you working 50-60 hours a week?",
+        "fieldCount": 4,
+        "classes": [
+          "_container_1v5e2_29",
+          "_fieldEntry_17tft_29"
+        ]
+      }
+    ],
+    "buttons": [
+      {
+        "tag": "button",
+        "text": "Upload File",
+        "type": "submit",
+        "classes": [
+          "_button_8wvgw_29",
+          "_secondary_8wvgw_114",
+          "_button_1fd3o_107"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Yes",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "No",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Yes",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "No",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Yes",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "No",
+        "type": "submit",
+        "classes": [
+          "_container_pjyt6_1",
+          "_option_y2cw4_33",
+          ""
+        ],
+        "id": null,
+        "dataAutomationId": null
+      },
+      {
+        "tag": "button",
+        "text": "Submit Application",
+        "type": "submit",
+        "classes": [
+          "_button_8wvgw_29",
+          "_primary_8wvgw_96",
+          "_greedy_8wvgw_218",
+          "_submitButton_oj0x8_408",
+          "ashby-application-form-submit-button"
+        ],
+        "id": null,
+        "dataAutomationId": null
+      }
+    ],
+    "tabs": [
+      {
+        "text": "Overview",
+        "selected": false,
+        "classes": [
+          "_tab_oj0x8_30"
+        ]
+      },
+      {
+        "text": "Application",
+        "selected": true,
+        "classes": [
+          "_tab_oj0x8_30",
+          "_active_oj0x8_57"
+        ]
+      }
+    ],
+    "iframes": [
+      {
+        "src": "https://www.recaptcha.net/recaptcha/api2/anchor?ar=1&k=6LeFb_YUAAAAALUD5h-BiQEp8JaFChe0e0A6r49Y&co=aHR0cHM6Ly9qb2JzLmFzaGJ5aHEuY29tOjQ0Mw..&hl=en&v=QvLuXwupqtKCyjBw2xIzFLIf&size=invisible&anchor-ms=20000&execute-ms=30000&cb=p4iargbqvgyh",
+        "id": null,
+        "name": "a-eqb0i84t0ofv"
+      },
+      {
+        "src": "",
+        "id": null,
+        "name": null
+      }
+    ]
+  },
+  "fields": [
+    {
+      "index": 0,
+      "tag": "input",
+      "type": "text",
+      "id": "_systemfield_name",
+      "name": "_systemfield_name",
+      "classes": [
+        "_input_1wkz4_28",
+        "_input_17tft_33"
+      ],
+      "label": "Name",
+      "placeholder": "Type here...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#_systemfield_name",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 281,
+        "w": 668,
+        "h": 54
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_name\">Name</label><div><input placeholder=\"Type here...\" name=\"_systemfield_name\" required=\"\" id=\"_systemfield_name\" type=\"text\" class=\"_input_1wkz4_28 _input_17tft_33\" value=\"\"></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 0,
+        "label": "Name",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 1,
+      "tag": "input",
+      "type": "email",
+      "id": "_systemfield_email",
+      "name": "_systemfield_email",
+      "classes": [
+        "_input_1wkz4_28",
+        "_input_17tft_33"
+      ],
+      "label": "Email",
+      "placeholder": "hello@example.com...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#_systemfield_email",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 388,
+        "w": 668,
+        "h": 54
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_email\">Email</label><div><input placeholder=\"hello@example.com...\" name=\"_systemfield_email\" required=\"\" id=\"_systemfield_email\" type=\"email\" class=\"_input_1wkz4_28 _input_17tft_33\" value=\"\"></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 1,
+        "label": "Email",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 2,
+      "tag": "input",
+      "type": "tel",
+      "id": "fefc1551-9c6c-40bb-ad6b-bdbd0bc741aa",
+      "name": "fefc1551-9c6c-40bb-ad6b-bdbd0bc741aa",
+      "classes": [
+        "_input_1wkz4_28",
+        "_input_17tft_33"
+      ],
+      "label": "Phone",
+      "placeholder": "1-415-555-1234...",
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#fefc1551-9c6c-40bb-ad6b-bdbd0bc741aa",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_jobPostingForm_oj0x8_399",
+            "ashby-application-form-container",
+            "_container_101oc_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 496,
+        "w": 668,
+        "h": 54
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"fefc1551-9c6c-40bb-ad6b-bdbd0bc741aa\">Phone</label><input placeholder=\"1-415-555-1234...\" name=\"fefc1551-9c6c-40bb-ad6b-bdbd0bc741aa\" required=\"\" id=\"fefc1551-9c6c-40bb-ad6b-bdbd0bc741aa\" type=\"tel\" class=\"_input_1wkz4_28 _input_17tft_33\" value=\"\"></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 2,
+        "label": "Phone",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 3,
+      "tag": "input",
+      "type": "file",
+      "id": "_systemfield_resume",
+      "name": null,
+      "classes": [],
+      "label": "Resume",
+      "placeholder": null,
+      "required": true,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#_systemfield_resume",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_container_1fd3o_71"
+          ],
+          "role": "presentation"
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 527,
+        "y": 637,
+        "w": 1,
+        "h": 1
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"_systemfield_resume\">Resume</label><div role=\"presentation\" class=\"_container_1fd3o_71 \"><input accept=\"application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf,image/*,video/*,audio/*\" type=\"file\" tabindex=\"-1\" id=\"_systemfield_resume\" required=\"\" style=\"border: 0px; clip: rect(0px, 0px, 0px, 0px); clip-path: inset(50%); height: 1px; margin: 0px -1px -1px 0px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap;\"><div class=\"_instructions_1fd3o_34\"><button class=\"_button_8wvgw_29 _secondary_8wvgw_114    _button_1fd3o_107\"><svg viewBox=\"0 0 448 512\" fill=\"none\" height=\"1em\"><path d=\"M375 73c-26-26-68.1-26-94.1 0L89 265C45.3 308.6 45.3 379.4 89 423s114.4 43.6 158.1 0L399 271c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L281 457c-62.4 62.4-163.5 62.4-225.9 0S-7.4 293.4 55 231L247 39C291.7-5.7 364.2-5.7 409 39s44.7 117.2 0 161.9L225.2 384.7c-31.6 31.6-83.6 28.7-111.5-6.2c-23.8-29.8-21.5-72.8 5.5-99.8L271 127c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9L153.2 312.7c-9.7 9.7-10.6 25.1-2 35.8c10 12.5 28.7 13.6 40 2.2L375 167c26-26 26-68.1 0-94.1z\"></path></svg><span><span>Upload File</span></span></button><p class=\"_dragInstructions_1fd3o_29\">or drag and drop here</p></div></div></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 3,
+        "label": "Resume",
+        "clicked": false,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": [
+          "Click failed: elementHandle.click: Timeout 2000ms exceeded.\nCall log:\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m   "
+        ]
+      }
+    },
+    {
+      "index": 4,
+      "tag": "textarea",
+      "type": "textarea",
+      "id": "4bdf01cc-5e27-422d-8dea-e3dc1fa4629a",
+      "name": "4bdf01cc-5e27-422d-8dea-e3dc1fa4629a",
+      "classes": [
+        "_input_1wnh2_29",
+        "_input_17tft_33"
+      ],
+      "label": "If yes, please give the name and contact details of the person that referred you!",
+      "placeholder": "Type here...",
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "",
+      "options": null,
+      "selector": "#\\34 bdf01cc-5e27-422d-8dea-e3dc1fa4629a",
+      "parentContext": [
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_fieldEntry_17tft_29",
+            "ashby-application-form-field-entry"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_section_oj0x8_87",
+            "ashby-application-form-section-container"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_jobPostingForm_oj0x8_399",
+            "ashby-application-form-container",
+            "_container_101oc_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 494,
+        "y": 879,
+        "w": 668,
+        "h": 131
+      },
+      "dataAttributes": {},
+      "rawHTML": "<div class=\"_fieldEntry_17tft_29 ashby-application-form-field-entry\"><label class=\"_heading_101oc_53  _label_17tft_43 ashby-application-form-question-title\" for=\"4bdf01cc-5e27-422d-8dea-e3dc1fa4629a\">If yes, please give the name and contact details of the person that referred you!</label><textarea placeholder=\"Type here...\" name=\"4bdf01cc-5e27-422d-8dea-e3dc1fa4629a\" id=\"4bdf01cc-5e27-422d-8dea-e3dc1fa4629a\" class=\"_input_1wnh2_29 _input_17tft_33 \" rows=\"4\"></textarea></div>",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 4,
+        "label": "If yes, please give the name and contact details of the person that referred you!",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 5,
+      "tag": "input",
+      "type": "radio",
+      "id": "00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-0",
+      "name": "00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765",
+      "classes": [],
+      "label": "Very Comfortable",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\30 0d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-0",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 1282,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"7875d093-d951-4625-a576-0b0fe9e36765\">How comfortable are you working 50-60 hours a week?</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><p><strong>For this role, we typically see folks in-office during regular business hours then they'll do a couple of hours at home in the evening and several hours on the weekends for a total of 50-60 hours.</strong></p></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-0\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-0\" class=\"_label_1v5e2_43 \">Very Comfortable</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-1\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-1\" class=\"_label_1v5e2_43 \">Comfortable</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-2\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-2\" class=\"_label_1",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 5,
+        "label": "Very Comfortable",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 6,
+      "tag": "input",
+      "type": "radio",
+      "id": "00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-1",
+      "name": "00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765",
+      "classes": [],
+      "label": "Comfortable",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\30 0d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-1",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 1315,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"7875d093-d951-4625-a576-0b0fe9e36765\">How comfortable are you working 50-60 hours a week?</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><p><strong>For this role, we typically see folks in-office during regular business hours then they'll do a couple of hours at home in the evening and several hours on the weekends for a total of 50-60 hours.</strong></p></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-0\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-0\" class=\"_label_1v5e2_43 \">Very Comfortable</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-1\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-1\" class=\"_label_1v5e2_43 \">Comfortable</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-2\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-2\" class=\"_label_1",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 6,
+        "label": "Comfortable",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 7,
+      "tag": "input",
+      "type": "radio",
+      "id": "00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-2",
+      "name": "00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765",
+      "classes": [],
+      "label": "Somewhat Uncomfortable",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\30 0d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-2",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 1349,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"7875d093-d951-4625-a576-0b0fe9e36765\">How comfortable are you working 50-60 hours a week?</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><p><strong>For this role, we typically see folks in-office during regular business hours then they'll do a couple of hours at home in the evening and several hours on the weekends for a total of 50-60 hours.</strong></p></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-0\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-0\" class=\"_label_1v5e2_43 \">Very Comfortable</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-1\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-1\" class=\"_label_1v5e2_43 \">Comfortable</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-2\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-2\" class=\"_label_1",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 7,
+        "label": "Somewhat Uncomfortable",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    },
+    {
+      "index": 8,
+      "tag": "input",
+      "type": "radio",
+      "id": "00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-3",
+      "name": "00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765",
+      "classes": [],
+      "label": "Very Uncomfortable",
+      "placeholder": null,
+      "required": false,
+      "ariaLabel": null,
+      "ariaLabelledBy": null,
+      "ariaDescribedBy": null,
+      "role": null,
+      "autocomplete": null,
+      "pattern": null,
+      "value": "on",
+      "options": null,
+      "selector": "#\\30 0d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-3",
+      "parentContext": [
+        {
+          "tag": "span",
+          "id": null,
+          "classes": [
+            "_container_ruukg_29"
+          ],
+          "role": null
+        },
+        {
+          "tag": "div",
+          "id": null,
+          "classes": [
+            "_option_1v5e2_35",
+            "false"
+          ],
+          "role": null
+        },
+        {
+          "tag": "fieldset",
+          "id": null,
+          "classes": [
+            "_container_1v5e2_29",
+            "_fieldEntry_17tft_29"
+          ],
+          "role": null
+        }
+      ],
+      "rect": {
+        "x": 493,
+        "y": 1383,
+        "w": 24,
+        "h": 24
+      },
+      "dataAttributes": {},
+      "rawHTML": "<fieldset class=\"_container_1v5e2_29 _fieldEntry_17tft_29\"><label class=\"_heading_101oc_53 _required_101oc_92 _label_17tft_43 ashby-application-form-question-title\" for=\"7875d093-d951-4625-a576-0b0fe9e36765\">How comfortable are you working 50-60 hours a week?</label><div class=\"_description_17tft_49 ashby-application-form-question-description\"><p><strong>For this role, we typically see folks in-office during regular business hours then they'll do a couple of hours at home in the evening and several hours on the weekends for a total of 50-60 hours.</strong></p></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-0\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-0\" class=\"_label_1v5e2_43 \">Very Comfortable</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-1\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-1\" class=\"_label_1v5e2_43 \">Comfortable</label></div><div class=\"_option_1v5e2_35 false\"><span class=\"_container_ruukg_29\" data-disabled=\"false\"><span class=\"_circle_ruukg_74\"></span><input type=\"radio\" id=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-2\" name=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765\"></span><label for=\"00d52a40-a0ab-436f-8cb7-b9aa67b8a48d_7875d093-d951-4625-a576-0b0fe9e36765-labeled-radio-2\" class=\"_label_1",
+      "step": "Main Page",
+      "interaction": {
+        "fieldIndex": 8,
+        "label": "Very Uncomfortable",
+        "clicked": true,
+        "dropdownAppeared": false,
+        "dropdownOptions": [],
+        "typeahead": false,
+        "errorsOnBlur": [],
+        "notes": []
+      }
+    }
+  ],
+  "widgets": [
+    {
+      "type": "file-upload",
+      "selector": "#_systemfield_resume",
+      "accept": "application/pdf,.pdf,application/msword,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.docx,application/vnd.oasis.opendocument.text,.odt,application/rtf,.rtf,image/*,video/*,audio/*",
+      "multiple": false,
+      "parentClasses": [
+        "_container_1fd3o_71",
+        ""
+      ],
+      "labelText": "Upload Fileor drag and drop here"
+    }
+  ]
+}

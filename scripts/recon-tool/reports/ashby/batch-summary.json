@@ -1,0 +1,157 @@
+{
+  "ats": "ashby",
+  "scanDate": "2026-03-18T05:43:02.511Z",
+  "totalUrls": 3,
+  "successfulScans": 3,
+  "failedUrls": [],
+  "portals": [
+    {
+      "index": 1,
+      "directory": "portal-001-Steadily",
+      "url": "https://jobs.ashbyhq.com/Steadily/92028e82-7d07-4e7d-8f19-0c67a06e0535",
+      "company": "Steadily",
+      "fieldCount": 9,
+      "requiredFieldCount": 4,
+      "widgetTypes": [
+        "file-upload"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "status": "success"
+    },
+    {
+      "index": 2,
+      "directory": "portal-002-tabz",
+      "url": "https://jobs.ashbyhq.com/tabz/e8f9c292-c0b9-4008-a57f-30e3c1c12a5d",
+      "company": "tabz",
+      "fieldCount": 5,
+      "requiredFieldCount": 4,
+      "widgetTypes": [
+        "file-upload"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "status": "success"
+    },
+    {
+      "index": 3,
+      "directory": "portal-003-Tabs",
+      "url": "https://jobs.ashbyhq.com/Tabs/a305abb8-306b-4c47-a547-493c952712c9",
+      "company": "Tabs",
+      "fieldCount": 6,
+      "requiredFieldCount": 4,
+      "widgetTypes": [
+        "file-upload"
+      ],
+      "frameworks": [
+        "React"
+      ],
+      "status": "success"
+    }
+  ],
+  "fieldFrequency": {
+    "name": {
+      "count": 3,
+      "requiredCount": 3,
+      "type": "text",
+      "labels": [
+        "Name"
+      ]
+    },
+    "email": {
+      "count": 3,
+      "requiredCount": 3,
+      "type": "email",
+      "labels": [
+        "Email"
+      ]
+    },
+    "phone": {
+      "count": 1,
+      "requiredCount": 1,
+      "type": "tel",
+      "labels": [
+        "Phone"
+      ]
+    },
+    "resume": {
+      "count": 3,
+      "requiredCount": 3,
+      "type": "file",
+      "labels": [
+        "Resume"
+      ]
+    },
+    "if_yes_please_give_the_name_and_contact_details_of_the_person_that_referred_you": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "textarea",
+      "labels": [
+        "If yes, please give the name and contact details of the person that referred you!"
+      ]
+    },
+    "very_comfortable": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Very Comfortable"
+      ]
+    },
+    "comfortable": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Comfortable"
+      ]
+    },
+    "somewhat_uncomfortable": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Somewhat Uncomfortable"
+      ]
+    },
+    "very_uncomfortable": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "radio",
+      "labels": [
+        "Very Uncomfortable"
+      ]
+    },
+    "field_0": {
+      "count": 2,
+      "requiredCount": 0,
+      "type": "file",
+      "labels": []
+    },
+    "what_are_your_compensation_expectations": {
+      "count": 1,
+      "requiredCount": 1,
+      "type": "text",
+      "labels": [
+        "What are your compensation expectations?"
+      ]
+    },
+    "field_4": {
+      "count": 1,
+      "requiredCount": 0,
+      "type": "combobox",
+      "labels": []
+    },
+    "linkedin_profile_url": {
+      "count": 1,
+      "requiredCount": 1,
+      "type": "text",
+      "labels": [
+        "Linkedin Profile URL"
+      ]
+    }
+  },
+  "optionRegistry": {}
+}
